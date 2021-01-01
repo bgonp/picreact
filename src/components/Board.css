@@ -1,0 +1,137 @@
+#board {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: 600;
+  color: #555;
+}
+
+#board .content {
+  display: grid;
+  grid-template: 120px 1fr / 120px 1fr;
+}
+
+#board .board {
+  display: grid;
+  grid-template-columns: repeat(10, 30px);
+  border: 1px solid #444;
+  width: fit-content;
+}
+
+#board .cell {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+}
+
+#board .cell:nth-child(5n) {
+  border-right: 1px solid #444;
+}
+
+#board .cell:nth-child(5n+1) {
+  border-left: 1px solid #444;
+}
+
+#board .cell:nth-child(50n+1),
+#board .cell:nth-child(50n+2),
+#board .cell:nth-child(50n+3),
+#board .cell:nth-child(50n+4),
+#board .cell:nth-child(50n+5),
+#board .cell:nth-child(50n+6),
+#board .cell:nth-child(50n+7),
+#board .cell:nth-child(50n+8),
+#board .cell:nth-child(50n+9),
+#board .cell:nth-child(50n+10) {
+  border-top: 1px solid #444;
+}
+
+#board .cell:nth-child(50n),
+#board .cell:nth-child(50n-1),
+#board .cell:nth-child(50n-2),
+#board .cell:nth-child(50n-3),
+#board .cell:nth-child(50n-4),
+#board .cell:nth-child(50n-5),
+#board .cell:nth-child(50n-6),
+#board .cell:nth-child(50n-7),
+#board .cell:nth-child(50n-8),
+#board .cell:nth-child(50n-9) {
+  border-bottom: 1px solid #444;
+}
+
+#board .cell .ok,
+#board .cell .error,
+#board .cell .filled,
+#board .cell .unfilled,
+#board .cell .button,
+#board .cell .state-0,
+#board .cell .state-1,
+#board .cell .state-2 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#board .cell .error {
+  border: 2px solid #e82828;
+}
+
+#board .cell .filled {
+  background-color: #444;
+}
+
+#board .cell .button {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+#board .cell .button:focus {
+  outline: none;
+}
+
+#board .cell .state-2 {
+  background: #444;
+}
+
+#board .column-help {
+  display: grid;
+  grid-column-start: 2;
+  grid-template-columns: repeat(10, 30px);
+  width: 100%;
+}
+
+#board .row-help {
+  display: grid;
+  grid-template-rows: repeat(10, 30px);
+  height: 100%;
+}
+
+#board .help {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#board .help.column {
+  flex-direction: column;
+  padding: 3px 0;
+}
+
+#board .help.row {
+  flex-direction: row;
+  padding: 0 5px;
+}
+
+#board .help span {
+  margin: 2px 4px 2px;
+}
