@@ -1,7 +1,10 @@
 import { FC, MouseEvent, ReactElement, useCallback, useContext, useMemo } from 'react'
+import classNames from 'classnames'
+
 import { MainContext } from 'contexts/MainContext'
 import { CellState } from 'models/State'
 import CrossIcon from './CrossIcon'
+import { Color } from 'models/Color'
 
 type Props = {
   column: number
@@ -43,8 +46,8 @@ export const Cell: FC<Props> = ({ column, row }) => {
 
   const getCellResult = useCallback<() => ReactElement>(
     () => (
-      <div className={`${isError ? 'error' : 'ok'}`}>
-        <div className={`${isFilled ? 'filled' : 'unfilled'}`} />
+      <div className={`${isFilled ? 'filled' : 'unfilled'}`}>
+        {isError && <CrossIcon color={Color.Error} />}
       </div>
     ),
     [isFilled, isError]
@@ -64,7 +67,18 @@ export const Cell: FC<Props> = ({ column, row }) => {
     )
   }, [state, toggleCrossState, toggleFilledState])
 
-  return <div className="cell">{finished ? getCellResult() : getCellButton()}</div>
+  const className = useMemo<string>(
+    () =>
+      classNames('cell', {
+        'border-top': column % 5 === 0,
+        'border-bottom': column % 5 === 4,
+        'border-left': row % 5 === 0,
+        'border-right': row % 5 === 4,
+      }),
+    [column, row]
+  )
+
+  return <div className={className}>{finished ? getCellResult() : getCellButton()}</div>
 }
 
 export default Cell

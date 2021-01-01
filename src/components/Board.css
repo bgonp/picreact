@@ -12,7 +12,7 @@
 #board .board {
   display: grid;
   grid-template-columns: repeat(10, 30px);
-  border: 1px solid #444;
+  border: 1px solid #444a;
   width: fit-content;
 }
 
@@ -21,41 +21,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ccc;
+  border: 1px solid #4443;
 }
 
-#board .cell:nth-child(5n) {
-  border-right: 1px solid #444;
+#board .cell.border-top {
+  border-top: 1px solid #444a;
 }
 
-#board .cell:nth-child(5n+1) {
-  border-left: 1px solid #444;
+#board .cell.border-right {
+  border-right: 1px solid #444a;
 }
 
-#board .cell:nth-child(50n+1),
-#board .cell:nth-child(50n+2),
-#board .cell:nth-child(50n+3),
-#board .cell:nth-child(50n+4),
-#board .cell:nth-child(50n+5),
-#board .cell:nth-child(50n+6),
-#board .cell:nth-child(50n+7),
-#board .cell:nth-child(50n+8),
-#board .cell:nth-child(50n+9),
-#board .cell:nth-child(50n+10) {
-  border-top: 1px solid #444;
+#board .cell.border-bottom {
+  border-bottom: 1px solid #444a;
 }
 
-#board .cell:nth-child(50n),
-#board .cell:nth-child(50n-1),
-#board .cell:nth-child(50n-2),
-#board .cell:nth-child(50n-3),
-#board .cell:nth-child(50n-4),
-#board .cell:nth-child(50n-5),
-#board .cell:nth-child(50n-6),
-#board .cell:nth-child(50n-7),
-#board .cell:nth-child(50n-8),
-#board .cell:nth-child(50n-9) {
-  border-bottom: 1px solid #444;
+#board .cell.border-left {
+  border-left: 1px solid #444a;
 }
 
 #board .cell .ok,
