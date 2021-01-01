@@ -30,14 +30,13 @@ export const useLocalStorage = <T>(
     [key]
   )
 
-  const removeStoredValue = useCallback<() => void>(() => {
-    setValue(initialValue)
+  const cleanStorage = useCallback<() => void>(() => {
     try {
       localStorage.removeItem(key)
     } catch (error) {
       console.error(error)
     }
-  }, [key, initialValue])
+  }, [key])
 
-  return [value, setStoredValue, removeStoredValue]
+  return [value, setStoredValue, cleanStorage]
 }

@@ -13,7 +13,7 @@ export type usePuzzleType = {
   finished: boolean
   puzzle: PuzzleType | null
   getState: (c: number, r: number) => CellState
-  setFinished: (finished: boolean) => void
+  setFinished: () => void
   setPuzzle: (puzzle: PuzzleType) => void
   setState: (c: number, r: number, value: CellState) => void
 }
@@ -29,11 +29,17 @@ export const initialPuzzleState = {
 }
 
 export const usePuzzle = (): usePuzzleType => {
-  const [code, setCode] = useLocalStorage<string>(STORAGE_CODE, initialPuzzleState.code)
+  const [code, setCodeValue, cleanCodeStorage] = useLocalStorage<string>(
+    STORAGE_CODE,
+    initialPuzzleState.code
+  )
 
-  const [finished, setFinished] = useState<boolean>(initialPuzzleState.finished)
+  const [state, setStateValue, cleanStateStorage] = useLocalStorage<BoardState>(
+    STORAGE_STATE,
+    []
+  )
 
-  const [state, setStateValue] = useLocalStorage<BoardState>(STORAGE_STATE, [])
+  const [finished, setFinishedValue] = useState<boolean>(initialPuzzleState.finished)
 
   const [puzzle, setPuzzleValue] = useState<PuzzleType | null>(initialPuzzleState.puzzle)
 
@@ -58,14 +64,27 @@ export const usePuzzle = (): usePuzzleType => {
   )
 
   const setPuzzle = useCallback<(puzzle: PuzzleType) => void>((puzzle) => {
-    setFinished(false)
+    setFinishedValue(false)
     setPuzzleValue(puzzle)
-    setCode(encodePuzzle(puzzle))
+    setCodeValue(encodePuzzle(puzzle))
     setStateValue(createState(puzzle))
   }, [])
 
+  const setFinished = useCallback<() => void>(() => {
+    setFinishedValue(true)
+    cleanCodeStorage()
+    cleanStateStorage()
+  }, [])
+
   useEffect(() => {
-    if (code) setPuzzleValue(decodePuzzle(code))
+    if (!code) return
+    let puzzle
+    if (finished || (puzzle = decodePuzzle(code)).size !== state.length) {
+      cleanCodeStorage()
+      cleanStateStorage()
+    } else {
+      setPuzzleValue(puzzle)
+    }
   }, [])
 
   return {

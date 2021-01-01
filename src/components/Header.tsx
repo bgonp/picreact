@@ -24,7 +24,7 @@ const Header = () => {
       <Link to={ROUTE_PLAY}>PLAY</Link>
       <Link to={ROUTE_CREATE}>CREATE</Link>
       <button onClick={() => setPuzzle(createPuzzle(10))}>NUEVO</button>
-      <button onClick={() => setFinished(true)}>RESOLVER</button>
+      <button onClick={() => setFinished()}>RESOLVER</button>
       <CopyToClipboard text={shareUrl}>
         <button>COPY LINK</button>
       </CopyToClipboard>

@@ -26,6 +26,17 @@ export const Cell: FC<Props> = ({ column, row }) => {
     return isFilled !== (state === CellState.Filled)
   }, [state, isFilled])
 
+  const className = useMemo<string>(
+    () =>
+      classNames('cell', {
+        'border-top': column % 5 === 0,
+        'border-bottom': column % 5 === 4,
+        'border-left': row % 5 === 0,
+        'border-right': row % 5 === 4,
+      }),
+    [column, row]
+  )
+
   const toggleCrossState = useCallback<(e: MouseEvent) => void>(
     (e) => {
       e.preventDefault()
@@ -66,17 +77,6 @@ export const Cell: FC<Props> = ({ column, row }) => {
       </button>
     )
   }, [state, toggleCrossState, toggleFilledState])
-
-  const className = useMemo<string>(
-    () =>
-      classNames('cell', {
-        'border-top': column % 5 === 0,
-        'border-bottom': column % 5 === 4,
-        'border-left': row % 5 === 0,
-        'border-right': row % 5 === 4,
-      }),
-    [column, row]
-  )
 
   return <div className={className}>{finished ? getCellResult() : getCellButton()}</div>
 }
