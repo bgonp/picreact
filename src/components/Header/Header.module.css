@@ -13,17 +13,20 @@
 }
 
 .button {
-  border: none;
+  align-items: center;
   background: var(--clear-background);
+  border-radius: 9999px;
+  border: none;
   color: var(--main-text-color);
   cursor: pointer;
-  text-decoration: none;
-  padding: 0.3rem 0.8rem;
-  border-radius: 9999px;
-  font-weight: 400;
-  font-size: 1rem;
+  display: flex;
   font-family: var(--main-font-family);
+  font-size: 1rem;
+  font-weight: 400;
+  justify-content: center;
   line-height: 1;
+  padding: 0.3rem 0.8rem;
+  text-decoration: none;
 }
 
 .button:focus {
