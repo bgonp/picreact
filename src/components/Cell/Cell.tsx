@@ -63,7 +63,7 @@ export const Cell: FC<Props> = (props) => {
       else if (state === CellState.Filled) setState(column, row, CellState.Cross)
       else if (state === CellState.Cross) setState(column, row, CellState.Empty)
     },
-    [column, row, state]
+    [column, row, state, setState]
   )
 
   const handleMouseDown = useCallback<(e: MouseEvent) => void>(
@@ -88,7 +88,7 @@ export const Cell: FC<Props> = (props) => {
     if (state === lastState) return
     if (isRightClicked && state !== CellState.Filled) setState(column, row, lastState)
     else if (isLeftClicked && state !== CellState.Cross) setState(column, row, lastState)
-  }, [column, row, isLeftClicked, isRightClicked, lastState])
+  }, [column, row, isLeftClicked, isRightClicked, lastState, state, setState])
 
   const getCellResult = useCallback<() => ReactElement>(
     () => (

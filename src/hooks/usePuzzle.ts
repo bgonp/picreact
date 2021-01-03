@@ -55,7 +55,7 @@ export const usePuzzle = (): usePuzzleType => {
 
   const resetState = useCallback<() => void>(() => {
     if (puzzle && !finished) setStateValue(createState(puzzle))
-  }, [puzzle, finished])
+  }, [puzzle, finished, setStateValue])
 
   const setState = useCallback<(c: number, r: number, value: CellState) => void>(
     (c, r, value) => {
@@ -66,21 +66,24 @@ export const usePuzzle = (): usePuzzleType => {
         })
       )
     },
-    []
+    [setStateValue]
   )
 
-  const setPuzzle = useCallback<(puzzle: PuzzleType) => void>((puzzle) => {
-    setFinishedValue(false)
-    setPuzzleValue(puzzle)
-    setCodeValue(encodePuzzle(puzzle))
-    setStateValue(createState(puzzle))
-  }, [])
+  const setPuzzle = useCallback<(puzzle: PuzzleType) => void>(
+    (puzzle) => {
+      setFinishedValue(false)
+      setPuzzleValue(puzzle)
+      setCodeValue(encodePuzzle(puzzle))
+      setStateValue(createState(puzzle))
+    },
+    [setCodeValue, setStateValue]
+  )
 
   const setFinished = useCallback<() => void>(() => {
     setFinishedValue(true)
     cleanCodeStorage()
     cleanStateStorage()
-  }, [])
+  }, [cleanCodeStorage, cleanStateStorage])
 
   useEffect(() => {
     if (!code) return
@@ -91,7 +94,7 @@ export const usePuzzle = (): usePuzzleType => {
     } else {
       setPuzzleValue(puzzle)
     }
-  }, [])
+  }, [code, finished, state, cleanCodeStorage, cleanStateStorage])
 
   return {
     code,

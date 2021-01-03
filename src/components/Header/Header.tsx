@@ -25,7 +25,7 @@ const Header = () => {
 
   const isRouteCreate = pathname === ROUTE_CREATE
 
-  const hidePuzzleButtons = !isRoutePlay && !puzzle
+  const hidePuzzleButtons = !isRoutePlay || !puzzle
 
   const playClassName = classNames(styles.button, { [styles.current]: isRoutePlay })
 
