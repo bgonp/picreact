@@ -1,4 +1,12 @@
-import { FC, MouseEvent, ReactElement, useCallback, useContext, useMemo } from 'react'
+import {
+  FC,
+  MouseEvent,
+  TouchEvent,
+  ReactElement,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react'
 import classNames from 'classnames'
 
 import { CrossIcon } from 'components/icons'
@@ -10,13 +18,15 @@ import styles from './Cell.module.css'
 
 type Props = {
   column: number
-  isClicked: boolean
+  isLeftClicked: boolean
+  isRightClicked: boolean
   lastState: CellState
   row: number
   setLastState: (state: CellState) => void
 }
 
-export const Cell: FC<Props> = ({ column, isClicked, lastState, row, setLastState }) => {
+export const Cell: FC<Props> = (props) => {
+  const { column, isLeftClicked, isRightClicked, lastState, row, setLastState } = props
   const { finished, puzzle, getState, setState } = useContext(PuzzleContext)
 
   const state = useMemo<CellState>(() => {
@@ -42,34 +52,43 @@ export const Cell: FC<Props> = ({ column, isClicked, lastState, row, setLastStat
     [column, row]
   )
 
-  const handleContextMenu = useCallback<(e: MouseEvent) => void>(
+  const handleContextMenu = useCallback<(e: MouseEvent) => void>((e) => {
+    e.preventDefault()
+  }, [])
+
+  const handleTouchEnd = useCallback<(e: TouchEvent) => void>(
     (e) => {
       e.preventDefault()
-      if (state === CellState.Cross) setState(column, row, CellState.Empty)
-      else if (state === CellState.Empty) setState(column, row, CellState.Cross)
+      if (state === CellState.Empty) setState(column, row, CellState.Filled)
+      else if (state === CellState.Filled) setState(column, row, CellState.Cross)
+      else if (state === CellState.Cross) setState(column, row, CellState.Empty)
     },
-    [column, row, state, setState]
+    [column, row, state]
   )
 
   const handleMouseDown = useCallback<(e: MouseEvent) => void>(
     ({ button }) => {
-      if (button !== 0) return
-      if (state === CellState.Filled) {
-        setState(column, row, CellState.Empty)
-        setLastState(CellState.Empty)
-      } else if (state === CellState.Empty) {
-        setState(column, row, CellState.Filled)
-        setLastState(CellState.Filled)
+      let newState: CellState = CellState.Empty
+      if (button === 0) {
+        if (state === CellState.Cross) return
+        if (state === CellState.Empty) newState = CellState.Filled
+      } else if (button === 2) {
+        if (state === CellState.Filled) return
+        if (state === CellState.Empty) newState = CellState.Cross
+      } else {
+        return
       }
+      setLastState(newState)
+      setState(column, row, newState)
     },
     [column, row, state, setLastState, setState]
   )
 
   const handleMouseEnter = useCallback<() => void>(() => {
-    if (isClicked && state !== CellState.Cross && state !== lastState) {
-      setState(column, row, lastState)
-    }
-  }, [column, row, isClicked, lastState])
+    if (state === lastState) return
+    if (isRightClicked && state !== CellState.Filled) setState(column, row, lastState)
+    else if (isLeftClicked && state !== CellState.Cross) setState(column, row, lastState)
+  }, [column, row, isLeftClicked, isRightClicked, lastState])
 
   const getCellResult = useCallback<() => ReactElement>(
     () => (
@@ -87,14 +106,15 @@ export const Cell: FC<Props> = ({ column, isClicked, lastState, row, setLastStat
     return (
       <button
         className={buttonClassName}
+        onContextMenu={handleContextMenu}
+        onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
         onMouseEnter={handleMouseEnter}
-        onContextMenu={handleContextMenu}
       >
         {state === CellState.Cross && <CrossIcon />}
       </button>
     )
-  }, [state, handleContextMenu, handleMouseDown, handleMouseEnter])
+  }, [state, handleContextMenu, handleMouseDown, handleMouseEnter, handleTouchEnd])
 
   return <div className={className}>{finished ? getCellResult() : getCellButton()}</div>
 }

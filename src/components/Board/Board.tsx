@@ -15,6 +15,7 @@ export const Board: FC<Props> = ({ puzzle }) => {
 
   const {
     isLeftClicked,
+    isRightClicked,
     handleMouseDown,
     handleMouseUp,
     handleMouseLeave,
@@ -27,17 +28,18 @@ export const Board: FC<Props> = ({ puzzle }) => {
         cells.push(
           <Cell
             key={`${i}-${j}`}
-            isClicked={isLeftClicked}
-            lastState={lastState}
-            setLastState={setLastState}
             column={i}
             row={j}
+            isLeftClicked={isLeftClicked}
+            isRightClicked={isRightClicked}
+            lastState={lastState}
+            setLastState={setLastState}
           />
         )
       }
     }
     return cells
-  }, [isLeftClicked, puzzle])
+  }, [isLeftClicked, isRightClicked, puzzle])
 
   const help = useMemo<{ columns: ReactElement[]; rows: ReactElement[] }>(() => {
     const columns = []
