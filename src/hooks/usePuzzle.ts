@@ -13,6 +13,7 @@ export type usePuzzleType = {
   finished: boolean
   puzzle: PuzzleType | null
   getState: (c: number, r: number) => CellState
+  resetState: () => void
   setFinished: () => void
   setPuzzle: (puzzle: PuzzleType) => void
   setState: (c: number, r: number, value: CellState) => void
@@ -23,6 +24,7 @@ export const initialPuzzleState = {
   finished: false,
   puzzle: null,
   getState: () => CellState.Empty,
+  resetState: () => {},
   setFinished: () => {},
   setPuzzle: () => {},
   setState: () => {},
@@ -50,6 +52,10 @@ export const usePuzzle = (): usePuzzleType => {
     },
     [state]
   )
+
+  const resetState = useCallback<() => void>(() => {
+    if (puzzle && !finished) setStateValue(createState(puzzle))
+  }, [puzzle, finished])
 
   const setState = useCallback<(c: number, r: number, value: CellState) => void>(
     (c, r, value) => {
@@ -92,6 +98,7 @@ export const usePuzzle = (): usePuzzleType => {
     finished,
     puzzle,
     getState,
+    resetState,
     setFinished,
     setPuzzle,
     setState,

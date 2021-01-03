@@ -1,4 +1,4 @@
 import ReactDOM from 'react-dom'
-import Wrapper from 'components/Wrapper'
+import Main from 'components/Main'
 
-ReactDOM.render(<Wrapper />, document.getElementById('root'))
+ReactDOM.render(<Main />, document.getElementById('root'))

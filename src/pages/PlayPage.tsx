@@ -1,23 +1,21 @@
-import { FC, useContext } from 'react'
+import { FC, ReactElement, useContext, useMemo } from 'react'
 
 import Board from 'components/Board'
+import Loading from 'components/Loading'
+import Wrapper from 'components/Wrapper'
 import { MainContext } from 'contexts/MainContext'
 import { createPuzzle } from 'utils/puzzleGenerator'
-import Header from 'components/Header'
-import Footer from 'components/Footer'
 
 const PlayPage: FC<{}> = () => {
-  const { puzzle, setPuzzle } = useContext(MainContext)
+  const { code, puzzle, setPuzzle } = useContext(MainContext)
 
-  if (!puzzle) return <button onClick={() => setPuzzle(createPuzzle(10))}>JUGAR!</button>
+  const content = useMemo<ReactElement>(() => {
+    if (!code) return <button onClick={() => setPuzzle(createPuzzle(10))}>JUGAR!</button> // TODO
+    if (!puzzle) return <Loading />
+    return <Board puzzle={puzzle} />
+  }, [code, puzzle])
 
-  return (
-    <div id="play-page">
-      <Header />
-      <Board puzzle={puzzle} />
-      <Footer />
-    </div>
-  )
+  return <Wrapper>{content}</Wrapper>
 }
 
 export default PlayPage

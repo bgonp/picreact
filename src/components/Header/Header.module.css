@@ -1,0 +1,35 @@
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 2rem;
+  background: var(--main-background);
+}
+
+.menu {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button {
+  border: none;
+  background: var(--clear-background);
+  color: var(--main-text-color);
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  font-weight: 400;
+  font-size: 1rem;
+  font-family: var(--main-font-family);
+  line-height: 1;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.current {
+  background: var(--secondary-background);
+}

@@ -1,0 +1,43 @@
+.board {
+  margin: 1rem auto;
+  width: fit-content;
+}
+
+.content {
+  display: grid;
+  grid-template: 120px 1fr / 85px 1fr;
+}
+
+.helpColumn {
+  display: grid;
+  grid-column-start: 2;
+  grid-template-columns: repeat(var(--puzzle-size), 30px);
+  width: 100%;
+
+  & .singleHelp {
+    flex-direction: column;
+  }
+}
+
+.helpRow {
+  display: grid;
+  grid-template-rows: repeat(var(--puzzle-size), 30px);
+  height: 100%;
+}
+
+.singleHelp {
+  align-items: center;
+  color: var(--main-text-color);
+  display: flex;
+  font-weight: 600;
+  gap: 5px;
+  justify-content: flex-end;
+  padding: 5px 10px;
+}
+
+.cells {
+  border: 1px solid var(--border-color-hard);
+  display: grid;
+  grid-template-columns: repeat(var(--puzzle-size), 30px);
+  width: fit-content;
+}

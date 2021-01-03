@@ -2,7 +2,7 @@ import { FC, useMemo, ReactElement } from 'react'
 import Cell from 'components/Cell'
 import { PuzzleType } from 'models/Puzzle'
 
-import './Board.css'
+import styles from './Board.module.css'
 
 type Props = {
   puzzle: PuzzleType
@@ -24,14 +24,14 @@ export const Board: FC<Props> = ({ puzzle }) => {
     const rows = []
     for (let i = 0; i < puzzle.size; i++) {
       rows.push(
-        <div className="help row" key={`r-${i}`}>
+        <div className={styles.singleHelp} key={`r-${i}`}>
           {puzzle.getRowHelp(i).map((n, j) => (
             <span key={`r-${i}-${j}`}>{n}</span>
           ))}
         </div>
       )
       columns.push(
-        <div className="help column" key={`c-${i}`}>
+        <div className={styles.singleHelp} key={`c-${i}`}>
           {puzzle.getColumnHelp(i).map((n, j) => (
             <span key={`r-${i}-${j}`}>{n}</span>
           ))}
@@ -42,13 +42,13 @@ export const Board: FC<Props> = ({ puzzle }) => {
   }, [puzzle])
 
   return (
-    <div id="board">
-      <div className="content">
-        <div className="column-help">{help.columns}</div>
-        <div className="row-help">{help.rows}</div>
-        <div className="board">{cells}</div>
+    <main className={styles.board}>
+      <div className={styles.content}>
+        <div className={styles.helpColumn}>{help.columns}</div>
+        <div className={styles.helpRow}>{help.rows}</div>
+        <div className={styles.cells}>{cells}</div>
       </div>
-    </div>
+    </main>
   )
 }
 

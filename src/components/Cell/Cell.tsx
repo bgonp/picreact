@@ -1,10 +1,12 @@
 import { FC, MouseEvent, ReactElement, useCallback, useContext, useMemo } from 'react'
 import classNames from 'classnames'
 
+import { CrossIcon } from 'components/icons'
 import { MainContext } from 'contexts/MainContext'
-import { CellState } from 'models/State'
-import CrossIcon from './CrossIcon'
 import { Color } from 'models/Color'
+import { CellState } from 'models/State'
+
+import styles from './Cell.module.css'
 
 type Props = {
   column: number
@@ -28,11 +30,11 @@ export const Cell: FC<Props> = ({ column, row }) => {
 
   const className = useMemo<string>(
     () =>
-      classNames('cell', {
-        'border-top': column % 5 === 0,
-        'border-bottom': column % 5 === 4,
-        'border-left': row % 5 === 0,
-        'border-right': row % 5 === 4,
+      classNames(styles.cell, {
+        [styles.borderTop]: column % 5 === 0,
+        [styles.borderBottom]: column % 5 === 4,
+        [styles.borderLeft]: row % 5 === 0,
+        [styles.borderRight]: row % 5 === 4,
       }),
     [column, row]
   )
@@ -57,7 +59,7 @@ export const Cell: FC<Props> = ({ column, row }) => {
 
   const getCellResult = useCallback<() => ReactElement>(
     () => (
-      <div className={`${isFilled ? 'filled' : 'unfilled'}`}>
+      <div className={`${styles.inner} ${isFilled ? styles.filled : ''}`}>
         {isError && <CrossIcon color={Color.Error} />}
       </div>
     ),
@@ -65,15 +67,16 @@ export const Cell: FC<Props> = ({ column, row }) => {
   )
 
   const getCellButton = useCallback<() => ReactElement>(() => {
+    const buttonClassName = classNames(styles.inner, styles.button, {
+      [styles.filled]: state === CellState.Filled,
+    })
     return (
       <button
-        className="button"
+        className={buttonClassName}
         onClick={toggleFilledState}
         onContextMenu={toggleCrossState}
       >
-        <div className={`state-${state}`}>
-          {state === CellState.Cross && <CrossIcon />}
-        </div>
+        {state === CellState.Cross && <CrossIcon />}
       </button>
     )
   }, [state, toggleCrossState, toggleFilledState])

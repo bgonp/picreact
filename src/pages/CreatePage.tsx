@@ -1,13 +1,13 @@
-import Footer from 'components/Footer'
-import Header from 'components/Header'
+import { FC } from 'react'
 
-const CreatePage = () => {
+import Wrapper from 'components/Wrapper'
+import Create from 'components/Create'
+
+const CreatePage: FC<{}> = () => {
   return (
-    <div id="create-page">
-      <Header />
-      CREATE!
-      <Footer />
-    </div>
+    <Wrapper>
+      <Create />
+    </Wrapper>
   )
 }
 

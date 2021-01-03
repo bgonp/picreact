@@ -1,9 +1,9 @@
 import { Puzzle, PuzzleType } from 'models/Puzzle'
 
-const OFFSET = 64
+const CHARS = 'ABCDEFGHIJKLMNkmnopqrstuvwxyz-_.'
 
 const letterToBooleans = (letter: string): boolean[] =>
-  (letter.charCodeAt(0) - OFFSET)
+  CHARS.indexOf(letter)
     .toString(2)
     .padStart(5, '0')
     .split('')
@@ -15,7 +15,7 @@ const booleansToLetter = (booleans: boolean[]): string => {
     (acc, boolean) => acc + (boolean ? '1' : '0'),
     ''
   )
-  return String.fromCharCode(parseInt(binary, 2) + OFFSET)
+  return CHARS[parseInt(binary, 2)]
 }
 
 export const decodePuzzle = (code: string): PuzzleType => {
