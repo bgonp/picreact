@@ -59,14 +59,14 @@ export const usePuzzle = (): usePuzzleType => {
 
   const setState = useCallback<(c: number, r: number, value: CellState) => void>(
     (c, r, value) => {
-      setStateValue(
+      setStateValue((state: BoardState) =>
         state.map((row, i) => {
           if (i !== c) return [...row]
           return row.map((cell, j) => (j !== r ? cell : value))
         })
       )
     },
-    [state]
+    []
   )
 
   const setPuzzle = useCallback<(puzzle: PuzzleType) => void>((puzzle) => {
