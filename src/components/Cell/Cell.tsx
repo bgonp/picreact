@@ -2,7 +2,7 @@ import { FC, MouseEvent, ReactElement, useCallback, useContext, useMemo } from '
 import classNames from 'classnames'
 
 import { CrossIcon } from 'components/icons'
-import { MainContext } from 'contexts/MainContext'
+import { PuzzleContext } from 'contexts/PuzzleContext'
 import { Color } from 'models/Color'
 import { CellState } from 'models/State'
 
@@ -17,7 +17,7 @@ type Props = {
 }
 
 export const Cell: FC<Props> = ({ column, isClicked, lastState, row, setLastState }) => {
-  const { finished, puzzle, getState, setState } = useContext(MainContext)
+  const { finished, puzzle, getState, setState } = useContext(PuzzleContext)
 
   const state = useMemo<CellState>(() => {
     return getState(column, row)
