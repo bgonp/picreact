@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-export type useLocalStorageType<T> = [T, (value: T) => void, () => void]
+type useLocalStorageType<T> = [T, (value: T | ((state: T) => T)) => void, () => void]
 
 export const useLocalStorage = <T>(
   key: string,
@@ -18,7 +18,7 @@ export const useLocalStorage = <T>(
     }
   )
 
-  const setStoredValue = useCallback<(value: T) => void>(
+  const setStoredValue = useCallback<(value: T | ((state: T) => T)) => void>(
     (value) => {
       setValue(value)
       try {
