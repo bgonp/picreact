@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 type useLocalStorageType<T> = [T, (value: T | ((state: T) => T)) => void, () => void]
 
@@ -18,18 +18,6 @@ export const useLocalStorage = <T>(
     }
   )
 
-  const setStoredValue = useCallback<(value: T | ((state: T) => T)) => void>(
-    (value) => {
-      setValue(value)
-      try {
-        localStorage.setItem(key, JSON.stringify(value))
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    [key]
-  )
-
   const cleanStorage = useCallback<() => void>(() => {
     try {
       localStorage.removeItem(key)
@@ -38,5 +26,13 @@ export const useLocalStorage = <T>(
     }
   }, [key])
 
-  return [value, setStoredValue, cleanStorage]
+  useEffect(() => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value))
+    } catch (error) {
+      console.error(error)
+    }
+  }, [key, value])
+
+  return [value, setValue, cleanStorage]
 }
