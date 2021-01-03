@@ -10,10 +10,13 @@ import styles from './Cell.module.css'
 
 type Props = {
   column: number
+  isClicked: boolean
+  lastState: CellState
   row: number
+  setLastState: (state: CellState) => void
 }
 
-export const Cell: FC<Props> = ({ column, row }) => {
+export const Cell: FC<Props> = ({ column, isClicked, lastState, row, setLastState }) => {
   const { finished, puzzle, getState, setState } = useContext(MainContext)
 
   const state = useMemo<CellState>(() => {
@@ -39,23 +42,34 @@ export const Cell: FC<Props> = ({ column, row }) => {
     [column, row]
   )
 
-  const toggleCrossState = useCallback<(e: MouseEvent) => void>(
+  const handleContextMenu = useCallback<(e: MouseEvent) => void>(
     (e) => {
       e.preventDefault()
       if (state === CellState.Cross) setState(column, row, CellState.Empty)
       else if (state === CellState.Empty) setState(column, row, CellState.Cross)
     },
-    [state, setState]
+    [column, row, state, setState]
   )
 
-  const toggleFilledState = useCallback<(e: MouseEvent) => void>(
-    (e) => {
-      e.preventDefault()
-      if (state === CellState.Filled) setState(column, row, CellState.Empty)
-      else if (state === CellState.Empty) setState(column, row, CellState.Filled)
+  const handleMouseDown = useCallback<(e: MouseEvent) => void>(
+    ({ button }) => {
+      if (button !== 0) return
+      if (state === CellState.Filled) {
+        setState(column, row, CellState.Empty)
+        setLastState(CellState.Empty)
+      } else if (state === CellState.Empty) {
+        setState(column, row, CellState.Filled)
+        setLastState(CellState.Filled)
+      }
     },
-    [state, setState]
+    [column, row, state, setLastState, setState]
   )
+
+  const handleMouseEnter = useCallback<() => void>(() => {
+    if (isClicked && state !== CellState.Cross && state !== lastState) {
+      setState(column, row, lastState)
+    }
+  }, [column, row, isClicked, lastState])
 
   const getCellResult = useCallback<() => ReactElement>(
     () => (
@@ -73,13 +87,14 @@ export const Cell: FC<Props> = ({ column, row }) => {
     return (
       <button
         className={buttonClassName}
-        onClick={toggleFilledState}
-        onContextMenu={toggleCrossState}
+        onMouseDown={handleMouseDown}
+        onMouseEnter={handleMouseEnter}
+        onContextMenu={handleContextMenu}
       >
         {state === CellState.Cross && <CrossIcon />}
       </button>
     )
-  }, [state, toggleCrossState, toggleFilledState])
+  }, [state, handleContextMenu, handleMouseDown, handleMouseEnter])
 
   return <div className={className}>{finished ? getCellResult() : getCellButton()}</div>
 }

@@ -9,14 +9,14 @@ import {
   ROUTE_PLAY,
   ROUTE_ROOT,
 } from 'constants/router.constants'
-import { MainContext } from 'contexts/MainContext'
+import { PuzzleContext } from 'contexts/PuzzleContext'
 import { createPuzzle } from 'utils/puzzleGenerator'
 
 import styles from './Header.module.css'
 
 const Header = () => {
   const { code, finished, puzzle, resetState, setFinished, setPuzzle } = useContext(
-    MainContext
+    PuzzleContext
   )
 
   const { pathname } = useLocation()

@@ -4,12 +4,12 @@ import { useHistory, useParams } from 'react-router-dom'
 import Loading from 'components/Loading'
 import Wrapper from 'components/Wrapper'
 import { ROUTE_PLAY } from 'constants/router.constants'
-import { MainContext } from 'contexts/MainContext'
+import { PuzzleContext } from 'contexts/PuzzleContext'
 import { decodePuzzle } from 'utils/puzzleEncoder'
 
 const LoadPage: FC<{}> = () => {
   // TODO: Error control
-  const { setPuzzle } = useContext(MainContext)
+  const { setPuzzle } = useContext(PuzzleContext)
 
   const { code } = useParams<{ code: string }>()
 

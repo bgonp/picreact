@@ -1,12 +1,12 @@
 import { FC } from 'react'
 
-import { MainContextProvider } from 'contexts/MainContext'
+import { PuzzleContextProvider } from 'contexts/PuzzleContext'
 import Router from 'router/Router'
 
 const Wrapper: FC<{}> = () => (
-  <MainContextProvider>
+  <PuzzleContextProvider>
     <Router />
-  </MainContextProvider>
+  </PuzzleContextProvider>
 )
 
 export default Wrapper
