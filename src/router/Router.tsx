@@ -2,17 +2,19 @@ import { FC } from 'react'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import CreatePage from 'pages/CreatePage'
+import HomePage from 'pages/HomePage'
 import LoadPage from 'pages/LoadPage'
 import PlayPage from 'pages/PlayPage'
-import { ROUTE_CREATE, ROUTE_LOAD, ROUTE_PLAY } from 'constants/router.constants'
+import ROUTES from 'constants/router.constants'
 
 const Router: FC<{}> = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path={ROUTE_CREATE} component={CreatePage} />
-      <Route exact path={ROUTE_LOAD} component={LoadPage} />
-      <Route exact path={ROUTE_PLAY} component={PlayPage} />
-      <Redirect to={ROUTE_PLAY} />
+      <Route exact path={ROUTES.CREATE} component={CreatePage} />
+      <Route exact path={ROUTES.HOME} component={HomePage} />
+      <Route exact path={ROUTES.LOAD} component={LoadPage} />
+      <Route exact path={ROUTES.PLAY} component={PlayPage} />
+      <Redirect to={ROUTES.PLAY} />
     </Switch>
   </BrowserRouter>
 )
