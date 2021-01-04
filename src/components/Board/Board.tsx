@@ -1,4 +1,6 @@
 import { FC, ReactElement, useMemo, useState } from 'react'
+import classNames from 'classnames'
+
 import Cell from 'components/Cell'
 import { useClickControl } from 'hooks/useClickControl'
 import { PuzzleType } from 'models/Puzzle'
@@ -39,7 +41,7 @@ export const Board: FC<Props> = ({ puzzle }) => {
       }
     }
     return cells
-  }, [isLeftClicked, isRightClicked, puzzle])
+  }, [isLeftClicked, isRightClicked, lastState, puzzle])
 
   const help = useMemo<{ columns: ReactElement[]; rows: ReactElement[] }>(() => {
     const columns = []
@@ -63,8 +65,16 @@ export const Board: FC<Props> = ({ puzzle }) => {
     return { columns, rows }
   }, [puzzle])
 
+  const className = classNames(styles.board, {
+    [styles.size5]: puzzle.size === 5,
+    [styles.size10]: puzzle.size === 10,
+    [styles.size15]: puzzle.size === 15,
+    [styles.size20]: puzzle.size === 20,
+    [styles.size25]: puzzle.size === 25,
+  })
+
   return (
-    <main className={styles.board}>
+    <div className={className}>
       <div
         className={styles.content}
         onMouseDown={handleMouseDown}
@@ -75,7 +85,7 @@ export const Board: FC<Props> = ({ puzzle }) => {
         <div className={styles.helpRow}>{help.rows}</div>
         <div className={styles.cells}>{cells}</div>
       </div>
-    </main>
+    </div>
   )
 }
 
