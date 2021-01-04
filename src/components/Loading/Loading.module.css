@@ -15,7 +15,7 @@
 .spinner {
   animation: spin 1.2s linear infinite;
   border: 0.5rem solid #0001;
-  border-top-color: var(--main-background);
+  border-top-color: var(--blue-main);
   border-radius: 50%;
   height: 3rem;
   width: 3rem;

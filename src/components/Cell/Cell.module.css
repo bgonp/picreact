@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--border-color-soft);
+  border: 1px solid var(--black-transparent);
 }
 
 .inner {
@@ -38,21 +38,21 @@
 }
 
 .filled {
-  background-color: var(--cell-filled-color);
+  background-color: var(--black-main);
 }
 
 .borderTop {
-  border-top: 1px solid var(--border-color-hard);
+  border-top: 1px solid var(--black-opaque);
 }
 
 .borderRight {
-  border-right: 1px solid var(--border-color-hard);
+  border-right: 1px solid var(--black-opaque);
 }
 
 .borderBottom {
-  border-bottom: 1px solid var(--border-color-hard);
+  border-bottom: 1px solid var(--black-opaque);
 }
 
 .borderLeft {
-  border-left: 1px solid var(--border-color-hard);
+  border-left: 1px solid var(--black-opaque);
 }
