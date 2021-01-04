@@ -13,7 +13,7 @@ const Wrapper: FC<Props> = ({ children }) => {
   return (
     <div className={styles.wrapper}>
       <Header />
-      {children}
+      <main className={styles.main}>{children}</main>
       <Footer />
     </div>
   )

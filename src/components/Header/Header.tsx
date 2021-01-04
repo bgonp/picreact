@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { generatePath, Link, useLocation } from 'react-router-dom'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import classNames from 'classnames'
@@ -20,6 +20,8 @@ const Header = () => {
   )
 
   const { pathname } = useLocation()
+
+  const [size, setSize] = useState<number>(10)
 
   const isRoutePlay = pathname === ROUTE_PLAY
 
@@ -49,17 +51,27 @@ const Header = () => {
           <>
             {!finished && (
               <>
-                <button className={styles.button} onClick={() => resetState()}>
+                <button className={styles.button} onClick={resetState}>
                   RESET
                 </button>
-                <button className={styles.button} onClick={() => setFinished()}>
+                <button className={styles.button} onClick={setFinished}>
                   RESOLVE
                 </button>
               </>
             )}
-            <button className={styles.button} onClick={() => setPuzzle(createPuzzle(10))}>
+            <button
+              className={styles.button}
+              onClick={() => setPuzzle(createPuzzle(size))}
+            >
               RANDOM
             </button>
+            <select onChange={(e) => setSize(parseInt(e.target.value))} value={size}>
+              <option value="5">5x5</option>
+              <option value="10">10x10</option>
+              <option value="15">15x15</option>
+              <option value="20">20x20</option>
+              <option value="25">25x25</option>
+            </select>
             <CopyToClipboard text={shareUrl}>
               <button className={styles.button}>COPY LINK</button>
             </CopyToClipboard>

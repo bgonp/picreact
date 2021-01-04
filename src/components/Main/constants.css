@@ -1,12 +1,12 @@
 :root {
-  --puzzle-size: 10;
+  --puzzle-size: 15;
   --main-text-color: #555;
   --border-color-hard: #444a;
   --border-color-soft: #4443;
   --cell-filled-color: #444;
   --main-background: #09f;
   --secondary-background: #def;
-  --clear-background: #fff;
+  --plain-white: #fff;
   --main-font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   --white-transparent: #fffd;
 }

@@ -1,8 +1,4 @@
 .header {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
   padding: 1rem 2rem;
   background: var(--main-background);
 }
@@ -14,7 +10,7 @@
 
 .button {
   align-items: center;
-  background: var(--clear-background);
+  background: var(--plain-white);
   border-radius: 9999px;
   border: none;
   color: var(--main-text-color);
