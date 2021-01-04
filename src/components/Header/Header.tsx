@@ -1,14 +1,9 @@
 import { useContext, useMemo, useState } from 'react'
-import { generatePath, Link, useLocation } from 'react-router-dom'
+import { generatePath, useLocation } from 'react-router-dom'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import classNames from 'classnames'
 
-import {
-  ROUTE_CREATE,
-  ROUTE_LOAD,
-  ROUTE_PLAY,
-  ROUTE_ROOT,
-} from 'constants/router.constants'
+import Button from 'components/Button'
+import ROUTES from 'constants/router.constants'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { createPuzzle } from 'utils/puzzleGenerator'
 
@@ -23,48 +18,41 @@ const Header = () => {
 
   const [size, setSize] = useState<number>(10)
 
-  const isRoutePlay = pathname === ROUTE_PLAY
+  const isRoutePlay = pathname === ROUTES.PLAY
 
-  const isRouteCreate = pathname === ROUTE_CREATE
+  const isRouteCreate = pathname === ROUTES.CREATE
 
   const hidePuzzleButtons = !isRoutePlay || !puzzle
 
-  const playClassName = classNames(styles.button, { [styles.current]: isRoutePlay })
-
-  const createClassName = classNames(styles.button, { [styles.current]: isRouteCreate })
-
   const shareUrl = useMemo<string>(
-    () => (code ? ROUTE_ROOT + generatePath(ROUTE_LOAD, { code }) : ''),
+    () => (code ? ROUTES.ROOT + generatePath(ROUTES.LOAD, { code }) : ''),
     [code]
   )
 
   return (
     <header className={styles.header}>
       <nav className={styles.menu}>
-        <Link className={playClassName} to={ROUTE_PLAY}>
-          PLAY
-        </Link>
-        <Link className={createClassName} to={ROUTE_CREATE}>
+        <Button to={ROUTES.CREATE} white primary={isRouteCreate}>
           CREATE
-        </Link>
+        </Button>
         {!hidePuzzleButtons && (
           <>
+            <Button to={ROUTES.PLAY} white primary={isRoutePlay}>
+              PLAY
+            </Button>
             {!finished && (
               <>
-                <button className={styles.button} onClick={resetState}>
+                <Button onClick={resetState} white>
                   RESET
-                </button>
-                <button className={styles.button} onClick={setFinished}>
+                </Button>
+                <Button onClick={setFinished} white>
                   RESOLVE
-                </button>
+                </Button>
               </>
             )}
-            <button
-              className={styles.button}
-              onClick={() => setPuzzle(createPuzzle(size))}
-            >
-              RANDOM
-            </button>
+            <Button onClick={() => setPuzzle(createPuzzle(size))} white>
+              NEW PUZZLE
+            </Button>
             <select onChange={(e) => setSize(parseInt(e.target.value))} value={size}>
               <option value="5">5x5</option>
               <option value="10">10x10</option>
@@ -73,7 +61,9 @@ const Header = () => {
               <option value="25">25x25</option>
             </select>
             <CopyToClipboard text={shareUrl}>
-              <button className={styles.button}>COPY LINK</button>
+              <Button onClick={() => alert('Copied!')} white>
+                COPY LINK
+              </Button>
             </CopyToClipboard>
           </>
         )}

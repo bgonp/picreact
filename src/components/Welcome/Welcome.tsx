@@ -3,14 +3,14 @@ import { FC, useContext } from 'react'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { createPuzzle } from 'utils/puzzleGenerator'
 
-import styles from './Welcome.module.css'
+import Button from 'components/Button'
 
 const Welcome: FC<{}> = () => {
   const { setPuzzle } = useContext(PuzzleContext)
   return (
-    <button className={styles.button} onClick={() => setPuzzle(createPuzzle(10))}>
+    <Button primary large onClick={() => setPuzzle(createPuzzle(10))}>
       CREATE NEW RANDOM PUZZLE
-    </button>
+    </Button>
   )
 }
 
