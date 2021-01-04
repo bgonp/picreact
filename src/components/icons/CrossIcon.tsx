@@ -3,18 +3,11 @@ import { FC } from 'react'
 
 type Props = {
   color?: Color
-  height?: number
-  width?: number
 }
 
-const CrossIcon: FC<Props> = ({ color = Color.Black, height = 24, width = 24 }) => {
+const CrossIcon: FC<Props> = ({ color = Color.Black }) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox={`0 0 24 24`}>
       <g fill="none" fillRule="evenodd">
         <path d="M0 0h24v24H0z" />
         <path
