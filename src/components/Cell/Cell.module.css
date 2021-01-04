@@ -26,14 +26,19 @@
   box-shadow: none;
   padding: 0;
   cursor: pointer;
-}
 
-.filled {
-  background-color: var(--cell-filled-color);
+  & svg {
+    min-width: 80%;
+    min-height: 80%;
+  }
 }
 
 .button:focus {
   outline: none;
+}
+
+.filled {
+  background-color: var(--cell-filled-color);
 }
 
 .borderTop {
