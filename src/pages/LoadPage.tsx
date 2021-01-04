@@ -20,7 +20,7 @@ const LoadPage: FC<{}> = () => {
   useEffect(() => {
     setPuzzle(decodePuzzle(code))
     setLoaded(true)
-  }, [])
+  }, [code, setPuzzle])
 
   if (loaded) history.push(ROUTE_PLAY)
 
