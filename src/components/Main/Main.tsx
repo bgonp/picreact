@@ -5,7 +5,7 @@ import Router from 'router/Router'
 
 import 'assets/styles/index.css'
 
-const Wrapper: FC<{}> = () => (
+const Wrapper: FC = () => (
   <PuzzleContextProvider>
     <Router />
   </PuzzleContextProvider>

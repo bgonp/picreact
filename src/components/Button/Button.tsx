@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react'
-import { Link } from 'react-router-dom'
 import classNames from 'classnames'
+import { Link } from 'wouter'
 
 import styles from './Button.module.css'
 
@@ -44,7 +44,7 @@ const Button: FC<Props> = ({
 
   if (!disabled && to !== null)
     return (
-      <Link className={className} to={to}>
+      <Link className={className} href={to}>
         {children}
       </Link>
     )

@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect } from 'react'
-import { Redirect, useParams } from 'react-router-dom'
+import { useLocation } from 'wouter'
 
 import Loading from 'components/Loading'
 import Wrapper from 'components/Wrapper'
@@ -7,17 +7,20 @@ import { ROUTE_PLAY } from 'constants/router.constants'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { decodePuzzle } from 'utils/puzzleEncoder'
 
-const LoadPage: FC<{}> = () => {
-  // TODO: Error control
-  const { puzzle, setPuzzle } = useContext(PuzzleContext)
+type Props = {
+  code: string
+}
 
-  const { code } = useParams<{ code: string }>()
+const LoadPage: FC<Props> = ({ code }) => {
+  // TODO: Error control
+  const { setPuzzle } = useContext(PuzzleContext)
+
+  const [, navigate] = useLocation()
 
   useEffect(() => {
     setPuzzle(decodePuzzle(code))
-  }, [code, setPuzzle])
-
-  if (puzzle) return <Redirect to={ROUTE_PLAY} />
+    navigate(ROUTE_PLAY)
+  }, [code, navigate, setPuzzle])
 
   return (
     <Wrapper>

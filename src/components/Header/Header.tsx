@@ -1,10 +1,12 @@
-import { useContext, useMemo, useState } from 'react'
-import { generatePath, useLocation } from 'react-router-dom'
+import { useContext, useEffect, useMemo, useState } from 'react'
+import { useRoute } from 'wouter'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 import Button from 'components/Button'
 import ROUTES from 'constants/router.constants'
+import { DEFAULT_SIZE } from 'constants/puzzle.constants'
 import { PuzzleContext } from 'contexts/PuzzleContext'
+import { createUrl } from 'utils/createUrl'
 import { createPuzzle } from 'utils/puzzleGenerator'
 
 import styles from './Header.module.css'
@@ -14,20 +16,21 @@ const Header = () => {
     PuzzleContext
   )
 
-  const { pathname } = useLocation()
+  const [isRoutePlay] = useRoute(ROUTES.PLAY)
 
-  const [size, setSize] = useState<number>(10)
+  const [isRouteCreate] = useRoute(ROUTES.CREATE)
 
-  const isRoutePlay = pathname === ROUTES.PLAY
+  const [size, setSize] = useState<number>(DEFAULT_SIZE)
 
-  const isRouteCreate = pathname === ROUTES.CREATE
+  const shareUrl = useMemo<string>(() => (code ? createUrl(ROUTES.LOAD, { code }) : ''), [
+    code,
+  ])
 
   const hidePuzzleButtons = !isRoutePlay || !puzzle
 
-  const shareUrl = useMemo<string>(
-    () => (code ? ROUTES.ROOT + generatePath(ROUTES.LOAD, { code }) : ''),
-    [code]
-  )
+  useEffect(() => {
+    if (puzzle) setSize(puzzle.size)
+  }, [puzzle])
 
   return (
     <header className={styles.header}>
