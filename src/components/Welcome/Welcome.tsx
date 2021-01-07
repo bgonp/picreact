@@ -1,16 +1,35 @@
-import { FC, useContext } from 'react'
-
-import { PuzzleContext } from 'contexts/PuzzleContext'
-import { createPuzzle } from 'utils/puzzleGenerator'
+import { FC } from 'react'
 
 import Button from 'components/Button'
+import { PuzzleType } from 'models/Puzzle'
+import { createPuzzle } from 'utils/puzzleGenerator'
 
-const Welcome: FC<{}> = () => {
-  const { setPuzzle } = useContext(PuzzleContext)
+import styles from './Welcome.module.css'
+
+type Props = {
+  setPuzzle: (puzzle: PuzzleType) => void
+}
+
+const Welcome: FC<Props> = ({ setPuzzle }) => {
+  const setEasyPuzzle = () => setPuzzle(createPuzzle(10))
+  const setMediumPuzzle = () => setPuzzle(createPuzzle(15))
+  const setHardPuzzle = () => setPuzzle(createPuzzle(20))
+
   return (
-    <Button primary large onClick={() => setPuzzle(createPuzzle(10))}>
-      CREATE NEW RANDOM PUZZLE
-    </Button>
+    <div className={styles.welcome}>
+      <h2 className={styles.title}>CREATE NEW RANDOM PUZZLE</h2>
+      <div className={styles.buttons}>
+        <Button primary large onClick={setEasyPuzzle}>
+          EASY
+        </Button>
+        <Button primary large onClick={setMediumPuzzle}>
+          MEDIUM
+        </Button>
+        <Button primary large onClick={setHardPuzzle}>
+          HARD
+        </Button>
+      </div>
+    </div>
   )
 }
 
