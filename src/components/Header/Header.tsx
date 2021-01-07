@@ -31,15 +31,30 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
+      <h1 className={styles.title}>
+        PIC<span>REACT</span>SS
+      </h1>
       <nav className={styles.menu}>
         <Button to={ROUTES.CREATE} white primary={isRouteCreate}>
           CREATE
         </Button>
+        {puzzle && (
+          <Button to={ROUTES.PLAY} white primary={isRoutePlay}>
+            PLAY
+          </Button>
+        )}
+        <Button onClick={() => setPuzzle(createPuzzle(size))} white>
+          NEW PUZZLE
+        </Button>
+        <select onChange={(e) => setSize(parseInt(e.target.value))} value={size}>
+          <option value="5">5x5</option>
+          <option value="10">10x10</option>
+          <option value="15">15x15</option>
+          <option value="20">20x20</option>
+          <option value="25">25x25</option>
+        </select>
         {!hidePuzzleButtons && (
           <>
-            <Button to={ROUTES.PLAY} white primary={isRoutePlay}>
-              PLAY
-            </Button>
             {!finished && (
               <>
                 <Button onClick={resetState} white>
@@ -50,16 +65,6 @@ const Header = () => {
                 </Button>
               </>
             )}
-            <Button onClick={() => setPuzzle(createPuzzle(size))} white>
-              NEW PUZZLE
-            </Button>
-            <select onChange={(e) => setSize(parseInt(e.target.value))} value={size}>
-              <option value="5">5x5</option>
-              <option value="10">10x10</option>
-              <option value="15">15x15</option>
-              <option value="20">20x20</option>
-              <option value="25">25x25</option>
-            </select>
             <CopyToClipboard text={shareUrl}>
               <Button onClick={() => alert('Copied!')} white>
                 COPY LINK
