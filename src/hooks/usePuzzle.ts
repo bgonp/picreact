@@ -12,22 +12,22 @@ export type usePuzzleType = {
   code: string
   finished: boolean
   puzzle: PuzzleType | null
-  getState: (c: number, r: number) => CellState
+  getCellState: (c: number, r: number) => CellState
   resetState: () => void
   setFinished: () => void
   setPuzzle: (puzzle: PuzzleType) => void
-  setState: (c: number, r: number, value: CellState) => void
+  setCellState: (c: number, r: number) => (value: CellState) => void
 }
 
 export const initialPuzzleState = {
   code: '',
   finished: false,
   puzzle: null,
-  getState: () => CellState.Empty,
+  getCellState: () => CellState.Empty,
   resetState: () => {},
   setFinished: () => {},
   setPuzzle: () => {},
-  setState: () => {},
+  setCellState: () => () => {},
 }
 
 export const usePuzzle = (): usePuzzleType => {
@@ -45,7 +45,7 @@ export const usePuzzle = (): usePuzzleType => {
 
   const [puzzle, setPuzzleValue] = useState<PuzzleType | null>(initialPuzzleState.puzzle)
 
-  const getState = useCallback<(c: number, r: number) => CellState>(
+  const getCellState = useCallback<(c: number, r: number) => CellState>(
     (c, r) => {
       if (state.length === 0) return CellState.Empty
       return state[c][r]
@@ -57,8 +57,8 @@ export const usePuzzle = (): usePuzzleType => {
     if (puzzle && !finished) setStateValue(createState(puzzle))
   }, [puzzle, finished, setStateValue])
 
-  const setState = useCallback<(c: number, r: number, value: CellState) => void>(
-    (c, r, value) => {
+  const setCellState = useCallback<(c: number, r: number) => (value: CellState) => void>(
+    (c, r) => (value) => {
       setStateValue((state: BoardState) =>
         state.map((row, i) => {
           if (i !== c) return [...row]
@@ -100,10 +100,10 @@ export const usePuzzle = (): usePuzzleType => {
     code,
     finished,
     puzzle,
-    getState,
+    getCellState,
     resetState,
     setFinished,
     setPuzzle,
-    setState,
+    setCellState,
   }
 }
