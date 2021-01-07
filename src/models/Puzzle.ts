@@ -5,6 +5,7 @@ export interface PuzzleType {
   isFilled: (column: number, row: number) => boolean
   getColumnHelp: (column: number) => Array<number>
   getRowHelp: (row: number) => Array<number>
+  map: <T>(callback: (column: number, row: number, filled: boolean) => T) => T[]
 }
 
 export class Puzzle implements PuzzleType {
@@ -40,6 +41,16 @@ export class Puzzle implements PuzzleType {
     this.validateIndex(column)
     this.validateIndex(row)
     return this._cells[column][row]
+  }
+
+  map<T>(callback: (column: number, row: number, filled: boolean) => T): T[] {
+    const result = []
+    for (let c = 0; c < this.size; c++) {
+      for (let r = 0; r < this.size; r++) {
+        result.push(callback(c, r, this._cells[c][r]))
+      }
+    }
+    return result
   }
 
   private initCells(cells: Array<Array<boolean>>) {
@@ -82,6 +93,6 @@ export class Puzzle implements PuzzleType {
   }
 
   private validateIndex(index: number): void {
-    if (index < 0 || index >= this.size) throw new Error()
+    if (index < 0 || index >= this.size) console.error(index)
   }
 }
