@@ -80,6 +80,7 @@
 
 .helpColumn {
   display: grid;
+  gap: 2px;
   grid-column-start: 2;
   width: 100%;
   margin-bottom: 0.4rem;
@@ -91,13 +92,14 @@
 
 .helpRow {
   display: grid;
+  gap: 2px;
   height: 100%;
   margin-right: 0.6rem;
 }
 
 .singleHelp {
   align-items: center;
-  color: var(--black-main);
+  color: var(--color-second);
   display: flex;
   font-weight: 600;
   gap: .4rem 0.8rem;
@@ -105,7 +107,26 @@
 }
 
 .cells {
-  border: 1px solid var(--black-opaque);
   display: grid;
   width: fit-content;
+  background: var(--color-third);
+  gap: 2px;
+  padding: 2px;
+
+  & .cell {
+    border-color: var(--color-fourth);
+    border-style: solid;
+    border-width: 0 20px 20px 0;
+    margin: 0 -20px -20px 0;
+    
+    &.gapRight {
+      border-right: none;
+      margin-right: 0;
+    }
+    
+    &.gapBottom {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+  }
 }

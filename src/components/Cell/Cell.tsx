@@ -1,56 +1,35 @@
-import {
-  FC,
-  MouseEvent,
-  TouchEvent,
-  ReactElement,
-  useCallback,
-  useContext,
-  useMemo,
-} from 'react'
+import { FC, MouseEvent, TouchEvent, ReactElement, useCallback } from 'react'
 import classNames from 'classnames'
 
 import { CrossIcon } from 'components/icons'
-import { PuzzleContext } from 'contexts/PuzzleContext'
-import { Color } from 'models/Color'
 import { CellState } from 'models/State'
 
 import styles from './Cell.module.css'
 
 type Props = {
-  column: number
+  className?: string
+  isFilled: boolean
+  isRevealed: boolean
   isLeftClicked: boolean
   isRightClicked: boolean
-  lastState: CellState
-  row: number
-  setLastState: (state: CellState) => void
+  clickedState: CellState
+  setClickedState: (state: CellState) => void
+  state: CellState
+  setState: (s: CellState) => void
 }
 
-export const Cell: FC<Props> = (props) => {
-  const { column, isLeftClicked, isRightClicked, lastState, row, setLastState } = props
-  const { finished, puzzle, getState, setState } = useContext(PuzzleContext)
-
-  const state = useMemo<CellState>(() => {
-    return getState(column, row)
-  }, [column, row, getState])
-
-  const isFilled = useMemo<boolean>(() => {
-    return Boolean(puzzle?.isFilled(column, row))
-  }, [column, row, puzzle])
-
-  const isError = useMemo<boolean>(() => {
-    return isFilled !== (state === CellState.Filled)
-  }, [state, isFilled])
-
-  const className = useMemo<string>(
-    () =>
-      classNames(styles.cell, {
-        [styles.borderTop]: column % 5 === 0,
-        [styles.borderBottom]: column % 5 === 4,
-        [styles.borderLeft]: row % 5 === 0,
-        [styles.borderRight]: row % 5 === 4,
-      }),
-    [column, row]
-  )
+export const Cell: FC<Props> = ({
+  className = '',
+  isFilled,
+  isRevealed,
+  isLeftClicked,
+  isRightClicked,
+  clickedState,
+  setClickedState,
+  state,
+  setState,
+}) => {
+  const isError = isFilled !== (state === CellState.Filled)
 
   const handleContextMenu = useCallback<(e: MouseEvent) => void>((e) => {
     e.preventDefault()
@@ -59,11 +38,11 @@ export const Cell: FC<Props> = (props) => {
   const handleTouchEnd = useCallback<(e: TouchEvent) => void>(
     (e) => {
       e.preventDefault()
-      if (state === CellState.Empty) setState(column, row, CellState.Filled)
-      else if (state === CellState.Filled) setState(column, row, CellState.Cross)
-      else if (state === CellState.Cross) setState(column, row, CellState.Empty)
+      if (state === CellState.Empty) setState(CellState.Filled)
+      else if (state === CellState.Filled) setState(CellState.Cross)
+      else if (state === CellState.Cross) setState(CellState.Empty)
     },
-    [column, row, state, setState]
+    [state, setState]
   )
 
   const handleMouseDown = useCallback<(e: MouseEvent) => void>(
@@ -78,45 +57,51 @@ export const Cell: FC<Props> = (props) => {
       } else {
         return
       }
-      setLastState(newState)
-      setState(column, row, newState)
+      setClickedState(newState)
+      setState(newState)
     },
-    [column, row, state, setLastState, setState]
+    [state, setClickedState, setState]
   )
 
   const handleMouseEnter = useCallback<() => void>(() => {
-    if (state === lastState) return
-    if (isRightClicked && state !== CellState.Filled) setState(column, row, lastState)
-    else if (isLeftClicked && state !== CellState.Cross) setState(column, row, lastState)
-  }, [column, row, isLeftClicked, isRightClicked, lastState, state, setState])
+    if (state === clickedState) return
+    if (isRightClicked && state !== CellState.Filled) setState(clickedState)
+    else if (isLeftClicked && state !== CellState.Cross) setState(clickedState)
+  }, [isLeftClicked, isRightClicked, clickedState, state, setState])
 
-  const getCellResult = useCallback<() => ReactElement>(
-    () => (
-      <div className={`${styles.inner} ${isFilled ? styles.filled : ''}`}>
-        {isError && <CrossIcon color={Color.Error} />}
+  const getCellResult = useCallback<() => ReactElement>(() => {
+    const cellClassName = classNames(styles.inner, {
+      [styles.filled]: isFilled,
+    })
+    return (
+      <div className={cellClassName}>
+        {isError && <CrossIcon iconClassName={styles.errorIcon} />}
       </div>
-    ),
-    [isFilled, isError]
-  )
+    )
+  }, [isFilled, isError])
 
   const getCellButton = useCallback<() => ReactElement>(() => {
-    const buttonClassName = classNames(styles.inner, styles.button, {
+    const cellClassName = classNames(styles.inner, styles.button, {
       [styles.filled]: state === CellState.Filled,
     })
     return (
       <button
-        className={buttonClassName}
+        className={cellClassName}
         onContextMenu={handleContextMenu}
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
         onMouseEnter={handleMouseEnter}
       >
-        {state === CellState.Cross && <CrossIcon />}
+        {state === CellState.Cross && <CrossIcon iconClassName={styles.crossIcon} />}
       </button>
     )
   }, [state, handleContextMenu, handleMouseDown, handleMouseEnter, handleTouchEnd])
 
-  return <div className={className}>{finished ? getCellResult() : getCellButton()}</div>
+  return (
+    <div className={`${styles.cell} ${className}`}>
+      {isRevealed ? getCellResult() : getCellButton()}
+    </div>
+  )
 }
 
 export default Cell

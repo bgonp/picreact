@@ -1,4 +1,4 @@
-import { FC, ReactElement, useMemo, useState } from 'react'
+import { FC, ReactElement, useCallback, useMemo, useState } from 'react'
 import classNames from 'classnames'
 
 import Cell from 'components/Cell'
@@ -9,11 +9,14 @@ import { CellState } from 'models/State'
 import styles from './Board.module.css'
 
 type Props = {
+  finished: boolean
   puzzle: PuzzleType
+  getCellState: (c: number, r: number) => CellState
+  setCellState: (c: number, r: number) => (s: CellState) => void
 }
 
-export const Board: FC<Props> = ({ puzzle }) => {
-  const [lastState, setLastState] = useState(CellState.Empty)
+export const Board: FC<Props> = ({ finished, puzzle, getCellState, setCellState }) => {
+  const [clickedState, setClickedState] = useState(CellState.Empty)
 
   const {
     isLeftClicked,
@@ -23,25 +26,42 @@ export const Board: FC<Props> = ({ puzzle }) => {
     handleMouseLeave,
   } = useClickControl()
 
-  const cells = useMemo<ReactElement[]>(() => {
-    const cells = []
-    for (let i = 0; i < puzzle.size; i++) {
-      for (let j = 0; j < puzzle.size; j++) {
-        cells.push(
-          <Cell
-            key={`${i}-${j}`}
-            column={i}
-            row={j}
-            isLeftClicked={isLeftClicked}
-            isRightClicked={isRightClicked}
-            lastState={lastState}
-            setLastState={setLastState}
-          />
-        )
-      }
-    }
-    return cells
-  }, [isLeftClicked, isRightClicked, lastState, puzzle])
+  const getClassName = useCallback<(column: number, row: number) => string>(
+    (column: number, row: number) =>
+      classNames(styles.cell, {
+        [styles.gapBottom]: column % 5 === 4,
+        [styles.gapRight]: row % 5 === 4,
+      }),
+    []
+  )
+
+  const cells = useMemo<ReactElement[]>(
+    () =>
+      puzzle.map<ReactElement>((column, row) => (
+        <Cell
+          key={`${column}-${row}`}
+          className={getClassName(column, row)}
+          isFilled={puzzle.isFilled(column, row)}
+          isRevealed={finished}
+          isLeftClicked={isLeftClicked}
+          isRightClicked={isRightClicked}
+          clickedState={clickedState}
+          setClickedState={setClickedState}
+          state={getCellState(column, row)}
+          setState={setCellState(column, row)}
+        />
+      )),
+    [
+      finished,
+      puzzle,
+      getCellState,
+      setCellState,
+      getClassName,
+      isLeftClicked,
+      isRightClicked,
+      clickedState,
+    ]
+  )
 
   const help = useMemo<{ columns: ReactElement[]; rows: ReactElement[] }>(() => {
     const columns = []
@@ -75,15 +95,17 @@ export const Board: FC<Props> = ({ puzzle }) => {
 
   return (
     <div className={className}>
-      <div
-        className={styles.content}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-      >
+      <div className={styles.content}>
         <div className={styles.helpColumn}>{help.columns}</div>
         <div className={styles.helpRow}>{help.rows}</div>
-        <div className={styles.cells}>{cells}</div>
+        <div
+          className={styles.cells}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+        >
+          {cells}
+        </div>
       </div>
     </div>
   )

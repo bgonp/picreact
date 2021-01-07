@@ -3,7 +3,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--black-transparent);
 }
 
 .inner {
@@ -17,10 +16,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--color-white);
 }
 
 .button {
-  background: none;
+  background-color: var(--color-white);
   border: none;
   border-radius: 0;
   box-shadow: none;
@@ -38,21 +38,13 @@
 }
 
 .filled {
-  background-color: var(--black-main);
+  background-color: var(--color-second);
 }
 
-.borderTop {
-  border-top: 1px solid var(--black-opaque);
+.crossIcon {
+  fill: var(--color-second);
 }
 
-.borderRight {
-  border-right: 1px solid var(--black-opaque);
-}
-
-.borderBottom {
-  border-bottom: 1px solid var(--black-opaque);
-}
-
-.borderLeft {
-  border-left: 1px solid var(--black-opaque);
+.errorIcon {
+  fill: var(--color-error);
 }

@@ -22,17 +22,18 @@
 }
 
 .primary {
-  background: var(--blue-main);
-  color: var(--white-plain);
+  background: var(--color-first);
+  color: var(--color-white);
 }
 
 .secondary {
-
+  background: var(--color-third);
+  color: var(--color-white);
 }
 
 .white {
-  background: var(--white-plain);
-  color: var(--blue-main);
+  background: var(--color-white);
+  color: var(--color-first);
 }
 
 .large {
