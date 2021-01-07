@@ -8,12 +8,19 @@ import { Redirect } from 'react-router-dom'
 import { ROUTE_HOME } from 'constants/router.constants'
 
 const PlayPage: FC<{}> = () => {
-  const { code, puzzle } = useContext(PuzzleContext)
+  const { code, finished, puzzle, getCellState, setCellState } = useContext(PuzzleContext)
 
   const content = useMemo<ReactElement>(() => {
     if (!puzzle) return <Loading />
-    return <Board puzzle={puzzle} />
-  }, [puzzle])
+    return (
+      <Board
+        finished={finished}
+        puzzle={puzzle}
+        getCellState={getCellState}
+        setCellState={setCellState}
+      />
+    )
+  }, [finished, puzzle, getCellState, setCellState])
 
   if (!code) return <Redirect to={ROUTE_HOME} />
 

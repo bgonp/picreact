@@ -8,11 +8,11 @@ import { ROUTE_PLAY } from 'constants/router.constants'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 
 const HomePage: FC<{}> = () => {
-  const { code, puzzle } = useContext(PuzzleContext)
+  const { code, puzzle, setPuzzle } = useContext(PuzzleContext)
 
   if (puzzle) return <Redirect to={ROUTE_PLAY} />
 
-  return <Wrapper>{code ? <Loading /> : <Welcome />}</Wrapper>
+  return <Wrapper>{code ? <Loading /> : <Welcome setPuzzle={setPuzzle} />}</Wrapper>
 }
 
 export default HomePage
