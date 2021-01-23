@@ -4,4 +4,8 @@ export enum CellState {
   Filled,
 }
 
-export type BoardState = Array<Array<CellState>>
+export type BoardState = {
+  cells: CellState[][]
+  columns: number[][]
+  rows: number[][]
+}
