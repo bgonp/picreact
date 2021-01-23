@@ -96,15 +96,19 @@ export const Board: FC<Props> = ({
     []
   )
 
-  const help = useMemo<{ columns: ReactElement[]; rows: ReactElement[] }>(() => {
-    const columns = []
-    const rows = []
-    for (let i = 0; i < puzzle.size; i++) {
-      rows.push(getLineHelp('r', i, puzzle.getRowHelp(i), rowsState[i]))
-      columns.push(getLineHelp('c', i, puzzle.getColumnHelp(i), colsState[i]))
-    }
-    return { columns, rows }
-  }, [colsState, puzzle, rowsState, getLineHelp])
+  const help = useMemo<{ columns: ReactElement[]; rows: ReactElement[] }>(
+    // TODO: Optimize this
+    () =>
+      [...Array(puzzle.size).keys()].reduce(
+        (acc: { columns: ReactElement[]; rows: ReactElement[] }, i) => {
+          acc.columns.push(getLineHelp('c', i, puzzle.getColumnHelp(i), colsState[i]))
+          acc.rows.push(getLineHelp('r', i, puzzle.getRowHelp(i), rowsState[i]))
+          return acc
+        },
+        { columns: [], rows: [] }
+      ),
+    [colsState, puzzle, rowsState, getLineHelp]
+  )
 
   const className = classNames(styles.board, {
     [styles.size5]: puzzle.size === 5,
