@@ -5,7 +5,7 @@ import CreatePage from 'pages/CreatePage'
 import HomePage from 'pages/HomePage'
 import LoadPage from 'pages/LoadPage'
 import PlayPage from 'pages/PlayPage'
-import ROUTES from 'constants/router.constants'
+import { ROUTES } from 'constants/router.constants'
 
 const Router: FC = () => (
   <>
