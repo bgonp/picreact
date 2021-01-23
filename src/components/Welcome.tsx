@@ -4,7 +4,7 @@ import Button from 'components/Button'
 import { PuzzleType } from 'models/Puzzle'
 import { createPuzzle } from 'utils/puzzleGenerator'
 
-import styles from './Welcome.module.css'
+import styles from 'styles/components/Welcome.module.css'
 
 type Props = {
   setPuzzle: (puzzle: PuzzleType) => void

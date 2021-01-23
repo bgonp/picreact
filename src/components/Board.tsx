@@ -5,18 +5,28 @@ import Cell from 'components/Cell'
 import { useClickControl } from 'hooks/useClickControl'
 import { PuzzleType } from 'models/Puzzle'
 import { CellState } from 'models/State'
+import { getHelpStatus } from 'utils/getHelpStatus'
 
-import styles from './Board.module.css'
+import styles from 'styles/components/Board.module.css'
 
 type Props = {
+  colsState: number[][]
   finished: boolean
   puzzle: PuzzleType
+  rowsState: number[][]
   getCellState: (c: number, r: number) => CellState
   setCellState: (c: number, r: number) => (s: CellState) => void
 }
 
-export const Board: FC<Props> = ({ finished, puzzle, getCellState, setCellState }) => {
-  const [clickedState, setClickedState] = useState(CellState.Empty)
+export const Board: FC<Props> = ({
+  colsState,
+  finished,
+  puzzle,
+  rowsState,
+  getCellState,
+  setCellState,
+}) => {
+  const [clickedState, setClickedState] = useState<CellState>(CellState.Empty)
 
   const {
     isLeftClicked,
@@ -63,27 +73,38 @@ export const Board: FC<Props> = ({ finished, puzzle, getCellState, setCellState 
     ]
   )
 
+  const getLineHelp = useCallback(
+    (prefix: string, index: number, numbers: number[], state: number[]): ReactElement => {
+      const isCorrect = getHelpStatus(numbers, state)
+      return (
+        <div className={styles.singleHelp} key={`${prefix}-${index}`}>
+          {numbers.length ? (
+            numbers.map((value, child) => (
+              <span
+                key={`${prefix}-${index}-${child}`}
+                className={isCorrect[child] ? styles.ok : ''}
+              >
+                {value}
+              </span>
+            ))
+          ) : (
+            <span key={`${prefix}-${index}-0`}>0</span>
+          )}
+        </div>
+      )
+    },
+    []
+  )
+
   const help = useMemo<{ columns: ReactElement[]; rows: ReactElement[] }>(() => {
     const columns = []
     const rows = []
     for (let i = 0; i < puzzle.size; i++) {
-      rows.push(
-        <div className={styles.singleHelp} key={`r-${i}`}>
-          {puzzle.getRowHelp(i).map((n, j) => (
-            <span key={`r-${i}-${j}`}>{n}</span>
-          ))}
-        </div>
-      )
-      columns.push(
-        <div className={styles.singleHelp} key={`c-${i}`}>
-          {puzzle.getColumnHelp(i).map((n, j) => (
-            <span key={`r-${i}-${j}`}>{n}</span>
-          ))}
-        </div>
-      )
+      rows.push(getLineHelp('r', i, puzzle.getRowHelp(i), rowsState[i]))
+      columns.push(getLineHelp('c', i, puzzle.getColumnHelp(i), colsState[i]))
     }
     return { columns, rows }
-  }, [puzzle])
+  }, [colsState, puzzle, rowsState, getLineHelp])
 
   const className = classNames(styles.board, {
     [styles.size5]: puzzle.size === 5,

@@ -3,8 +3,9 @@ import classNames from 'classnames'
 
 import { CrossIcon } from 'components/icons'
 import { CellState } from 'models/State'
+import { COLORS } from 'constants/colors.constants'
 
-import styles from './Cell.module.css'
+import styles from 'styles/components/Cell.module.css'
 
 type Props = {
   className?: string
@@ -75,7 +76,7 @@ export const Cell: FC<Props> = ({
     })
     return (
       <div className={cellClassName}>
-        {isError && <CrossIcon iconClassName={styles.errorIcon} />}
+        {isError && <CrossIcon color={isFilled ? COLORS.FIFTH : COLORS.FOURTH} />}
       </div>
     )
   }, [isFilled, isError])
@@ -92,7 +93,7 @@ export const Cell: FC<Props> = ({
         onMouseDown={handleMouseDown}
         onMouseEnter={handleMouseEnter}
       >
-        {state === CellState.Cross && <CrossIcon iconClassName={styles.crossIcon} />}
+        {state === CellState.Cross && <CrossIcon color={COLORS.SECOND} />}
       </button>
     )
   }, [state, handleContextMenu, handleMouseDown, handleMouseEnter, handleTouchEnd])

@@ -1,15 +1,11 @@
-import { FC, ReactElement } from 'react'
+import { FC } from 'react'
 
 import Footer from 'components/Footer'
 import Header from 'components/Header'
 
-import styles from './Wrapper.module.css'
+import styles from 'styles/components/Wrapper.module.css'
 
-type Props = {
-  children: ReactElement
-}
-
-const Wrapper: FC<Props> = ({ children }) => {
+const Wrapper: FC = ({ children }) => {
   return (
     <div className={styles.wrapper}>
       <Header />

@@ -1,7 +1,0 @@
-.footer {
-  background: var(--color-second);
-  color: var(--color-white);
-  padding: 1rem 2rem;
-  display: flex;
-  gap: 0.5rem;
-}

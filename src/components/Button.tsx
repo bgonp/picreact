@@ -2,37 +2,40 @@ import { FC, ReactNode } from 'react'
 import classNames from 'classnames'
 import { Link } from 'wouter'
 
-import styles from './Button.module.css'
+import styles from 'styles/components/Button.module.css'
 
 type Props = {
   children: ReactNode
-  disabled?: boolean
   href?: string | null
+  to?: string | null
+  asIcon?: boolean
+  disabled?: boolean
   large?: boolean
   primary?: boolean
   secondary?: boolean
-  to?: string | null
+  outlined?: boolean
   onClick?: (() => void) | null
-  white?: boolean
 }
 
 const Button: FC<Props> = ({
   children,
-  disabled = false,
   href = null,
+  to = null,
+  asIcon = false,
+  disabled = false,
   large = false,
   primary = false,
   secondary = false,
-  to = null,
+  outlined = false,
   onClick = null,
-  white = false,
 }) => {
   const className = classNames(styles.button, {
+    [styles.asIcon]: asIcon,
     [styles.disabled]: disabled,
+    [styles.large]: large,
     [styles.primary]: primary,
     [styles.secondary]: secondary,
-    [styles.large]: large,
-    [styles.white]: white,
+    [styles.outlined]: outlined,
   })
 
   if (!disabled && onClick !== null)
@@ -51,7 +54,7 @@ const Button: FC<Props> = ({
 
   if (!disabled && href !== null)
     return (
-      <a className={className} href={href} target="_blank" rel="noreferrer">
+      <a className={className} href={href} target="_blank" rel="nofollow noreferrer">
         {children}
       </a>
     )

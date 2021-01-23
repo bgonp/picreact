@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import styles from './Loading.module.css'
+import styles from 'styles/components/Loading.module.css'
 
 const Loading: FC = () => (
   <div className={styles.loading}>
