@@ -1,0 +1,23 @@
+.header {
+  padding: 1rem 2rem;
+  background: var(--color-first);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  color: var(--color-white);
+  margin: 0 2rem 0 0;
+  font-size: 28px;
+  font-weight: 600;
+
+  & span {
+    color: var(--color-third);
+  }
+}
+
+.menu {
+  display: flex;
+  gap: 0.5rem;
+}
