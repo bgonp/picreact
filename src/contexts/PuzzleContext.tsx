@@ -1,13 +1,10 @@
-import { createContext, FC, ReactElement } from 'react'
-import { initialPuzzleState, usePuzzle, usePuzzleType } from 'hooks/usePuzzle'
+import { FC } from 'react'
+import { usePuzzle, usePuzzleType } from 'hooks/usePuzzle'
+import { createContextSecure as createContext } from 'utils/contextSecure'
 
-type Props = {
-  children: ReactElement
-}
+export const PuzzleContext = createContext<usePuzzleType>()
 
-export const PuzzleContext = createContext<usePuzzleType>(initialPuzzleState)
-
-export const PuzzleContextProvider: FC<Props> = ({ children }) => {
+export const PuzzleContextProvider: FC = ({ children }) => {
   const puzzleContext = usePuzzle()
 
   return <PuzzleContext.Provider value={puzzleContext}>{children}</PuzzleContext.Provider>

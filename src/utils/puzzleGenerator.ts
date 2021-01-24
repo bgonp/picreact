@@ -5,13 +5,8 @@ export const createPuzzle = (size: number): PuzzleType => {
   if (size < PUZZLE_MIN_SIZE || size > PUZZLE_MAX_SIZE || size % 5 !== 0)
     throw new Error()
 
-  const cells: Array<Array<boolean>> = []
-  for (let i = 0; i < size; i++) {
-    cells.push([])
-    for (let j = 0; j < size; j++) {
-      cells[i].push(Math.random() < 0.65)
-    }
-  }
+  const indexes = [...Array(size).keys()]
+  const cells: boolean[][] = indexes.map(() => indexes.map(() => Math.random() < 0.6))
 
   return new Puzzle(cells)
 }

@@ -37,7 +37,7 @@ export const decodePuzzle = (code: string): PuzzleType => {
 
 export const encodePuzzle = (puzzle: PuzzleType): string => {
   let encoded = ''
-  for (let column = 0; column < puzzle.size; column++) {
+  for (const column of [...Array(puzzle.size).keys()]) {
     for (let row = 0; row < puzzle.size; row += 5) {
       encoded += booleansToLetter([
         puzzle.isFilled(column, row),

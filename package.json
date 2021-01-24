@@ -7,20 +7,15 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@types/classnames": "^2.2.11",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
-    "@types/react-dom": "^16.9.8",
     "classnames": "^2.2.6",
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
     "react": "^17.0.1",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "typescript": "^4.0.3",
-    "web-vitals": "^0.2.4"
+    "wouter": "^2.7.0"
   },
   "scripts": {
     "start": "craco start",
@@ -47,9 +42,12 @@
     ]
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.11",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.0.0",
     "@types/react": "^16.14.2",
     "@types/react-copy-to-clipboard": "^5.0.0",
-    "@types/react-router-dom": "^5.1.7",
+    "@types/react-dom": "^16.9.8",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
     "eslint": "^7.16.0",
