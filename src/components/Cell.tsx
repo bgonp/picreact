@@ -14,8 +14,9 @@ type Props = {
   isLeftClicked: boolean
   isRightClicked: boolean
   clickedState: CellState
-  setClickedState: (state: CellState) => void
   state: CellState
+  onHover: () => void
+  setClickedState: (state: CellState) => void
   setState: (s: CellState) => void
 }
 
@@ -26,8 +27,9 @@ export const Cell: FC<Props> = ({
   isLeftClicked,
   isRightClicked,
   clickedState,
-  setClickedState,
   state,
+  onHover,
+  setClickedState,
   setState,
 }) => {
   const isError = isFilled !== (state === CellState.Filled)
@@ -65,10 +67,11 @@ export const Cell: FC<Props> = ({
   )
 
   const handleMouseEnter = useCallback<() => void>(() => {
+    onHover()
     if (state === clickedState) return
     if (isRightClicked && state !== CellState.Filled) setState(clickedState)
     else if (isLeftClicked && state !== CellState.Cross) setState(clickedState)
-  }, [isLeftClicked, isRightClicked, clickedState, state, setState])
+  }, [isLeftClicked, isRightClicked, clickedState, state, onHover, setState])
 
   const getCellResult = useCallback<() => ReactElement>(() => {
     const cellClassName = classNames(styles.inner, {

@@ -26,6 +26,8 @@ export const Board: FC<Props> = ({
   getCellState,
   setCellState,
 }) => {
+  const [currentCell, setCurrentCell] = useState<[number, number]>([-1, -1])
+
   const [clickedState, setClickedState] = useState<CellState>(CellState.Empty)
 
   const {
@@ -36,13 +38,25 @@ export const Board: FC<Props> = ({
     handleMouseLeave,
   } = useClickControl()
 
+  const onCellHover = useCallback<(column: number, row: number) => () => void>(
+    (column, row) => () => setCurrentCell([column, row]),
+    []
+  )
+
+  const onMouseLeave = useCallback<() => void>(() => {
+    handleMouseLeave()
+    setCurrentCell([-1, -1])
+  }, [handleMouseLeave])
+
   const getClassName = useCallback<(column: number, row: number) => string>(
     (column: number, row: number) =>
       classNames(styles.cell, {
         [styles.gapBottom]: column % 5 === 4,
         [styles.gapRight]: row % 5 === 4,
+        [styles.hover]:
+          !finished && (column === currentCell[0] || row === currentCell[1]),
       }),
-    []
+    [currentCell, finished]
   )
 
   const cells = useMemo<ReactElement[]>(
@@ -51,13 +65,14 @@ export const Board: FC<Props> = ({
         <Cell
           key={`${column}-${row}`}
           className={getClassName(column, row)}
-          isFilled={puzzle.isFilled(column, row)}
-          isRevealed={finished}
-          isLeftClicked={isLeftClicked}
-          isRightClicked={isRightClicked}
           clickedState={clickedState}
-          setClickedState={setClickedState}
+          isFilled={puzzle.isFilled(column, row)}
+          isLeftClicked={isLeftClicked}
+          isRevealed={finished}
+          isRightClicked={isRightClicked}
           state={getCellState(column, row)}
+          onHover={onCellHover(column, row)}
+          setClickedState={setClickedState}
           setState={setCellState(column, row)}
         />
       )),
@@ -67,6 +82,7 @@ export const Board: FC<Props> = ({
       getCellState,
       setCellState,
       getClassName,
+      onCellHover,
       isLeftClicked,
       isRightClicked,
       clickedState,
@@ -127,7 +143,7 @@ export const Board: FC<Props> = ({
           className={styles.cells}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
+          onMouseLeave={onMouseLeave}
         >
           {cells}
         </div>
