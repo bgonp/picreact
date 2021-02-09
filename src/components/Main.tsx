@@ -6,15 +6,18 @@ import { PuzzleContextProvider } from 'contexts/PuzzleContext'
 import { initColors } from 'utils/styles'
 
 import 'styles/index.css'
+import ErrorBoundary from './ErrorBoundary'
 
 initColors()
 
-const Wrapper: FC = () => (
-  <ModalContextProvider>
-    <PuzzleContextProvider>
-      <Router />
-    </PuzzleContextProvider>
-  </ModalContextProvider>
+const Main: FC = () => (
+  <ErrorBoundary>
+    <ModalContextProvider>
+      <PuzzleContextProvider>
+        <Router />
+      </PuzzleContextProvider>
+    </ModalContextProvider>
+  </ErrorBoundary>
 )
 
-export default Wrapper
+export default Main
