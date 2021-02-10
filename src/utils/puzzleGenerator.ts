@@ -6,7 +6,7 @@ export const createPuzzle = (size: number): PuzzleType => {
     throw new Error()
 
   const indexes = [...Array(size).keys()]
-  const cells: boolean[][] = indexes.map(() => indexes.map(() => Math.random() < 0.6))
+  const cells: boolean[][] = indexes.map(() => indexes.map(() => Math.random() < 0.5))
 
   return new Puzzle(cells)
 }
