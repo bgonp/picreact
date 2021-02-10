@@ -10,6 +10,7 @@ const Create: FC = () => {
   const { confirm, error, notice } = useContext(ModalContext)
 
   const showConfirm = () =>
+    // eslint-disable-next-line
     confirm(`This is a confirm dialog ${Math.random()}`, () => console.log('povale'))
 
   const showError = () => error(`This is an error ${Math.random()}`)
