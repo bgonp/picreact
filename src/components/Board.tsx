@@ -104,7 +104,9 @@ export const Board: FC<Props> = ({
               </span>
             ))
           ) : (
-            <span key={`${prefix}-${index}-0`}>0</span>
+            <span key={`${prefix}-${index}-0`} className={styles.ok}>
+              0
+            </span>
           )}
         </div>
       )
