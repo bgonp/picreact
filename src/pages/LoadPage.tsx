@@ -4,10 +4,10 @@ import { useLocation } from 'wouter'
 import Loading from 'components/Loading'
 import Wrapper from 'components/Wrapper'
 import { ROUTE_HOME, ROUTE_PLAY } from 'constants/router.constants'
+import { ModalContext } from 'contexts/ModalContext'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
 import { decodePuzzle } from 'utils/puzzleEncoder'
-import { ModalContext } from 'contexts/ModalContext'
 
 type Props = {
   code: string

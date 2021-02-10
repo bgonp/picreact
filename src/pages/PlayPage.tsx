@@ -1,16 +1,15 @@
-import { FC, ReactElement, useEffect, useMemo } from 'react'
+import { FC, lazy } from 'react'
 import { useLocation } from 'wouter'
 
-import Board from 'components/Board'
-import Loading from 'components/Loading'
 import Wrapper from 'components/Wrapper'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { ROUTE_HOME } from 'constants/router.constants'
 import { useContextSecure as useContext } from 'utils/contextSecure'
 
+const Board = lazy(() => import('components/Board'))
+
 const PlayPage: FC = () => {
   const {
-    code,
     colsState,
     finished,
     puzzle,
@@ -21,9 +20,13 @@ const PlayPage: FC = () => {
 
   const [, navigate] = useLocation()
 
-  const content = useMemo<ReactElement>(() => {
-    if (!puzzle) return <Loading />
-    return (
+  if (!puzzle) {
+    navigate(ROUTE_HOME)
+    return null
+  }
+
+  return (
+    <Wrapper>
       <Board
         colsState={colsState}
         finished={finished}
@@ -32,14 +35,8 @@ const PlayPage: FC = () => {
         getCellState={getCellState}
         setCellState={setCellState}
       />
-    )
-  }, [colsState, finished, puzzle, rowsState, getCellState, setCellState])
-
-  useEffect(() => {
-    if (!code) navigate(ROUTE_HOME)
-  }, [code, navigate])
-
-  return <Wrapper>{content}</Wrapper>
+    </Wrapper>
+  )
 }
 
 export default PlayPage

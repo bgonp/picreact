@@ -1,7 +1,8 @@
-import { FC } from 'react'
+import { FC, lazy } from 'react'
 
 import Wrapper from 'components/Wrapper'
-import Create from 'components/Create'
+
+const Create = lazy(() => import('components/Create'))
 
 const CreatePage: FC = () => {
   return (
