@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRoute } from 'wouter'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
@@ -20,16 +20,12 @@ const Header = () => {
   const { notice } = useContext(ModalContext)
 
   const [isRoutePlay] = useRoute(ROUTES.PLAY)
-
   const [isRouteCreate] = useRoute(ROUTES.CREATE)
 
   const [size, setSize] = useState<number>(DEFAULT_SIZE)
 
-  const shareUrl = useMemo<string>(() => (code ? createUrl(ROUTES.LOAD, { code }) : ''), [
-    code,
-  ])
-
-  const hidePuzzleButtons = !isRoutePlay || !puzzle
+  const shareUrl: string = code ? createUrl(ROUTES.LOAD, { code }) : ''
+  const hidePuzzleButtons: boolean = !isRoutePlay || !puzzle
 
   useEffect(() => {
     if (puzzle) setSize(puzzle.size)

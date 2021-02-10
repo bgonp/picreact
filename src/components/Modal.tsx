@@ -1,10 +1,10 @@
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import classNames from 'classnames'
+import { useTimeout } from 'bgon-custom-hooks'
 
 import Button from 'components/Button'
 import CloseButton from 'components/CloseButton'
 import { ModalProps } from 'hooks/useModal'
-import { useTimeout } from 'hooks/useTimeout'
 import { ALERT_ANIMATION, ALERT_TIMEOUT } from 'constants/app.constants'
 
 import styles from 'styles/components/Modal.module.css'
@@ -21,29 +21,29 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
     [styles.hidden]: hidden,
   })
 
-  const handleConfirm = useCallback(() => {
+  const handleConfirm: () => void = () => {
     setHidden(true)
     setTimeout(onConfirm, ALERT_ANIMATION)
-  }, [setTimeout, onConfirm])
+  }
 
-  const handleClose = useCallback(() => {
+  const handleClose: () => void = () => {
     setHidden(true)
     setTimeout(onClose, ALERT_ANIMATION)
-  }, [setTimeout, onClose])
+  }
 
   const handleMouseEnter = clearTimeout
 
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseLeave = () => {
     if (!ALERT_TIMEOUT || type === 'confirm') return
-    setTimeout(handleClose, ALERT_TIMEOUT)
-  }, [type, handleClose, setTimeout])
+    setTimeout(() => setHidden(true), ALERT_TIMEOUT)
+  }
 
   useEffect(() => {
     clearTimeout()
     setHidden(false)
     if (!ALERT_TIMEOUT || type === 'confirm') return
-    setTimeout(handleClose, ALERT_TIMEOUT)
-  }, [content, type, handleClose, setTimeout, clearTimeout])
+    setTimeout(() => setHidden(true), ALERT_TIMEOUT)
+  }, [content, type, setTimeout, clearTimeout])
 
   if (type === 'confirm')
     return (

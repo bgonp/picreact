@@ -1,9 +1,9 @@
-import { FC, MouseEvent, TouchEvent, ReactElement, useCallback } from 'react'
+import { FC, MouseEvent, TouchEvent, ReactElement } from 'react'
 import classNames from 'classnames'
 
 import { CrossIcon } from 'components/icons'
-import { CellState } from 'models/State'
 import { COLORS } from 'constants/colors.constants'
+import { CellState } from 'models/State'
 
 import styles from 'styles/components/Cell.module.css'
 
@@ -34,46 +34,40 @@ export const Cell: FC<Props> = ({
 }) => {
   const isError = isFilled !== (state === CellState.Filled)
 
-  const handleContextMenu = useCallback<(e: MouseEvent) => void>((e) => {
+  const handleContextMenu: (e: MouseEvent) => void = (e) => {
     e.preventDefault()
-  }, [])
+  }
 
-  const handleTouchEnd = useCallback<(e: TouchEvent) => void>(
-    (e) => {
-      e.preventDefault()
-      if (state === CellState.Empty) setState(CellState.Filled)
-      else if (state === CellState.Filled) setState(CellState.Cross)
-      else if (state === CellState.Cross) setState(CellState.Empty)
-    },
-    [state, setState]
-  )
+  const handleTouchEnd: (e: TouchEvent) => void = (e) => {
+    e.preventDefault()
+    if (state === CellState.Empty) setState(CellState.Filled)
+    else if (state === CellState.Filled) setState(CellState.Cross)
+    else if (state === CellState.Cross) setState(CellState.Empty)
+  }
 
-  const handleMouseDown = useCallback<(e: MouseEvent) => void>(
-    ({ button }) => {
-      let newState: CellState = CellState.Empty
-      if (button === 0) {
-        if (state === CellState.Cross) return
-        if (state === CellState.Empty) newState = CellState.Filled
-      } else if (button === 2) {
-        if (state === CellState.Filled) return
-        if (state === CellState.Empty) newState = CellState.Cross
-      } else {
-        return
-      }
-      setClickedState(newState)
-      setState(newState)
-    },
-    [state, setClickedState, setState]
-  )
+  const handleMouseDown: (e: MouseEvent) => void = ({ button }) => {
+    let newState: CellState = CellState.Empty
+    if (button === 0) {
+      if (state === CellState.Cross) return
+      if (state === CellState.Empty) newState = CellState.Filled
+    } else if (button === 2) {
+      if (state === CellState.Filled) return
+      if (state === CellState.Empty) newState = CellState.Cross
+    } else {
+      return
+    }
+    setClickedState(newState)
+    setState(newState)
+  }
 
-  const handleMouseEnter = useCallback<() => void>(() => {
+  const handleMouseEnter: () => void = () => {
     onHover()
     if (state === clickedState) return
     if (isRightClicked && state !== CellState.Filled) setState(clickedState)
     else if (isLeftClicked && state !== CellState.Cross) setState(clickedState)
-  }, [isLeftClicked, isRightClicked, clickedState, state, onHover, setState])
+  }
 
-  const getCellResult = useCallback<() => ReactElement>(() => {
+  const getCellResult: () => ReactElement = () => {
     const cellClassName = classNames(styles.inner, {
       [styles.filled]: isFilled,
     })
@@ -82,9 +76,9 @@ export const Cell: FC<Props> = ({
         {isError && <CrossIcon color={isFilled ? COLORS.FIFTH : COLORS.FOURTH} />}
       </div>
     )
-  }, [isFilled, isError])
+  }
 
-  const getCellButton = useCallback<() => ReactElement>(() => {
+  const getCellButton: () => ReactElement = () => {
     const cellClassName = classNames(styles.inner, styles.button, {
       [styles.filled]: state === CellState.Filled,
     })
@@ -99,7 +93,7 @@ export const Cell: FC<Props> = ({
         {state === CellState.Cross && <CrossIcon color={COLORS.SECOND} />}
       </button>
     )
-  }, [state, handleContextMenu, handleMouseDown, handleMouseEnter, handleTouchEnd])
+  }
 
   return (
     <div className={`${styles.cell} ${className}`}>
