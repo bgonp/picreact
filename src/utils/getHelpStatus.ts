@@ -1,5 +1,7 @@
 export const getHelpStatus = (target: number[], current: number[]): boolean[] => {
   const result: boolean[] = new Array(target.length).fill(false)
+  if (current.length > target.length) return result
+
   const proposal = [...current]
 
   const indexes = [...target.keys()]
