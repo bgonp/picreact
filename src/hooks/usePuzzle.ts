@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useLocalStorage } from 'bgon-custom-hooks'
 
-import { useLocalStorage } from 'hooks/useLocalStorage'
+import { STORAGE_CODE, STORAGE_STATE } from 'constants/storage.constants'
 import { PuzzleType } from 'models/Puzzle'
 import { BoardState, CellState } from 'models/State'
 import { decodePuzzle, encodePuzzle } from 'utils/puzzleEncoder'
 import { createState } from 'utils/stateCreator'
-
-import { STORAGE_CODE, STORAGE_STATE } from 'constants/storage.constants'
 import { getColState, getRowState } from 'utils/linesState'
 
 export type usePuzzleType = {
@@ -22,33 +21,19 @@ export type usePuzzleType = {
   setCellState: (c: number, r: number) => (value: CellState) => void
 }
 
-export const initialPuzzleState: usePuzzleType = {
-  code: '',
-  colsState: [],
-  finished: false,
-  puzzle: null,
-  rowsState: [],
-  getCellState: () => CellState.Empty,
-  resetState: () => {},
-  setFinished: () => {},
-  setPuzzle: () => {},
-  setCellState: () => () => {},
-}
-
 export const usePuzzle = (): usePuzzleType => {
-  const [code, setCodeValue, cleanCodeStorage] = useLocalStorage<string>(
-    STORAGE_CODE,
-    initialPuzzleState.code
-  )
+  const [code, setCodeValue, cleanCodeStorage] = useLocalStorage<string>(STORAGE_CODE, '')
 
   const [state, setStateValue, cleanStateStorage] = useLocalStorage<BoardState>(
     STORAGE_STATE,
     { cells: [], columns: [], rows: [] }
   )
 
-  const [finished, setFinishedValue] = useState<boolean>(initialPuzzleState.finished)
+  const [finished, setFinishedValue] = useState<boolean>(false)
 
-  const [puzzle, setPuzzleValue] = useState<PuzzleType | null>(initialPuzzleState.puzzle)
+  const [puzzle, setPuzzleValue] = useState<PuzzleType | null>(() =>
+    code ? decodePuzzle(code) : null
+  )
 
   const getCellState = useCallback<(c: number, r: number) => CellState>(
     (c, r) => {
@@ -64,15 +49,15 @@ export const usePuzzle = (): usePuzzleType => {
 
   const setCellState = useCallback<(c: number, r: number) => (value: CellState) => void>(
     (c, r) => (value) => {
-      const cells = state.cells.map((row, i) => {
+      const cells = state.cells.map((row: CellState[], i: number) => {
         if (i !== c) return [...row]
         return row.map((cell, j) => (j !== r ? cell : value))
       })
-      const columns = state.columns.map((column, i) => {
+      const columns = state.columns.map((column: number[], i: number) => {
         if (i !== r) return [...column]
         return getColState(cells, i)
       })
-      const rows = state.rows.map((row, i) => {
+      const rows = state.rows.map((row: number[], i: number) => {
         if (i !== c) return [...row]
         return getRowState(cells, i)
       })
@@ -80,6 +65,12 @@ export const usePuzzle = (): usePuzzleType => {
     },
     [state, setStateValue]
   )
+
+  const setFinished = useCallback<() => void>(() => {
+    setFinishedValue(true)
+    cleanCodeStorage()
+    cleanStateStorage()
+  }, [cleanCodeStorage, cleanStateStorage])
 
   const setPuzzle = useCallback<(puzzle: PuzzleType) => void>(
     (puzzle) => {
@@ -91,23 +82,6 @@ export const usePuzzle = (): usePuzzleType => {
     [setCodeValue, setStateValue]
   )
 
-  const setFinished = useCallback<() => void>(() => {
-    setFinishedValue(true)
-    cleanCodeStorage()
-    cleanStateStorage()
-  }, [cleanCodeStorage, cleanStateStorage])
-
-  useEffect(() => {
-    if (!code || puzzle) return
-    const newPuzzle = puzzle || decodePuzzle(code)
-    if (finished || newPuzzle.size !== state.cells.length) {
-      cleanCodeStorage()
-      cleanStateStorage()
-    } else {
-      setPuzzleValue(newPuzzle)
-    }
-  }, [code, finished, state, puzzle, cleanCodeStorage, cleanStateStorage])
-
   return {
     code,
     colsState: state.columns,
@@ -116,8 +90,8 @@ export const usePuzzle = (): usePuzzleType => {
     rowsState: state.rows,
     getCellState,
     resetState,
+    setCellState,
     setFinished,
     setPuzzle,
-    setCellState,
   }
 }
