@@ -1,13 +1,14 @@
 .wrapper {
-  font-family: var(--font-family-main);
   display: flex;
   flex-direction: column;
+  font-family: var(--font-family-main);
   min-height: 100vh;
 }
 
 .main {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  position: relative;
 }
