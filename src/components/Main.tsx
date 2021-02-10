@@ -1,12 +1,12 @@
 import { FC } from 'react'
 import Router from 'router/Router'
 
+import ErrorBoundary from 'components/ErrorBoundary'
 import { ModalContextProvider } from 'contexts/ModalContext'
 import { PuzzleContextProvider } from 'contexts/PuzzleContext'
 import { initColors } from 'utils/styles'
 
 import 'styles/index.css'
-import ErrorBoundary from './ErrorBoundary'
 
 initColors()
 
