@@ -1,95 +1,100 @@
 import { useCallback, useState } from 'react'
 import { useLocalStorage } from 'bgon-custom-hooks'
 
-import { STORAGE_CODE, STORAGE_STATE } from 'constants/storage.constants'
-import { PuzzleType } from 'models/Puzzle'
-import { BoardState, CellState } from 'models/State'
-import { decodePuzzle, encodePuzzle } from 'utils/puzzleEncoder'
-import { createState } from 'utils/stateCreator'
-import { getColState, getRowState } from 'utils/linesState'
+import { ST_BOARD, ST_COLUMNS, ST_ROWS } from 'constants/storage.constants'
+import { CellState, Puzzle } from 'models/Puzzle'
+import { getEmptyBoard } from 'utils/puzzleCreator'
+import { getUpdatedClues } from 'utils/getUpdatedClues'
 
-export type usePuzzleType = {
-  code: string
-  colsState: number[][]
+type Board = Puzzle['board']
+type Columns = Puzzle['columns']
+type Rows = Puzzle['rows']
+
+export type UsePuzzleType = {
   finished: boolean
-  puzzle: PuzzleType | null
-  rowsState: number[][]
+  puzzle: Puzzle
   getCellState: (c: number, r: number) => CellState
-  resetState: () => void
-  setFinished: () => void
-  setPuzzle: (puzzle: PuzzleType) => void
+  reset: () => void
   setCellState: (c: number, r: number) => (value: CellState) => void
+  setFinished: () => void
+  setPuzzle: (puzzle: Puzzle) => void
 }
 
-export const usePuzzle = (): usePuzzleType => {
-  const [code, setCodeValue, cleanCodeStorage] = useLocalStorage<string>(STORAGE_CODE, '')
-
-  const [state, setStateValue, cleanStateStorage] = useLocalStorage<BoardState>(
-    STORAGE_STATE,
-    { cells: [], columns: [], rows: [] }
-  )
+export const usePuzzle = (): UsePuzzleType => {
+  const [board, setBoard, cleanBoard] = useLocalStorage<Board>(ST_BOARD, [])
+  const [columns, setColumns, cleanColumns] = useLocalStorage<Columns>(ST_COLUMNS, [])
+  const [rows, setRows, cleanRows] = useLocalStorage<Rows>(ST_ROWS, [])
 
   const [finished, setFinishedValue] = useState<boolean>(false)
 
-  const [puzzle, setPuzzleValue] = useState<PuzzleType | null>(() =>
-    code ? decodePuzzle(code) : null
+  const isValidIndex = useCallback<(index: number) => boolean>(
+    (index) => index >= 0 && index < board.length,
+    [board]
   )
 
   const getCellState = useCallback<(c: number, r: number) => CellState>(
     (c, r) => {
-      if (state.cells.length === 0) return CellState.Empty
-      return state.cells[c][r]
+      if (!isValidIndex(c) || !isValidIndex(r))
+        throw new Error('Cell index out of bounds')
+      return board[c][r]
     },
-    [state.cells]
+    [board, isValidIndex]
   )
 
-  const resetState = useCallback<() => void>(() => {
-    if (puzzle && !finished) setStateValue(createState(puzzle))
-  }, [puzzle, finished, setStateValue])
+  const reset = useCallback<() => void>(() => {
+    setBoard((board) => getEmptyBoard(board.length))
+    setColumns((columns) =>
+      columns.map((column) => column.map(({ value }) => ({ value, solved: false })))
+    )
+    setRows((rows) =>
+      rows.map((row) => row.map(({ value }) => ({ value, solved: false })))
+    )
+  }, [setBoard, setColumns, setRows])
 
   const setCellState = useCallback<(c: number, r: number) => (value: CellState) => void>(
     (c, r) => (value) => {
-      const cells = state.cells.map((row: CellState[], i: number) => {
-        if (i !== c) return [...row]
-        return row.map((cell, j) => (j !== r ? cell : value))
+      if (!isValidIndex(c) || !isValidIndex(r))
+        throw new Error('Cell index out of bounds')
+
+      const nextBoard = board.map((column, i) =>
+        column.map((cell, j) => (i === c && j === r ? value : cell))
+      )
+
+      setBoard(nextBoard)
+      setColumns((cols) => {
+        const line = nextBoard[c]
+        return cols.map((col, i) => (i !== c ? col : getUpdatedClues(col, line)))
       })
-      const columns = state.columns.map((column: number[], i: number) => {
-        if (i !== r) return [...column]
-        return getColState(cells, i)
+      setRows((rows) => {
+        const line = nextBoard.map((column) => column[r])
+        return rows.map((row, i) => (i !== r ? row : getUpdatedClues(row, line)))
       })
-      const rows = state.rows.map((row: number[], i: number) => {
-        if (i !== c) return [...row]
-        return getRowState(cells, i)
-      })
-      setStateValue({ cells, columns, rows })
     },
-    [state, setStateValue]
+    [board, isValidIndex, setBoard, setColumns, setRows]
   )
 
   const setFinished = useCallback<() => void>(() => {
     setFinishedValue(true)
-    cleanCodeStorage()
-    cleanStateStorage()
-  }, [cleanCodeStorage, cleanStateStorage])
+    cleanBoard()
+    cleanColumns()
+    cleanRows()
+  }, [cleanBoard, cleanColumns, cleanRows])
 
-  const setPuzzle = useCallback<(puzzle: PuzzleType) => void>(
+  const setPuzzle = useCallback<(puzzle: Puzzle) => void>(
     (puzzle) => {
       setFinishedValue(false)
-      setPuzzleValue(puzzle)
-      setCodeValue(encodePuzzle(puzzle))
-      setStateValue(createState(puzzle))
+      setBoard(puzzle.board)
+      setColumns(puzzle.columns)
+      setRows(puzzle.rows)
     },
-    [setCodeValue, setStateValue]
+    [setBoard, setColumns, setRows]
   )
 
   return {
-    code,
-    colsState: state.columns,
     finished,
-    puzzle,
-    rowsState: state.rows,
+    puzzle: { board, columns, rows },
     getCellState,
-    resetState,
+    reset,
     setCellState,
     setFinished,
     setPuzzle,

@@ -1,19 +1,17 @@
-import { FC, MouseEvent, TouchEvent, ReactElement } from 'react'
+import { FC, MouseEvent, TouchEvent } from 'react'
 import classNames from 'classnames'
 
 import { CrossIcon } from 'components/icons'
 import { COLORS } from 'constants/colors.constants'
-import { CellState } from 'models/State'
+import { CellState } from 'models/Puzzle'
 
 import styles from 'styles/components/Cell.module.css'
 
 type Props = {
   className?: string
-  isFilled: boolean
-  isRevealed: boolean
+  clickedState: CellState
   isLeftClicked: boolean
   isRightClicked: boolean
-  clickedState: CellState
   state: CellState
   onHover: () => void
   setClickedState: (state: CellState) => void
@@ -22,18 +20,14 @@ type Props = {
 
 export const Cell: FC<Props> = ({
   className = '',
-  isFilled,
-  isRevealed,
+  clickedState,
   isLeftClicked,
   isRightClicked,
-  clickedState,
   state,
   onHover,
   setClickedState,
   setState,
 }) => {
-  const isError = isFilled !== (state === CellState.Filled)
-
   const handleContextMenu: (e: MouseEvent) => void = (e) => {
     e.preventDefault()
   }
@@ -67,24 +61,14 @@ export const Cell: FC<Props> = ({
     else if (isLeftClicked && state !== CellState.Cross) setState(clickedState)
   }
 
-  const getCellResult: () => ReactElement = () => {
-    const cellClassName = classNames(styles.inner, {
-      [styles.filled]: isFilled,
-    })
-    return (
-      <div className={cellClassName}>
-        {isError && <CrossIcon color={isFilled ? COLORS.FIFTH : COLORS.FOURTH} />}
-      </div>
-    )
-  }
+  const buttonClassName = classNames(styles.inner, styles.button, {
+    [styles.filled]: state === CellState.Filled,
+  })
 
-  const getCellButton: () => ReactElement = () => {
-    const cellClassName = classNames(styles.inner, styles.button, {
-      [styles.filled]: state === CellState.Filled,
-    })
-    return (
+  return (
+    <div className={`${styles.cell} ${className}`}>
       <button
-        className={cellClassName}
+        className={buttonClassName}
         onContextMenu={handleContextMenu}
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
@@ -92,12 +76,6 @@ export const Cell: FC<Props> = ({
       >
         {state === CellState.Cross && <CrossIcon color={COLORS.SECOND} />}
       </button>
-    )
-  }
-
-  return (
-    <div className={`${styles.cell} ${className}`}>
-      {isRevealed ? getCellResult() : getCellButton()}
     </div>
   )
 }

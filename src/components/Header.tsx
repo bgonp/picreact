@@ -1,34 +1,36 @@
 import { useEffect, useState } from 'react'
 import { useRoute } from 'wouter'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import copy from 'copy-to-clipboard'
 
 import Button from 'components/Button'
 import { ModalContext } from 'contexts/ModalContext'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
-import { createUrl } from 'utils/createUrl'
-import { createPuzzle } from 'utils/puzzleGenerator'
 import { ROUTES } from 'constants/router.constants'
 import { DEFAULT_SIZE } from 'constants/puzzle.constants'
 
 import styles from 'styles/components/Header.module.css'
+import { encodePuzzle } from 'utils/puzzleEncoder'
+import { createPuzzleFromSize } from 'utils/puzzleCreator'
 
 const Header = () => {
-  const { code, finished, puzzle, resetState, setFinished, setPuzzle } = useContext(
-    PuzzleContext
-  )
+  const { finished, puzzle, reset, setPuzzle } = useContext(PuzzleContext)
   const { notice } = useContext(ModalContext)
+
+  const handleCopy = () => {
+    copy(encodePuzzle(puzzle))
+    notice('Copied!')
+  }
 
   const [isRoutePlay] = useRoute(ROUTES.PLAY)
   const [isRouteCreate] = useRoute(ROUTES.CREATE)
 
   const [size, setSize] = useState<number>(DEFAULT_SIZE)
 
-  const shareUrl: string = code ? createUrl(ROUTES.LOAD, { code }) : ''
   const hidePuzzleButtons: boolean = !isRoutePlay || !puzzle
 
   useEffect(() => {
-    if (puzzle) setSize(puzzle.size)
+    if (puzzle) setSize(puzzle.board.length)
   }, [puzzle])
 
   return (
@@ -45,7 +47,7 @@ const Header = () => {
             PLAY
           </Button>
         )}
-        <Button onClick={() => setPuzzle(createPuzzle(size))} outlined>
+        <Button onClick={() => setPuzzle(createPuzzleFromSize(size))} outlined>
           NEW PUZZLE
         </Button>
         <select onChange={(e) => setSize(parseInt(e.target.value))} value={size}>
@@ -58,20 +60,13 @@ const Header = () => {
         {!hidePuzzleButtons && (
           <>
             {!finished && (
-              <>
-                <Button onClick={resetState} outlined>
-                  RESET
-                </Button>
-                <Button onClick={setFinished} outlined>
-                  RESOLVE
-                </Button>
-              </>
-            )}
-            <CopyToClipboard text={shareUrl}>
-              <Button onClick={() => notice('Copied!')} outlined>
-                COPY LINK
+              <Button onClick={reset} outlined>
+                RESET
               </Button>
-            </CopyToClipboard>
+            )}
+            <Button onClick={handleCopy} outlined>
+              COPY LINK
+            </Button>
           </>
         )}
       </nav>

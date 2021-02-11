@@ -1,2 +1,3 @@
-export const STORAGE_CODE = 'puzzle-code'
-export const STORAGE_STATE = 'puzzle-state'
+export const ST_BOARD = 'puzzle-board'
+export const ST_COLUMNS = 'puzzle-columns'
+export const ST_ROWS = 'puzzle-rows'

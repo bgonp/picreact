@@ -1,19 +1,19 @@
 import { FC } from 'react'
 
 import Button from 'components/Button'
-import { PuzzleType } from 'models/Puzzle'
-import { createPuzzle } from 'utils/puzzleGenerator'
+import { Puzzle } from 'models/Puzzle'
+import { createPuzzleFromSize } from 'utils/puzzleCreator'
 
 import styles from 'styles/components/Welcome.module.css'
 
 type Props = {
-  setPuzzle: (puzzle: PuzzleType) => void
+  setPuzzle: (puzzle: Puzzle) => void
 }
 
 const Welcome: FC<Props> = ({ setPuzzle }) => {
-  const setEasyPuzzle = () => setPuzzle(createPuzzle(10))
-  const setMediumPuzzle = () => setPuzzle(createPuzzle(15))
-  const setHardPuzzle = () => setPuzzle(createPuzzle(20))
+  const setEasyPuzzle = () => setPuzzle(createPuzzleFromSize(10))
+  const setMediumPuzzle = () => setPuzzle(createPuzzleFromSize(15))
+  const setHardPuzzle = () => setPuzzle(createPuzzleFromSize(20))
 
   return (
     <div className={styles.welcome}>

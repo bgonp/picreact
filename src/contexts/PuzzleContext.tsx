@@ -1,8 +1,8 @@
 import { FC } from 'react'
-import { usePuzzle, usePuzzleType } from 'hooks/usePuzzle'
+import { usePuzzle, UsePuzzleType } from 'hooks/usePuzzle'
 import { createContextSecure as createContext } from 'utils/contextSecure'
 
-export const PuzzleContext = createContext<usePuzzleType>()
+export const PuzzleContext = createContext<UsePuzzleType>()
 
 export const PuzzleContextProvider: FC = ({ children }) => {
   const puzzleContext = usePuzzle()

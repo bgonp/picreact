@@ -123,6 +123,11 @@
     border-style: solid;
     border-width: 0 2px 2px 0;
     margin: 0 -2px -2px 0;
+
+    & button {
+      box-shadow: inset 0 0 0 2rem transparent;
+      transition: box-shadow 0.1s ease;
+    }
     
     &.gapRight {
       border-right: none;

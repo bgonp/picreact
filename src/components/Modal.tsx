@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { useTimeout } from 'bgon-custom-hooks'
 
@@ -26,24 +26,24 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
     setTimeout(onConfirm, ALERT_ANIMATION)
   }
 
-  const handleClose: () => void = () => {
+  const handleClose = useCallback<() => void>(() => {
     setHidden(true)
     setTimeout(onClose, ALERT_ANIMATION)
-  }
+  }, [onClose, setTimeout])
 
   const handleMouseEnter = clearTimeout
 
   const handleMouseLeave = () => {
     if (!ALERT_TIMEOUT || type === 'confirm') return
-    setTimeout(() => setHidden(true), ALERT_TIMEOUT)
+    setTimeout(handleClose, ALERT_TIMEOUT)
   }
 
   useEffect(() => {
     clearTimeout()
     setHidden(false)
     if (!ALERT_TIMEOUT || type === 'confirm') return
-    setTimeout(() => setHidden(true), ALERT_TIMEOUT)
-  }, [content, type, setTimeout, clearTimeout])
+    setTimeout(handleClose, ALERT_TIMEOUT)
+  }, [content, type, handleClose, setTimeout, clearTimeout])
 
   if (type === 'confirm')
     return (

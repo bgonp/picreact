@@ -7,7 +7,7 @@ import { ROUTE_HOME, ROUTE_PLAY } from 'constants/router.constants'
 import { ModalContext } from 'contexts/ModalContext'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
-import { decodePuzzle } from 'utils/puzzleEncoder'
+import { createPuzzleFromCode } from 'utils/puzzleCreator'
 
 type Props = {
   code: string
@@ -21,7 +21,7 @@ const LoadPage: FC<Props> = ({ code }) => {
 
   useEffect(() => {
     try {
-      const puzzle = decodePuzzle(code)
+      const puzzle = createPuzzleFromCode(code)
       setPuzzle(puzzle)
       navigate(ROUTE_PLAY)
       notice('Puzzle loaded successfully')

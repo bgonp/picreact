@@ -1,52 +1,39 @@
-import { Puzzle, PuzzleType } from 'models/Puzzle'
+import { Clue, Puzzle } from 'models/Puzzle'
 
-const CHARS = 'ABCDEFGHIJKLMNkmnopqrstuvwxyz-_.'
+const CODE_FIRST_CHAR = 99
 
-const letterToBooleans = (letter: string): boolean[] =>
-  CHARS.indexOf(letter)
-    .toString(2)
-    .padStart(5, '0')
-    .split('')
-    .map((boolean) => boolean === '1')
+const sideSeparator = String.fromCharCode(CODE_FIRST_CHAR - 1)
+const lineSeparator = String.fromCharCode(CODE_FIRST_CHAR - 2)
 
-const booleansToLetter = (booleans: boolean[]): string => {
-  if (booleans.length !== 5) throw new Error()
-  const binary: string = booleans.reduce(
-    (acc, boolean) => acc + (boolean ? '1' : '0'),
-    ''
-  )
-  return CHARS[parseInt(binary, 2)]
+const isValidCode = (code: string): boolean => {
+  const sides = code.split(sideSeparator)
+  if (sides.length !== 2) return false
+  const regex = new RegExp(`${lineSeparator}`, 'g')
+  return sides[0].match(regex)?.length === sides[1].match(regex)?.length
 }
 
-export const decodePuzzle = (code: string): PuzzleType => {
-  const matrix: boolean[][] = []
-  const cells: boolean[] = code
-    .split('')
-    .reduce(
-      (puzzle: boolean[], letter: string) => puzzle.concat(letterToBooleans(letter)),
-      []
+const encodeSide = (side: Clue[][]): string =>
+  side
+    .map((line) =>
+      line.reduce(
+        (acc, clue) => acc + String.fromCharCode(clue.value + CODE_FIRST_CHAR),
+        ''
+      )
     )
-  const size: number = Math.sqrt(cells.length)
+    .join(lineSeparator)
 
-  while (cells.length > 0) {
-    matrix.push(cells.splice(0, size))
-  }
+const decodeLine = (code: string): Clue[] =>
+  code
+    .split('')
+    .map((letter) => ({ value: letter.charCodeAt(0) - CODE_FIRST_CHAR, solved: false }))
 
-  return new Puzzle(matrix)
-}
+const decodeSide = (code: string): Clue[][] =>
+  code.split(lineSeparator).map((lineCode) => decodeLine(lineCode))
 
-export const encodePuzzle = (puzzle: PuzzleType): string => {
-  let encoded = ''
-  for (const column of [...Array(puzzle.size).keys()]) {
-    for (let row = 0; row < puzzle.size; row += 5) {
-      encoded += booleansToLetter([
-        puzzle.isFilled(column, row),
-        puzzle.isFilled(column, row + 1),
-        puzzle.isFilled(column, row + 2),
-        puzzle.isFilled(column, row + 3),
-        puzzle.isFilled(column, row + 4),
-      ])
-    }
-  }
-  return encoded
+export const encodePuzzle = ({ columns, rows }: Puzzle): string =>
+  `${encodeSide(columns)}${sideSeparator}${encodeSide(rows)}`
+
+export const decodePuzzle = (code: string): Clue[][][] => {
+  if (!isValidCode(code)) throw new Error('Wrong puzzle code')
+  return code.split(sideSeparator).map((side) => decodeSide(side))
 }

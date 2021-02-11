@@ -9,14 +9,7 @@ import { useContextSecure as useContext } from 'utils/contextSecure'
 const Board = lazy(() => import('components/Board'))
 
 const PlayPage: FC = () => {
-  const {
-    colsState,
-    finished,
-    puzzle,
-    rowsState,
-    getCellState,
-    setCellState,
-  } = useContext(PuzzleContext)
+  const { finished, puzzle, getCellState, setCellState } = useContext(PuzzleContext)
 
   const [, navigate] = useLocation()
 
@@ -28,10 +21,8 @@ const PlayPage: FC = () => {
   return (
     <Wrapper>
       <Board
-        colsState={colsState}
         finished={finished}
         puzzle={puzzle}
-        rowsState={rowsState}
         getCellState={getCellState}
         setCellState={setCellState}
       />

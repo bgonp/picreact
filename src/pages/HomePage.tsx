@@ -1,7 +1,6 @@
 import { FC, lazy, useEffect } from 'react'
 import { useLocation } from 'wouter'
 
-import Loading from 'components/Loading'
 import Wrapper from 'components/Wrapper'
 import { ROUTE_PLAY } from 'constants/router.constants'
 import { PuzzleContext } from 'contexts/PuzzleContext'
@@ -10,7 +9,7 @@ import { useContextSecure as useContext } from 'utils/contextSecure'
 const Welcome = lazy(() => import('components/Welcome'))
 
 const HomePage: FC = () => {
-  const { code, puzzle, setPuzzle } = useContext(PuzzleContext)
+  const { puzzle, setPuzzle } = useContext(PuzzleContext)
 
   const [, navigate] = useLocation()
 
@@ -18,7 +17,11 @@ const HomePage: FC = () => {
     if (puzzle) navigate(ROUTE_PLAY)
   }, [puzzle, navigate])
 
-  return <Wrapper>{code ? <Loading /> : <Welcome setPuzzle={setPuzzle} />}</Wrapper>
+  return (
+    <Wrapper>
+      <Welcome setPuzzle={setPuzzle} />
+    </Wrapper>
+  )
 }
 
 export default HomePage
