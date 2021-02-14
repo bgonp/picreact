@@ -13,6 +13,7 @@ import styles from 'styles/components/Board.module.css'
 type Props = {
   canUndo: boolean
   puzzle: Puzzle
+  size: number
   solved: boolean
   getCellState: (r: number, c: number) => CellState
   reset: () => void
@@ -23,6 +24,7 @@ type Props = {
 export const Board: FC<Props> = ({
   canUndo,
   puzzle,
+  size,
   solved,
   getCellState,
   reset,
@@ -61,11 +63,11 @@ export const Board: FC<Props> = ({
   )
 
   const className = classNames(styles.board, {
-    [styles.size5]: puzzle.board.length === 5,
-    [styles.size10]: puzzle.board.length === 10,
-    [styles.size15]: puzzle.board.length === 15,
-    [styles.size20]: puzzle.board.length === 20,
-    [styles.size25]: puzzle.board.length === 25,
+    [styles.size5]: size === 5,
+    [styles.size10]: size === 10,
+    [styles.size15]: size === 15,
+    [styles.size20]: size === 20,
+    [styles.size25]: size === 25,
   })
 
   return (

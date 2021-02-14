@@ -11,9 +11,17 @@ const Board = lazy(() => import('components/Board'))
 
 const PlayPage: FC = () => {
   const { confirm } = useContext(ModalContext)
-  const { canUndo, solved, puzzle, getCellState, reset, setCellState, undo } = useContext(
-    PuzzleContext
-  )
+  const {
+    canUndo,
+    initialized,
+    size,
+    solved,
+    puzzle,
+    getCellState,
+    reset,
+    setCellState,
+    undo,
+  } = useContext(PuzzleContext)
 
   const [, navigate] = useLocation()
 
@@ -21,14 +29,15 @@ const PlayPage: FC = () => {
     confirm('This will discard current progress. Are you sure?', reset)
 
   useEffect(() => {
-    if (puzzle.board.length === 0) navigate(ROUTE_HOME)
-  }, [puzzle, navigate])
+    if (!initialized) navigate(ROUTE_HOME)
+  }, [initialized, navigate])
 
   return (
     <Wrapper>
       <Board
         canUndo={canUndo}
         puzzle={puzzle}
+        size={size}
         solved={solved}
         getCellState={getCellState}
         reset={handleReset}

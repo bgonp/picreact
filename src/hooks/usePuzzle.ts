@@ -15,7 +15,9 @@ type Step = [number, number, CellState]
 
 export type UsePuzzleType = {
   canUndo: boolean
+  initialized: boolean
   puzzle: Puzzle
+  size: number
   solved: boolean
   getCellState: (r: number, c: number) => CellState
   remove: () => void
@@ -128,7 +130,9 @@ export const usePuzzle = (): UsePuzzleType => {
 
   return {
     canUndo,
+    initialized: board.length > 0,
     puzzle: { board, columns, rows },
+    size: board.length,
     solved,
     getCellState,
     remove,

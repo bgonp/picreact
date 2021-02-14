@@ -9,13 +9,13 @@ import { useContextSecure as useContext } from 'utils/contextSecure'
 const Welcome = lazy(() => import('components/Welcome'))
 
 const HomePage: FC = () => {
-  const { puzzle, setPuzzle } = useContext(PuzzleContext)
+  const { initialized, setPuzzle } = useContext(PuzzleContext)
 
   const [, navigate] = useLocation()
 
   useEffect(() => {
-    if (puzzle) navigate(ROUTE_PLAY)
-  }, [puzzle, navigate])
+    if (initialized) navigate(ROUTE_PLAY)
+  }, [initialized, navigate])
 
   return (
     <Wrapper>

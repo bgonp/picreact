@@ -15,14 +15,12 @@ import { COLORS } from 'constants/colors.constants'
 
 const Header = () => {
   const { confirm, notice } = useContext(ModalContext)
-  const { solved, puzzle, remove } = useContext(PuzzleContext)
+  const { initialized, solved, puzzle, remove } = useContext(PuzzleContext)
 
   const [, navigate] = useLocation()
   const [isRouteCreate] = useRoute(ROUTES.CREATE)
   const [isRouteHome] = useRoute(ROUTES.HOME)
   const [isRoutePlay] = useRoute(ROUTES.PLAY)
-
-  const hasPuzzle: boolean = puzzle.board.length > 0
 
   const handleShare = () => {
     const code = encodePuzzle(puzzle)
@@ -32,7 +30,7 @@ const Header = () => {
   }
 
   const handleNewPuzzle = () => {
-    if (solved || puzzle.board.length === 0) {
+    if (solved || !initialized) {
       remove()
       navigate(ROUTES.HOME)
     } else {
@@ -51,7 +49,7 @@ const Header = () => {
       <nav className={styles.menu}>
         <Button
           to={ROUTES.PLAY}
-          disabled={isRoutePlay || !hasPuzzle}
+          disabled={isRoutePlay || !initialized}
           outlined={!isRoutePlay}
         >
           PLAY
@@ -62,7 +60,7 @@ const Header = () => {
         <Button to={ROUTES.CREATE} disabled={isRouteCreate} outlined={!isRouteCreate}>
           CREATE
         </Button>
-        <Button asIcon onClick={handleShare} disabled={!hasPuzzle}>
+        <Button asIcon onClick={handleShare} disabled={!initialized}>
           <ShareIcon color={COLORS.FIRST} />
         </Button>
       </nav>
