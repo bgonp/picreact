@@ -12,6 +12,7 @@ type Props = {
   clickedState: CellState
   isLeftClicked: boolean
   isRightClicked: boolean
+  solved: boolean
   state: CellState
   onHover: () => void
   setClickedState: (state: CellState) => void
@@ -23,6 +24,7 @@ export const Cell: FC<Props> = ({
   clickedState,
   isLeftClicked,
   isRightClicked,
+  solved,
   state,
   onHover,
   setClickedState,
@@ -34,12 +36,14 @@ export const Cell: FC<Props> = ({
 
   const handleTouchEnd: (e: TouchEvent) => void = (e) => {
     e.preventDefault()
+    if (solved) return
     if (state === CellState.Empty) setState(CellState.Filled)
     else if (state === CellState.Filled) setState(CellState.Cross)
     else if (state === CellState.Cross) setState(CellState.Empty)
   }
 
   const handleMouseDown: (e: MouseEvent) => void = ({ button }) => {
+    if (solved) return
     let newState: CellState = CellState.Empty
     if (button === 0) {
       if (state === CellState.Cross) return
@@ -56,13 +60,15 @@ export const Cell: FC<Props> = ({
 
   const handleMouseEnter: () => void = () => {
     onHover()
+    if (solved) return
     if (state === clickedState) return
     if (isRightClicked && state !== CellState.Filled) setState(clickedState)
     else if (isLeftClicked && state !== CellState.Cross) setState(clickedState)
   }
 
-  const buttonClassName = classNames(styles.inner, styles.button, {
+  const buttonClassName = classNames(styles.button, {
     [styles.filled]: state === CellState.Filled,
+    [styles.solved]: solved,
   })
 
   return (
@@ -74,7 +80,7 @@ export const Cell: FC<Props> = ({
         onMouseDown={handleMouseDown}
         onMouseEnter={handleMouseEnter}
       >
-        {state === CellState.Cross && <CrossIcon color={COLORS.SECOND} />}
+        {!solved && state === CellState.Cross && <CrossIcon color={COLORS.SECOND} />}
       </button>
     </div>
   )
