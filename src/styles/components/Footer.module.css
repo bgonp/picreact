@@ -4,4 +4,5 @@
   padding: 1rem 2rem;
   display: flex;
   gap: 0.5rem;
+  justify-content: space-between;
 }

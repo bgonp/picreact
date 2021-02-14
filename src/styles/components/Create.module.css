@@ -1,8 +1,8 @@
 .create {
-  background: var(--color-dark_transparent);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-first);
+  text-align: center;
 }

@@ -20,7 +20,7 @@
   text-align: center;
 
   &.hidden {
-    animation: fade-out 0.6s ease forwards;
+    animation: fade-out var(--time-animation_duration) ease forwards;
   }
 
   & .content {
@@ -55,7 +55,7 @@
   }
 
   &.hidden {
-    animation: right-escape 0.6s ease forwards;
+    animation: right-escape var(--time-animation_duration) ease forwards;
   }
 }
 

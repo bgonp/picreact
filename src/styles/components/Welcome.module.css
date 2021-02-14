@@ -13,4 +13,8 @@
 .buttons {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin: 0 auto;
+  max-width: 16rem;
 }

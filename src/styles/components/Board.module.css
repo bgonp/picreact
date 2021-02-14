@@ -1,77 +1,42 @@
 .board {
-  margin: 1rem auto;
+  padding: 1rem;
   width: fit-content;
   user-select: none;
-}
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
 
-.size5 {
-  & .cells, & .helpColumn {
-    grid-template-columns: repeat(5, 2.5rem);
+  &.size5 {
+    --puzzle-size: 5;
+    font-size: 1.9rem;
   }
 
-  & .cells, & .helpRow {
-    grid-template-rows: repeat(5, 2.5rem);
+  &.size10 {
+    --puzzle-size: 10;
+    font-size: 1.7rem;
   }
 
-  & .singleHelp {
+  &.size15 {
+    --puzzle-size: 15;
     font-size: 1.4rem;
   }
-}
 
-.size10 {
-  & .cells, & .helpColumn {
-    grid-template-columns: repeat(10, 2rem);
-  }
-
-  & .cells, & .helpRow {
-    grid-template-rows: repeat(10, 2rem);
-  }
-
-  & .singleHelp {
-    font-size: 1.2rem;
+  &.size20 {
+    --puzzle-size: 20;
+    font-size: 1.3rem;
   }
 }
 
-.size15 {
-  & .cells, & .helpColumn {
-    grid-template-columns: repeat(15, 1.8rem);
-  }
-
-  & .cells, & .helpRow {
-    grid-template-rows: repeat(15, 1.8rem);
-  }
-
-  & .singleHelp {
-    font-size: 1.1rem;
-  }
+.cells, .cluesColumns {
+  grid-template-columns: repeat(var(--puzzle-size), 1.3em);
 }
 
-.size20 {
-  & .cells, & .helpColumn {
-    grid-template-columns: repeat(20, 1.6rem);
-  }
-
-  & .cells, & .helpRow {
-    grid-template-rows: repeat(20, 1.6rem);
-  }
-
-  & .singleHelp {
-    font-size: 1rem;
-  }
+.cells, .cluesRows {
+  grid-template-rows: repeat(var(--puzzle-size), 1.3em);
 }
 
-.size25 {
-  & .cells, & .helpColumn {
-    grid-template-columns: repeat(25, 1.4rem);
-  }
-
-  & .cells, & .helpRow {
-    grid-template-rows: repeat(25, 1.4rem);
-  }
-
-  & .singleHelp {
-    font-size: 0.9rem;
-  }
+.cluesLine {
+  font-size: 0.8em;
 }
 
 .content {
@@ -79,32 +44,44 @@
   grid-template: auto auto / auto auto;
 }
 
-.helpColumn {
+.cluesColumns {
+  box-sizing: border-box;
   display: grid;
   gap: 2px;
   grid-column-start: 2;
   width: 100%;
-  margin-bottom: 0.4rem;
+  padding: 0 2px;
 
-  & .singleHelp {
+  & .cluesLine {
     flex-direction: column;
+    padding: 0.6em 0;
+
+    &.hover {
+      background: linear-gradient(transparent, var(--color-fifth_transparent));
+    }
   }
 }
 
-.helpRow {
+.cluesRows {
+  box-sizing: border-box;
   display: grid;
   gap: 2px;
   height: 100%;
-  margin-right: 0.6rem;
+  padding: 2px 0;
 }
 
-.singleHelp {
+.cluesLine {
   align-items: center;
   color: var(--color-first);
   display: flex;
   font-weight: 600;
-  gap: .4rem 0.8rem;
+  gap: 0.6em 0.85em;
   justify-content: flex-end;
+  padding: 0 0.8em;
+
+  &.hover {
+    background: linear-gradient(to right, transparent, var(--color-fifth_transparent));
+  }
 
   & .ok {
     color: var(--color-third);
@@ -125,7 +102,7 @@
     margin: 0 -2px -2px 0;
 
     & button {
-      box-shadow: inset 0 0 0 2rem transparent;
+      box-shadow: inset 0 0 0 1em transparent;
       transition: box-shadow 0.1s ease;
     }
     
@@ -140,7 +117,13 @@
     }
     
     &.hover button {
-      box-shadow: inset 0 0 0 2rem var(--color-fifth_transparent);
+      box-shadow: inset 0 0 0 1em var(--color-fifth_transparent);
     }
   }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
