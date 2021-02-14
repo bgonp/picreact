@@ -1,23 +1,19 @@
 import { FC } from 'react'
+
+import Footer from 'components/Footer'
+import Header from 'components/Header'
 import Router from 'router/Router'
 
-import ErrorBoundary from 'components/ErrorBoundary'
-import { ModalContextProvider } from 'contexts/ModalContext'
-import { PuzzleContextProvider } from 'contexts/PuzzleContext'
-import { initCssVariables } from 'utils/styles'
-
-import 'styles/index.css'
-
-initCssVariables()
+import styles from 'styles/components/Main.module.css'
 
 const Main: FC = () => (
-  <ErrorBoundary>
-    <ModalContextProvider>
-      <PuzzleContextProvider>
-        <Router />
-      </PuzzleContextProvider>
-    </ModalContextProvider>
-  </ErrorBoundary>
+  <div className={styles.wrapper}>
+    <Header />
+    <main className={styles.main}>
+      <Router />
+    </main>
+    <Footer />
+  </div>
 )
 
 export default Main
