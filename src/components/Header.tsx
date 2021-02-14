@@ -1,37 +1,47 @@
-import { useEffect, useState } from 'react'
-import { useRoute } from 'wouter'
+import { useLocation, useRoute } from 'wouter'
 import copy from 'copy-to-clipboard'
 
 import Button from 'components/Button'
+import { ShareIcon } from 'components/icons'
+import { ROUTES, ROUTE_LOAD } from 'constants/router.constants'
 import { ModalContext } from 'contexts/ModalContext'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
-import { ROUTES } from 'constants/router.constants'
-import { DEFAULT_SIZE } from 'constants/puzzle.constants'
+import { createUrl } from 'utils/createUrl'
+import { encodePuzzle } from 'utils/puzzleEncoder'
 
 import styles from 'styles/components/Header.module.css'
-import { encodePuzzle } from 'utils/puzzleEncoder'
-import { createPuzzleFromSize } from 'utils/puzzleCreator'
+import { COLORS } from 'constants/colors.constants'
 
 const Header = () => {
-  const { finished, puzzle, reset, setPuzzle } = useContext(PuzzleContext)
-  const { notice } = useContext(ModalContext)
+  const { confirm, notice } = useContext(ModalContext)
+  const { solved, puzzle, remove } = useContext(PuzzleContext)
 
-  const handleCopy = () => {
-    copy(encodePuzzle(puzzle))
-    notice('Copied!')
+  const [, navigate] = useLocation()
+  const [isRouteCreate] = useRoute(ROUTES.CREATE)
+  const [isRouteHome] = useRoute(ROUTES.HOME)
+  const [isRoutePlay] = useRoute(ROUTES.PLAY)
+
+  const hasPuzzle: boolean = puzzle.board.length > 0
+
+  const handleShare = () => {
+    const code = encodePuzzle(puzzle)
+    const url = createUrl(ROUTE_LOAD, { code })
+    copy(url)
+    notice('Puzzle URL copied!')
   }
 
-  const [isRoutePlay] = useRoute(ROUTES.PLAY)
-  const [isRouteCreate] = useRoute(ROUTES.CREATE)
-
-  const [size, setSize] = useState<number>(DEFAULT_SIZE)
-
-  const hidePuzzleButtons: boolean = !isRoutePlay || !puzzle
-
-  useEffect(() => {
-    if (puzzle) setSize(puzzle.board.length)
-  }, [puzzle])
+  const handleNewPuzzle = () => {
+    if (solved || puzzle.board.length === 0) {
+      remove()
+      navigate(ROUTES.HOME)
+    } else {
+      confirm('This will discard current puzzle. Are you sure?', () => {
+        remove()
+        navigate(ROUTES.HOME)
+      })
+    }
+  }
 
   return (
     <header className={styles.header}>
@@ -39,36 +49,22 @@ const Header = () => {
         PIC<span>REACT</span>SS
       </h1>
       <nav className={styles.menu}>
+        <Button
+          to={ROUTES.PLAY}
+          disabled={isRoutePlay || !hasPuzzle}
+          outlined={!isRoutePlay}
+        >
+          PLAY
+        </Button>
+        <Button onClick={handleNewPuzzle} disabled={isRouteHome} outlined={!isRouteHome}>
+          NEW
+        </Button>
         <Button to={ROUTES.CREATE} disabled={isRouteCreate} outlined={!isRouteCreate}>
           CREATE
         </Button>
-        {puzzle && (
-          <Button to={ROUTES.PLAY} disabled={isRoutePlay} outlined={!isRoutePlay}>
-            PLAY
-          </Button>
-        )}
-        <Button onClick={() => setPuzzle(createPuzzleFromSize(size))} outlined>
-          NEW PUZZLE
+        <Button asIcon onClick={handleShare} disabled={!hasPuzzle}>
+          <ShareIcon color={COLORS.FIRST} />
         </Button>
-        <select onChange={(e) => setSize(parseInt(e.target.value))} value={size}>
-          <option value="5">5x5</option>
-          <option value="10">10x10</option>
-          <option value="15">15x15</option>
-          <option value="20">20x20</option>
-          <option value="25">25x25</option>
-        </select>
-        {!hidePuzzleButtons && (
-          <>
-            {!finished && (
-              <Button onClick={reset} outlined>
-                RESET
-              </Button>
-            )}
-            <Button onClick={handleCopy} outlined>
-              COPY LINK
-            </Button>
-          </>
-        )}
       </nav>
     </header>
   )
