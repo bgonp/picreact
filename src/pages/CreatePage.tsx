@@ -1,14 +1,14 @@
 import { FC, lazy } from 'react'
 
-import Wrapper from 'components/Wrapper'
+import LazyLoaded from 'components/LazyLoaded'
 
 const Create = lazy(() => import('components/Create'))
 
 const CreatePage: FC = () => {
   return (
-    <Wrapper>
+    <LazyLoaded>
       <Create />
-    </Wrapper>
+    </LazyLoaded>
   )
 }
 

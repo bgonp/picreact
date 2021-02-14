@@ -1,7 +1,7 @@
 import { FC, lazy, useEffect } from 'react'
 import { useLocation } from 'wouter'
 
-import Wrapper from 'components/Wrapper'
+import LazyLoaded from 'components/LazyLoaded'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { ROUTE_HOME } from 'constants/router.constants'
 import { useContextSecure as useContext } from 'utils/contextSecure'
@@ -33,7 +33,7 @@ const PlayPage: FC = () => {
   }, [initialized, navigate])
 
   return (
-    <Wrapper>
+    <LazyLoaded>
       <Board
         canUndo={canUndo}
         puzzle={puzzle}
@@ -44,7 +44,7 @@ const PlayPage: FC = () => {
         setCellState={setCellState}
         undo={undo}
       />
-    </Wrapper>
+    </LazyLoaded>
   )
 }
 

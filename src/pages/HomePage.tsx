@@ -1,7 +1,7 @@
 import { FC, lazy, useEffect } from 'react'
 import { useLocation } from 'wouter'
 
-import Wrapper from 'components/Wrapper'
+import LazyLoaded from 'components/LazyLoaded'
 import { ROUTE_PLAY } from 'constants/router.constants'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
@@ -18,9 +18,9 @@ const HomePage: FC = () => {
   }, [initialized, navigate])
 
   return (
-    <Wrapper>
+    <LazyLoaded>
       <Welcome setPuzzle={setPuzzle} />
-    </Wrapper>
+    </LazyLoaded>
   )
 }
 
