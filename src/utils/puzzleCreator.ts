@@ -24,15 +24,15 @@ const getLineClues = (type: 'col' | 'row', cells: boolean[][], i: number): Clue[
 const getClues = (cells: boolean[][]): { columns: Clue[][]; rows: Clue[][] } =>
   [...Array(cells.length)].reduce(
     ({ columns, rows }, _, i) => ({
-      columns: columns.concat([getLineClues('col', cells, i)]),
-      rows: rows.concat([getLineClues('row', cells, i)]),
+      columns: [...columns, getLineClues('col', cells, i)],
+      rows: [...rows, getLineClues('row', cells, i)],
     }),
     { columns: [], rows: [] }
   )
 
 export const getEmptyBoard = (size: number): CellState[][] =>
   [...Array(size)].reduce(
-    (acc) => acc.concat([Array(size).fill(CellState.Empty)]),
+    (acc) => [...acc, Array(size).fill(CellState.Empty)],
     [] as CellState[][]
   )
 

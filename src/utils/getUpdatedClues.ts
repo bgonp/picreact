@@ -12,7 +12,7 @@ const getLineGroups = (line: CellState[]): number[] => {
     return acc
   }, [] as number[])
 
-  return counter ? groups.concat(counter) : groups
+  return counter ? [...groups, counter] : groups
 }
 
 const getLineBounds = (line: CellState[]): { left: number[]; right: number[] } => {
