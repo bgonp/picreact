@@ -1,13 +1,12 @@
 import { FC, useEffect } from 'react'
 import { useLocation } from 'wouter'
 
-import Loading from 'components/Loading'
-import Wrapper from 'components/Wrapper'
 import { ROUTE_HOME, ROUTE_PLAY } from 'constants/router.constants'
 import { ModalContext } from 'contexts/ModalContext'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
 import { createPuzzleFromCode } from 'utils/puzzleCreator'
+import Wrapper from 'components/Wrapper'
 
 type Props = {
   code: string
@@ -31,11 +30,7 @@ const LoadPage: FC<Props> = ({ code }) => {
     }
   }, [code, navigate, setPuzzle, error, notice])
 
-  return (
-    <Wrapper>
-      <Loading />
-    </Wrapper>
-  )
+  return <Wrapper />
 }
 
 export default LoadPage
