@@ -3,9 +3,10 @@ import classNames from 'classnames'
 import { useTimeout } from 'bgon-custom-hooks'
 
 import Button from 'components/Button'
-import CloseButton from 'components/CloseButton'
+import { CrossIcon } from 'components/icons'
+import { COLORS } from 'constants/colors.constants'
+import { TIMES } from 'constants/times.constants'
 import { ModalProps } from 'hooks/useModal'
-import { ALERT_ANIMATION, ALERT_TIMEOUT } from 'constants/app.constants'
 
 import styles from 'styles/components/Modal.module.css'
 
@@ -23,26 +24,26 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
 
   const handleConfirm: () => void = () => {
     setHidden(true)
-    setTimeout(onConfirm, ALERT_ANIMATION)
+    onConfirm()
   }
 
   const handleClose = useCallback<() => void>(() => {
     setHidden(true)
-    setTimeout(onClose, ALERT_ANIMATION)
+    setTimeout(onClose, TIMES.ANIMATION_DURATION)
   }, [onClose, setTimeout])
 
   const handleMouseEnter = clearTimeout
 
   const handleMouseLeave = () => {
-    if (!ALERT_TIMEOUT || type === 'confirm') return
-    setTimeout(handleClose, ALERT_TIMEOUT)
+    if (!TIMES.ALERT_TIMEOUT || type === 'confirm') return
+    setTimeout(handleClose, TIMES.ALERT_TIMEOUT)
   }
 
   useEffect(() => {
     clearTimeout()
     setHidden(false)
-    if (!ALERT_TIMEOUT || type === 'confirm') return
-    setTimeout(handleClose, ALERT_TIMEOUT)
+    if (!TIMES.ALERT_TIMEOUT || type === 'confirm') return
+    setTimeout(handleClose, TIMES.ALERT_TIMEOUT)
   }, [content, type, handleClose, setTimeout, clearTimeout])
 
   if (type === 'confirm')
@@ -69,11 +70,14 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
       onMouseLeave={handleMouseLeave}
     >
       <div className={styles.content}>{content}</div>
-      <CloseButton
+      <Button
+        asIcon
         primary={type === 'notice'}
         secondary={type === 'error'}
         onClick={handleClose}
-      />
+      >
+        <CrossIcon color={COLORS.WHITE} />
+      </Button>
     </div>
   )
 }
