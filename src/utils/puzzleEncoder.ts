@@ -9,7 +9,12 @@ const isValidCode = (code: string): boolean => {
   const sides = code.split(sideSeparator)
   if (sides.length !== 2) return false
   const regex = new RegExp(`${lineSeparator}`, 'g')
-  return sides[0].match(regex)?.length === sides[1].match(regex)?.length
+  const size = (sides[0].match(regex)?.length || 0) + 1
+  if (size - 1 !== sides[1].match(regex)?.length) return false
+  return code.split('').every((letter) => {
+    const value = letter.charCodeAt(0) - CODE_FIRST_CHAR
+    return value >= -2 && value <= size
+  })
 }
 
 const encodeSide = (side: Clue[][]): string =>

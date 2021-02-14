@@ -1,9 +1,9 @@
-import { PUZZLE_MIN_SIZE, PUZZLE_MAX_SIZE } from 'constants/puzzle.constants'
+import { MIN_SIZE, MAX_SIZE } from 'constants/puzzle.constants'
 import { CellState, Clue, Puzzle } from 'models/Puzzle'
 import { decodePuzzle } from 'utils/puzzleEncoder'
 
 const isValidSize = (size: number): boolean =>
-  size >= PUZZLE_MIN_SIZE && size <= PUZZLE_MAX_SIZE && size % 5 === 0
+  size >= MIN_SIZE && size <= MAX_SIZE && size % 5 === 0
 
 const getLineClues = (type: 'col' | 'row', cells: boolean[][], i: number): Clue[] => {
   let counter = 0
@@ -18,7 +18,7 @@ const getLineClues = (type: 'col' | 'row', cells: boolean[][], i: number): Clue[
     return acc
   }, [] as Clue[])
 
-  return clues.length === 0 ? [0] : clues
+  return clues.length === 0 ? [{ value: 0, solved: true }] : clues
 }
 
 const getClues = (cells: boolean[][]): { columns: Clue[][]; rows: Clue[][] } =>
@@ -38,7 +38,7 @@ export const getEmptyBoard = (size: number): CellState[][] =>
 
 export const createPuzzleFromCells = (cells: boolean[][]): Puzzle => {
   const size = cells.length
-  if (!isValidSize(size) || cells.some((column) => size !== column.length))
+  if (!isValidSize(size) || cells.some((row) => size !== row.length))
     throw new Error('Wrong puzzle size')
 
   const board = getEmptyBoard(size)
@@ -51,7 +51,6 @@ export const createPuzzleFromSize = (size: number): Puzzle => {
   const cells = [...Array(size)].map(() =>
     [...Array(size)].map(() => Math.random() < 0.5)
   )
-  console.log({ cells })
 
   return createPuzzleFromCells(cells)
 }
