@@ -1,7 +1,8 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useLocalStorage } from 'bgon-custom-hooks'
 
-import { ST_BOARD, ST_COLUMNS, ST_ROWS } from 'constants/storage.constants'
+import { ST_BOARD, ST_COLUMNS, ST_HISTORY, ST_ROWS } from 'constants/storage.constants'
+import { STEPS_LIMIT } from 'constants/puzzle.constants'
 import { CellState, Puzzle } from 'models/Puzzle'
 import { getEmptyBoard } from 'utils/puzzleCreator'
 import { getUpdatedClues } from 'utils/getUpdatedClues'
@@ -10,38 +11,52 @@ type Board = Puzzle['board']
 type Columns = Puzzle['columns']
 type Rows = Puzzle['rows']
 
+type Step = [number, number, CellState]
+
 export type UsePuzzleType = {
-  finished: boolean
+  canUndo: boolean
   puzzle: Puzzle
-  getCellState: (c: number, r: number) => CellState
+  solved: boolean
+  getCellState: (r: number, c: number) => CellState
+  remove: () => void
   reset: () => void
-  setCellState: (c: number, r: number) => (value: CellState) => void
-  setFinished: () => void
+  setCellState: (r: number, c: number) => (value: CellState) => void
   setPuzzle: (puzzle: Puzzle) => void
+  undo: () => void
 }
 
 export const usePuzzle = (): UsePuzzleType => {
   const [board, setBoard, cleanBoard] = useLocalStorage<Board>(ST_BOARD, [])
   const [columns, setColumns, cleanColumns] = useLocalStorage<Columns>(ST_COLUMNS, [])
   const [rows, setRows, cleanRows] = useLocalStorage<Rows>(ST_ROWS, [])
+  const [history, setHistory, cleanHistory] = useLocalStorage<Step[]>(ST_HISTORY, [])
+  const [solved, setSolved] = useState<boolean>(false)
 
-  const [finished, setFinishedValue] = useState<boolean>(false)
-
-  const isValidIndex = useCallback<(index: number) => boolean>(
-    (index) => index >= 0 && index < board.length,
+  const checkIndexes = useCallback<(...indexes: number[]) => void>(
+    (...indexes) => {
+      if (indexes.some((index) => index < 0 && index >= board.length))
+        throw new Error('Cell index out of bounds')
+    },
     [board]
   )
 
-  const getCellState = useCallback<(c: number, r: number) => CellState>(
-    (c, r) => {
-      if (!isValidIndex(c) || !isValidIndex(r))
-        throw new Error('Cell index out of bounds')
-      return board[c][r]
+  const getCellState = useCallback<(r: number, c: number) => CellState>(
+    (r, c) => {
+      checkIndexes(r, c)
+      return board[r][c]
     },
-    [board, isValidIndex]
+    [board, checkIndexes]
   )
 
+  const remove = useCallback<() => void>(() => {
+    setHistory([])
+    setBoard([])
+    setColumns([])
+    setRows([])
+  }, [setBoard, setColumns, setHistory, setRows])
+
   const reset = useCallback<() => void>(() => {
+    setHistory([])
     setBoard((board) => getEmptyBoard(board.length))
     setColumns((columns) =>
       columns.map((column) => column.map(({ value }) => ({ value, solved: false })))
@@ -49,40 +64,44 @@ export const usePuzzle = (): UsePuzzleType => {
     setRows((rows) =>
       rows.map((row) => row.map(({ value }) => ({ value, solved: false })))
     )
-  }, [setBoard, setColumns, setRows])
+  }, [setBoard, setColumns, setHistory, setRows])
 
-  const setCellState = useCallback<(c: number, r: number) => (value: CellState) => void>(
-    (c, r) => (value) => {
-      if (!isValidIndex(c) || !isValidIndex(r))
-        throw new Error('Cell index out of bounds')
+  const updateCell = useCallback<(r: number, c: number, state: CellState) => void>(
+    (r, c, state) => {
+      checkIndexes(r, c)
 
       const nextBoard = board.map((column, i) =>
-        column.map((cell, j) => (i === c && j === r ? value : cell))
+        column.map((cell, j) => (i === r && j === c ? state : cell))
       )
+      const col = nextBoard.map((row) => row[c])
+      const nextCols = columns.map((l, i) => (i !== c ? l : getUpdatedClues(l, col)))
+      const row = nextBoard[r]
+      const nextRows = rows.map((l, i) => (i !== r ? l : getUpdatedClues(l, row)))
+      const isSolved =
+        board.length > 0 &&
+        nextCols.every((clues) => clues.every((clue) => clue.solved)) &&
+        nextRows.every((clues) => clues.every((clue) => clue.solved))
 
       setBoard(nextBoard)
-      setColumns((cols) => {
-        const line = nextBoard[c]
-        return cols.map((col, i) => (i !== c ? col : getUpdatedClues(col, line)))
-      })
-      setRows((rows) => {
-        const line = nextBoard.map((column) => column[r])
-        return rows.map((row, i) => (i !== r ? row : getUpdatedClues(row, line)))
-      })
+      setColumns(nextCols)
+      setRows(nextRows)
+      setSolved(isSolved)
     },
-    [board, isValidIndex, setBoard, setColumns, setRows]
+    [board, columns, rows, checkIndexes, setBoard, setColumns, setRows]
   )
 
-  const setFinished = useCallback<() => void>(() => {
-    setFinishedValue(true)
-    cleanBoard()
-    cleanColumns()
-    cleanRows()
-  }, [cleanBoard, cleanColumns, cleanRows])
+  const setCellState = useCallback<(r: number, c: number) => (state: CellState) => void>(
+    (r, c) => (state) => {
+      const prevState = getCellState(r, c)
+      setHistory((steps) => [[r, c, prevState], ...steps].slice(0, STEPS_LIMIT) as Step[])
+      updateCell(r, c, state)
+    },
+    [getCellState, setHistory, updateCell]
+  )
 
   const setPuzzle = useCallback<(puzzle: Puzzle) => void>(
     (puzzle) => {
-      setFinishedValue(false)
+      setSolved(false)
       setBoard(puzzle.board)
       setColumns(puzzle.columns)
       setRows(puzzle.rows)
@@ -90,13 +109,32 @@ export const usePuzzle = (): UsePuzzleType => {
     [setBoard, setColumns, setRows]
   )
 
+  const canUndo = !solved && history.length > 0
+
+  const undo = useCallback<() => void>(() => {
+    if (!canUndo) return
+    const [[r, c, state], ...nextHistory] = history
+    updateCell(r, c, state)
+    setHistory(nextHistory)
+  }, [canUndo, history, setHistory, updateCell])
+
+  useEffect(() => {
+    if (!solved) return
+    cleanBoard()
+    cleanColumns()
+    cleanHistory()
+    cleanRows()
+  }, [solved, cleanBoard, cleanColumns, cleanHistory, cleanRows])
+
   return {
-    finished,
+    canUndo,
     puzzle: { board, columns, rows },
+    solved,
     getCellState,
+    remove,
     reset,
     setCellState,
-    setFinished,
     setPuzzle,
+    undo,
   }
 }
