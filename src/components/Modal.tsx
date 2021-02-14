@@ -56,7 +56,7 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
               CONFIRM
             </Button>
             <Button secondary onClick={handleClose}>
-              CLOSE
+              CANCEL
             </Button>
           </div>
         </div>
