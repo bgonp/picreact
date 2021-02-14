@@ -6,7 +6,7 @@ import { COLORS } from 'constants/colors.constants'
 import styles from 'styles/components/icons.module.css'
 
 type Props = {
-  color: HexColor
+  color?: HexColor
 }
 
 const GitHubIcon: FC<Props> = ({ color = COLORS.DARK }) => (
