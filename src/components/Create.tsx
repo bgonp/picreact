@@ -1,5 +1,7 @@
 import { FC } from 'react'
 
+import Loading from 'components/Loading'
+
 import styles from 'styles/components/Create.module.css'
 
 const Create: FC = () => {
@@ -8,6 +10,7 @@ const Create: FC = () => {
       WORK IN PROGRESS
       <br />
       :)
+      <Loading />
     </div>
   )
 }
