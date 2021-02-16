@@ -28,9 +28,10 @@ const encodeSide = (side: Clue[][]): string =>
     .join(lineSeparator)
 
 const decodeLine = (code: string): Clue[] =>
-  code
-    .split('')
-    .map((letter) => ({ value: letter.charCodeAt(0) - CODE_FIRST_CHAR, solved: false }))
+  code.split('').map((letter) => {
+    const value = letter.charCodeAt(0) - CODE_FIRST_CHAR
+    return { value, solved: value === 0 }
+  })
 
 const decodeSide = (code: string): Clue[][] =>
   code.split(lineSeparator).map((lineCode) => decodeLine(lineCode))
