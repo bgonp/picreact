@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useLocalStorage } from 'bgon-custom-hooks'
 
 import { ST_BOARD, ST_COLUMNS, ST_HISTORY, ST_ROWS } from 'constants/storage.constants'
@@ -15,6 +15,7 @@ type Step = [number, number, CellState]
 
 export type UsePuzzleType = {
   canUndo: boolean
+  empty: boolean
   initialized: boolean
   puzzle: Puzzle
   size: number
@@ -22,7 +23,7 @@ export type UsePuzzleType = {
   getCellState: (r: number, c: number) => CellState
   remove: () => void
   reset: () => void
-  setCellState: (r: number, c: number) => (value: CellState) => void
+  setCellState: (r: number, c: number) => (state: CellState) => void
   setPuzzle: (puzzle: Puzzle) => void
   undo: () => void
 }
@@ -32,7 +33,14 @@ export const usePuzzle = (): UsePuzzleType => {
   const [columns, setColumns, cleanColumns] = useLocalStorage<Columns>(ST_COLUMNS, [])
   const [rows, setRows, cleanRows] = useLocalStorage<Rows>(ST_ROWS, [])
   const [history, setHistory, cleanHistory] = useLocalStorage<Step[]>(ST_HISTORY, [])
-  const [solved, setSolved] = useState<boolean>(false)
+
+  const size = board.length
+  const initialized = size > 0
+  const empty = board.every((line) => line.every((cell) => cell !== CellState.Filled))
+  const colsSolved = columns.every((clues) => clues.every((clue) => clue.solved))
+  const rowsSolved = columns.every((clues) => clues.every((clue) => clue.solved))
+  const solved = initialized && colsSolved && rowsSolved
+  const canUndo = history.length > 0 && !solved
 
   const checkIndexes = useCallback<(...indexes: number[]) => void>(
     (...indexes) => {
@@ -79,15 +87,10 @@ export const usePuzzle = (): UsePuzzleType => {
       const nextCols = columns.map((l, i) => (i !== c ? l : getUpdatedClues(l, col)))
       const row = nextBoard[r]
       const nextRows = rows.map((l, i) => (i !== r ? l : getUpdatedClues(l, row)))
-      const isSolved =
-        board.length > 0 &&
-        nextCols.every((clues) => clues.every((clue) => clue.solved)) &&
-        nextRows.every((clues) => clues.every((clue) => clue.solved))
 
       setBoard(nextBoard)
       setColumns(nextCols)
       setRows(nextRows)
-      setSolved(isSolved)
     },
     [board, columns, rows, checkIndexes, setBoard, setColumns, setRows]
   )
@@ -103,15 +106,12 @@ export const usePuzzle = (): UsePuzzleType => {
 
   const setPuzzle = useCallback<(puzzle: Puzzle) => void>(
     (puzzle) => {
-      setSolved(false)
       setBoard(puzzle.board)
       setColumns(puzzle.columns)
       setRows(puzzle.rows)
     },
     [setBoard, setColumns, setRows]
   )
-
-  const canUndo = !solved && history.length > 0
 
   const undo = useCallback<() => void>(() => {
     if (!canUndo) return
@@ -130,9 +130,10 @@ export const usePuzzle = (): UsePuzzleType => {
 
   return {
     canUndo,
-    initialized: board.length > 0,
+    empty,
+    initialized,
     puzzle: { board, columns, rows },
-    size: board.length,
+    size,
     solved,
     getCellState,
     remove,
