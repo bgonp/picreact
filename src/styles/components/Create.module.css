@@ -11,3 +11,7 @@
   margin: 0 auto;
   max-width: 16rem;
 }
+
+.footer {
+  color: var(--color-sixth);
+}

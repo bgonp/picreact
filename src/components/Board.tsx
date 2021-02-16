@@ -9,8 +9,9 @@ import styles from 'styles/components/Board.module.css'
 
 type Props = {
   blocked?: boolean
-  buttons: ReactElement[]
+  buttons?: ReactElement | null
   crossable?: boolean
+  footer?: ReactElement | null
   puzzle: Puzzle
   size: number
   getCellState: (r: number, c: number) => CellState
@@ -19,8 +20,9 @@ type Props = {
 
 export const Board: FC<Props> = ({
   blocked = false,
-  buttons,
+  buttons = [],
   crossable = false,
+  footer = [],
   puzzle,
   size,
   getCellState,
@@ -128,7 +130,9 @@ export const Board: FC<Props> = ({
           )}
         </div>
 
-        <div className={styles.buttons}>{buttons}</div>
+        {buttons && <div className={styles.buttons}>{buttons}</div>}
+
+        {footer && <div className={styles.footer}>{footer}</div>}
       </div>
     </div>
   )

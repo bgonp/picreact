@@ -34,7 +34,7 @@ const Create: FC<Props> = ({ onCreate }) => {
   if (size === 0) {
     return (
       <div className={styles.create}>
-        <h1>Choose your puzzle size</h1>
+        <h1>Choose puzzle size</h1>
         <div className={styles.buttons}>
           <Button primary large outlined onClick={setSize(5)}>
             5 x 5
@@ -74,18 +74,23 @@ const Create: FC<Props> = ({ onCreate }) => {
     onCreate(createPuzzleFromCells(board))
   }
 
-  const buttons = [
-    <Button key="discard" asIcon secondary disabled={empty} onClick={handleDiscard}>
-      <RefreshIcon color={COLORS.WHITE} />
-    </Button>,
-    <Button key="save" asIcon primary disabled={empty} onClick={handleSave}>
-      <TickIcon color={COLORS.WHITE} />
-    </Button>,
-  ]
+  const buttons = (
+    <>
+      <Button key="discard" asIcon secondary disabled={empty} onClick={handleDiscard}>
+        <RefreshIcon color={COLORS.WHITE} />
+      </Button>
+      <Button key="save" asIcon primary disabled={empty} onClick={handleSave}>
+        <TickIcon color={COLORS.WHITE} />
+      </Button>
+    </>
+  )
+
+  const footer = <h2 className={styles.footer}>Puzzle creation</h2>
 
   return (
     <Board
       buttons={buttons}
+      footer={footer}
       puzzle={{ board, columns, rows }}
       size={size}
       getCellState={getCellState}

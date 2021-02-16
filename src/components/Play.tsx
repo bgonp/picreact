@@ -33,23 +33,28 @@ const Play: FC<Props> = ({
 }) => {
   const { confirm } = useContext(ModalContext)
 
-  const handleReset = () =>
+  const onReset = () =>
     confirm('This will discard current progress. Are you sure?', reset)
 
-  const buttons = [
-    <Button key="reset" asIcon secondary disabled={solved || empty} onClick={handleReset}>
-      <RefreshIcon color={COLORS.WHITE} />
-    </Button>,
-    <Button key="undo" asIcon primary disabled={!canUndo} onClick={undo}>
-      <UndoIcon color={COLORS.WHITE} />
-    </Button>,
-  ]
+  const buttons = (
+    <>
+      <Button key="reset" asIcon secondary disabled={solved || empty} onClick={onReset}>
+        <RefreshIcon color={COLORS.WHITE} />
+      </Button>
+      <Button key="undo" asIcon primary disabled={!canUndo} onClick={undo}>
+        <UndoIcon color={COLORS.WHITE} />
+      </Button>
+    </>
+  )
+
+  const footer = <h2>{solved ? 'Solved!' : "Let's solve this!"}</h2>
 
   return (
     <Board
       blocked={solved}
-      crossable={true}
       buttons={buttons}
+      footer={footer}
+      crossable={true}
       puzzle={puzzle}
       size={size}
       getCellState={getCellState}
