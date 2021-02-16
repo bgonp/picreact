@@ -1,23 +1,29 @@
 import { FC } from 'react'
+import { useLocation } from 'wouter'
 
 import Button from 'components/Button'
-import { PuzzleType } from 'models/Puzzle'
-import { createPuzzle } from 'utils/puzzleGenerator'
+import { ROUTE_CREATE } from 'constants/router.constants'
+import { Puzzle } from 'models/Puzzle'
+import { createPuzzleFromSize } from 'utils/puzzleCreator'
 
 import styles from 'styles/components/Welcome.module.css'
 
 type Props = {
-  setPuzzle: (puzzle: PuzzleType) => void
+  setPuzzle: (puzzle: Puzzle) => void
 }
 
 const Welcome: FC<Props> = ({ setPuzzle }) => {
-  const setEasyPuzzle = () => setPuzzle(createPuzzle(10))
-  const setMediumPuzzle = () => setPuzzle(createPuzzle(15))
-  const setHardPuzzle = () => setPuzzle(createPuzzle(20))
+  const [, navigate] = useLocation()
+
+  const setEasyPuzzle = () => setPuzzle(createPuzzleFromSize(5))
+  const setMediumPuzzle = () => setPuzzle(createPuzzleFromSize(10))
+  const setHardPuzzle = () => setPuzzle(createPuzzleFromSize(15))
+  const setExpertPuzzle = () => setPuzzle(createPuzzleFromSize(20))
+  const navigateToCreate = () => navigate(ROUTE_CREATE)
 
   return (
     <div className={styles.welcome}>
-      <h2 className={styles.title}>CREATE NEW RANDOM PUZZLE</h2>
+      <h1>Load a random puzzle or create your own</h1>
       <div className={styles.buttons}>
         <Button primary large onClick={setEasyPuzzle}>
           EASY
@@ -27,6 +33,12 @@ const Welcome: FC<Props> = ({ setPuzzle }) => {
         </Button>
         <Button primary large onClick={setHardPuzzle}>
           HARD
+        </Button>
+        <Button secondary large onClick={setExpertPuzzle}>
+          EXPERT
+        </Button>
+        <Button primary large onClick={navigateToCreate} outlined>
+          CUSTOM
         </Button>
       </div>
     </div>

@@ -1,45 +1,48 @@
-import { FC, ReactElement, useEffect, useMemo } from 'react'
+import { FC, lazy, useEffect } from 'react'
 import { useLocation } from 'wouter'
 
-import Board from 'components/Board'
-import Loading from 'components/Loading'
-import Wrapper from 'components/Wrapper'
+import LazyLoaded from 'components/LazyLoaded'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { ROUTE_HOME } from 'constants/router.constants'
 import { useContextSecure as useContext } from 'utils/contextSecure'
 
+const Play = lazy(() => import('components/Play'))
+
 const PlayPage: FC = () => {
   const {
-    code,
-    colsState,
-    finished,
+    canUndo,
+    empty,
+    initialized,
+    size,
+    solved,
     puzzle,
-    rowsState,
     getCellState,
+    reset,
     setCellState,
+    undo,
   } = useContext(PuzzleContext)
 
   const [, navigate] = useLocation()
 
-  const content = useMemo<ReactElement>(() => {
-    if (!puzzle) return <Loading />
-    return (
-      <Board
-        colsState={colsState}
-        finished={finished}
-        puzzle={puzzle}
-        rowsState={rowsState}
-        getCellState={getCellState}
-        setCellState={setCellState}
-      />
-    )
-  }, [colsState, finished, puzzle, rowsState, getCellState, setCellState])
-
   useEffect(() => {
-    if (!code) navigate(ROUTE_HOME)
-  }, [code, navigate])
+    if (!initialized) navigate(ROUTE_HOME)
+  }, [initialized, navigate])
 
-  return <Wrapper>{content}</Wrapper>
+  return (
+    <LazyLoaded>
+      <Play
+        canUndo={canUndo}
+        empty={empty}
+        puzzle={puzzle}
+        size={size}
+        solved={solved}
+        getCellState={getCellState}
+        reset={reset}
+        setCellState={setCellState}
+        undo={undo}
+      />
+    </LazyLoaded>
+  )
 }
 
 export default PlayPage

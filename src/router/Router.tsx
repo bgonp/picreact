@@ -1,14 +1,15 @@
 import { FC } from 'react'
-import { Redirect, Route } from 'wouter'
+import { Route, Switch } from 'wouter'
 
+import { ROUTES } from 'constants/router.constants'
 import CreatePage from 'pages/CreatePage'
 import HomePage from 'pages/HomePage'
 import LoadPage from 'pages/LoadPage'
+import NotFoundPage from 'pages/NotFoundPage'
 import PlayPage from 'pages/PlayPage'
-import { ROUTES } from 'constants/router.constants'
 
 const Router: FC = () => (
-  <>
+  <Switch>
     <Route path={ROUTES.CREATE}>
       <CreatePage />
     </Route>
@@ -19,8 +20,8 @@ const Router: FC = () => (
     <Route path={ROUTES.PLAY}>
       <PlayPage />
     </Route>
-    <Redirect to={ROUTES.HOME} />
-  </>
+    <NotFoundPage />
+  </Switch>
 )
 
 export default Router

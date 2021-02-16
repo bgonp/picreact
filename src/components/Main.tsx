@@ -1,20 +1,19 @@
 import { FC } from 'react'
+
+import Footer from 'components/Footer'
+import Header from 'components/Header'
 import Router from 'router/Router'
 
-import { ModalContextProvider } from 'contexts/ModalContext'
-import { PuzzleContextProvider } from 'contexts/PuzzleContext'
-import { initColors } from 'utils/styles'
+import styles from 'styles/components/Main.module.css'
 
-import 'styles/index.css'
-
-initColors()
-
-const Wrapper: FC = () => (
-  <ModalContextProvider>
-    <PuzzleContextProvider>
+const Main: FC = () => (
+  <div className={styles.wrapper}>
+    <Header />
+    <main className={styles.main}>
       <Router />
-    </PuzzleContextProvider>
-  </ModalContextProvider>
+    </main>
+    <Footer />
+  </div>
 )
 
-export default Wrapper
+export default Main

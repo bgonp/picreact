@@ -7,7 +7,6 @@
   color: var(--color-first);
   cursor: pointer;
   display: flex;
-  font-family: var(--font-family-main);
   font-size: 1rem;
   font-weight: 400;
   justify-content: center;
@@ -65,7 +64,7 @@
 
 .disabled {
   cursor: default;
-  opacity: 0.8;
+  opacity: 0.7;
 
   &:hover {
     box-shadow: none;
@@ -73,15 +72,22 @@
 }
 
 .large {
-  padding: 1.2rem 2.5rem;
-  font-size: 1.1rem;
+  /* padding: 1.2rem 2.5rem; */
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  line-height: 1;
   font-weight: 600;
   letter-spacing: 1px;
 }
 
 .asIcon {
-  line-height: 1;
   padding: 0.4rem;
-  height: 2rem;
-  width: 2rem;
+  height: calc(2rem + 4px);
+  width: calc(2rem + 4px);
+}
+
+.large.asIcon {
+  padding: 0.75rem;
+  height: calc(3rem + 4px);
+  width: calc(3rem + 4px);
 }

@@ -1,14 +1,5 @@
 import { FC, ReactNode, useCallback, useMemo, useState } from 'react'
 
-type ModalType = 'confirm' | 'notice' | 'error'
-
-type ModalProps = {
-  content: string
-  type: ModalType
-  onConfirm: () => void
-  onClose: () => void
-}
-
 type ConfirmType = (content: string, onConfirm: () => void, onClose?: () => void) => void
 
 type ErrorType = (content: string, onClose?: () => void) => void
@@ -20,6 +11,22 @@ type UseModalType = {
   error: ErrorType
   notice: NoticeType
   modal: ReactNode
+}
+
+type ModalType = 'confirm' | 'notice' | 'error'
+
+type ModalProps = {
+  content: string
+  type: ModalType
+  onConfirm: () => void
+  onClose: () => void
+}
+
+type ShowParams = {
+  content: string
+  type: ModalType
+  onConfirm?: () => void
+  onClose?: () => void
 }
 
 type State = ModalProps & {
@@ -43,8 +50,8 @@ const useModal = (Modal: FC<ModalProps>): UseModalType => {
     setState((state) => ({ ...state, hidden: true }))
   }, [])
 
-  const show = useCallback<(params: ModalProps) => void>(
-    ({ type, content, onConfirm, onClose }) => {
+  const show = useCallback<(params: ShowParams) => void>(
+    ({ type, content, onConfirm = () => {}, onClose = () => {} }) => {
       setState({
         hidden: false,
         content,
@@ -63,14 +70,12 @@ const useModal = (Modal: FC<ModalProps>): UseModalType => {
   )
 
   const error = useCallback<ErrorType>(
-    (content, onClose = () => {}) =>
-      show({ type: 'error', content, onConfirm: () => {}, onClose }),
+    (content, onClose = () => {}) => show({ type: 'error', content, onClose }),
     [show]
   )
 
-  const notice = useCallback<ErrorType>(
-    (content, onClose = () => {}) =>
-      show({ type: 'notice', content, onConfirm: () => {}, onClose }),
+  const notice = useCallback<NoticeType>(
+    (content, onClose = () => {}) => show({ type: 'notice', content, onClose }),
     [show]
   )
 
@@ -105,6 +110,6 @@ const useModal = (Modal: FC<ModalProps>): UseModalType => {
   }
 }
 
-export type { ModalProps, ConfirmType, ErrorType, NoticeType }
+export type { ConfirmType, ErrorType, NoticeType, ModalProps }
 
 export { useModal }

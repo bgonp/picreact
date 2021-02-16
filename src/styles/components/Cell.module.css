@@ -5,34 +5,37 @@
   align-items: center;
 }
 
-.inner {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-white);
-  padding: 0.4rem;
-}
-
 .button {
+  align-items: center;
   background-color: var(--color-white);
-  border: none;
   border-radius: 0;
+  border: none;
+  bottom: 0;
   box-shadow: none;
-  padding: 0.4rem;
+  box-sizing: border-box;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  padding: 0.4rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
 }
 
 .button:focus {
   outline: none;
 }
 
+.blocked {
+  cursor: default;
+}
+
 .filled {
-  background-color: var(--color-first);
+  background-color: var(--color-sixth);
+
+  &.crossable {
+    background-color: var(--color-first);
+  }
 }

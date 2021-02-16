@@ -1,33 +1,32 @@
-import { FC, ReactElement, useCallback, useMemo, useState } from 'react'
+import { FC, ReactElement, useCallback, useState } from 'react'
 import classNames from 'classnames'
 
 import Cell from 'components/Cell'
 import { useClickControl } from 'hooks/useClickControl'
-import { PuzzleType } from 'models/Puzzle'
-import { CellState } from 'models/State'
-import { getHelpStatus } from 'utils/getHelpStatus'
+import { CellState, Puzzle } from 'models/Puzzle'
 
 import styles from 'styles/components/Board.module.css'
 
 type Props = {
-  colsState: number[][]
-  finished: boolean
-  puzzle: PuzzleType
-  rowsState: number[][]
-  getCellState: (c: number, r: number) => CellState
-  setCellState: (c: number, r: number) => (s: CellState) => void
+  blocked?: boolean
+  buttons: ReactElement[]
+  crossable?: boolean
+  puzzle: Puzzle
+  size: number
+  getCellState: (r: number, c: number) => CellState
+  setCellState: (r: number, c: number) => (s: CellState) => void
 }
 
 export const Board: FC<Props> = ({
-  colsState,
-  finished,
+  blocked = false,
+  buttons,
+  crossable = false,
   puzzle,
-  rowsState,
+  size,
   getCellState,
   setCellState,
 }) => {
   const [currentCell, setCurrentCell] = useState<[number, number]>([-1, -1])
-
   const [clickedState, setClickedState] = useState<CellState>(CellState.Empty)
 
   const {
@@ -38,8 +37,8 @@ export const Board: FC<Props> = ({
     handleMouseLeave,
   } = useClickControl()
 
-  const onCellHover = useCallback<(column: number, row: number) => () => void>(
-    (column, row) => () => setCurrentCell([column, row]),
+  const onCellHover = useCallback<(row: number, column: number) => () => void>(
+    (row, column) => () => setCurrentCell([row, column]),
     []
   )
 
@@ -48,105 +47,88 @@ export const Board: FC<Props> = ({
     setCurrentCell([-1, -1])
   }, [handleMouseLeave])
 
-  const getClassName = useCallback<(column: number, row: number) => string>(
-    (column: number, row: number) =>
+  const getClassName = useCallback<(row: number, column: number) => string>(
+    (row, column) =>
       classNames(styles.cell, {
-        [styles.gapBottom]: column % 5 === 4,
-        [styles.gapRight]: row % 5 === 4,
-        [styles.hover]:
-          !finished && (column === currentCell[0] || row === currentCell[1]),
+        [styles.gapBottom]: row % 5 === 4,
+        [styles.gapRight]: column % 5 === 4,
+        [styles.hover]: row === currentCell[0] || column === currentCell[1],
       }),
-    [currentCell, finished]
-  )
-
-  const cells = useMemo<ReactElement[]>(
-    () =>
-      puzzle.map<ReactElement>((column, row) => (
-        <Cell
-          key={`${column}-${row}`}
-          className={getClassName(column, row)}
-          clickedState={clickedState}
-          isFilled={puzzle.isFilled(column, row)}
-          isLeftClicked={isLeftClicked}
-          isRevealed={finished}
-          isRightClicked={isRightClicked}
-          state={getCellState(column, row)}
-          onHover={onCellHover(column, row)}
-          setClickedState={setClickedState}
-          setState={setCellState(column, row)}
-        />
-      )),
-    [
-      finished,
-      puzzle,
-      getCellState,
-      setCellState,
-      getClassName,
-      onCellHover,
-      isLeftClicked,
-      isRightClicked,
-      clickedState,
-    ]
-  )
-
-  const getLineHelp = useCallback(
-    (prefix: string, index: number, numbers: number[], state: number[]): ReactElement => {
-      const isCorrect = getHelpStatus(numbers, state)
-      return (
-        <div className={styles.singleHelp} key={`${prefix}-${index}`}>
-          {numbers.length ? (
-            numbers.map((value, child) => (
-              <span
-                key={`${prefix}-${index}-${child}`}
-                className={isCorrect[child] ? styles.ok : ''}
-              >
-                {value}
-              </span>
-            ))
-          ) : (
-            <span key={`${prefix}-${index}-0`}>0</span>
-          )}
-        </div>
-      )
-    },
-    []
-  )
-
-  const help = useMemo<{ columns: ReactElement[]; rows: ReactElement[] }>(
-    // TODO: Optimize this
-    () =>
-      [...Array(puzzle.size).keys()].reduce(
-        (acc: { columns: ReactElement[]; rows: ReactElement[] }, i) => {
-          acc.columns.push(getLineHelp('c', i, puzzle.getColumnHelp(i), colsState[i]))
-          acc.rows.push(getLineHelp('r', i, puzzle.getRowHelp(i), rowsState[i]))
-          return acc
-        },
-        { columns: [], rows: [] }
-      ),
-    [colsState, puzzle, rowsState, getLineHelp]
+    [currentCell]
   )
 
   const className = classNames(styles.board, {
-    [styles.size5]: puzzle.size === 5,
-    [styles.size10]: puzzle.size === 10,
-    [styles.size15]: puzzle.size === 15,
-    [styles.size20]: puzzle.size === 20,
-    [styles.size25]: puzzle.size === 25,
+    [styles.crossable]: crossable,
+    [styles.size5]: size === 5,
+    [styles.size10]: size === 10,
+    [styles.size15]: size === 15,
+    [styles.size20]: size === 20,
+    [styles.size25]: size === 25,
   })
 
   return (
     <div className={className}>
       <div className={styles.content}>
-        <div className={styles.helpColumn}>{help.columns}</div>
-        <div className={styles.helpRow}>{help.rows}</div>
+        <div className={styles.cluesColumns}>
+          {puzzle.columns.map((column, i) => (
+            <div
+              key={`c-${i}`}
+              className={classNames(styles.cluesLine, {
+                [styles.hover]: i === currentCell[1],
+              })}
+            >
+              {column.map(({ value, solved }, j) => (
+                <span key={`c-${i}-${j}`} className={solved ? styles.ok : ''}>
+                  {value}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.cluesRows}>
+          {puzzle.rows.map((row, i) => (
+            <div
+              key={`r-${i}`}
+              className={classNames(styles.cluesLine, {
+                [styles.hover]: i === currentCell[0],
+              })}
+            >
+              {row.map(({ value, solved }, j) => (
+                <span key={`r-${i}-${j}`} className={solved ? styles.ok : ''}>
+                  {value}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+
         <div
           className={styles.cells}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           onMouseLeave={onMouseLeave}
         >
-          {cells}
+          {puzzle.board.map((row, r) =>
+            row.map((_, c) => (
+              <Cell
+                key={`${r}-${c}`}
+                blocked={blocked}
+                className={getClassName(r, c)}
+                clickedState={clickedState}
+                crossable={crossable}
+                isLeftClicked={isLeftClicked}
+                isRightClicked={isRightClicked}
+                onHover={onCellHover(r, c)}
+                state={getCellState(r, c)}
+                setClickedState={setClickedState}
+                setState={setCellState(r, c)}
+              />
+            ))
+          )}
         </div>
+
+        <div className={styles.buttons}>{buttons}</div>
       </div>
     </div>
   )

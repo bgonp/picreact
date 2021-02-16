@@ -1,39 +1,48 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useRoute } from 'wouter'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { useLocation, useRoute } from 'wouter'
+import copy from 'copy-to-clipboard'
 
 import Button from 'components/Button'
+import { ShareIcon } from 'components/icons'
+import { COLORS } from 'constants/colors.constants'
+import { ROUTES } from 'constants/router.constants'
 import { ModalContext } from 'contexts/ModalContext'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
 import { createUrl } from 'utils/createUrl'
-import { createPuzzle } from 'utils/puzzleGenerator'
-import { ROUTES } from 'constants/router.constants'
-import { DEFAULT_SIZE } from 'constants/puzzle.constants'
+import { encodePuzzle } from 'utils/puzzleEncoder'
 
 import styles from 'styles/components/Header.module.css'
 
 const Header = () => {
-  const { code, finished, puzzle, resetState, setFinished, setPuzzle } = useContext(
-    PuzzleContext
-  )
-  const { notice } = useContext(ModalContext)
+  const { confirm, notice } = useContext(ModalContext)
+  const { initialized, solved, puzzle, remove } = useContext(PuzzleContext)
 
+  const [, navigate] = useLocation()
+  const [isRouteCreate] = useRoute(ROUTES.CREATE)
+  const [isRouteHome] = useRoute(ROUTES.HOME)
   const [isRoutePlay] = useRoute(ROUTES.PLAY)
 
-  const [isRouteCreate] = useRoute(ROUTES.CREATE)
+  const handleNavigate = (route: string) => {
+    if (initialized && !solved) {
+      return confirm('This will discard current puzzle. Are you sure?', () => {
+        remove()
+        navigate(route)
+      })
+    }
+    remove()
+    navigate(route)
+  }
 
-  const [size, setSize] = useState<number>(DEFAULT_SIZE)
+  const handleNewPuzzle = () => handleNavigate(ROUTES.HOME)
 
-  const shareUrl = useMemo<string>(() => (code ? createUrl(ROUTES.LOAD, { code }) : ''), [
-    code,
-  ])
+  const handleCreate = () => handleNavigate(ROUTES.CREATE)
 
-  const hidePuzzleButtons = !isRoutePlay || !puzzle
-
-  useEffect(() => {
-    if (puzzle) setSize(puzzle.size)
-  }, [puzzle])
+  const handleShare = () => {
+    const code = encodePuzzle(puzzle)
+    const url = createUrl(ROUTES.LOAD, { code })
+    copy(url)
+    notice('Puzzle URL copied!')
+  }
 
   return (
     <header className={styles.header}>
@@ -41,43 +50,22 @@ const Header = () => {
         PIC<span>REACT</span>SS
       </h1>
       <nav className={styles.menu}>
-        <Button to={ROUTES.CREATE} disabled={isRouteCreate} outlined={!isRouteCreate}>
+        <Button
+          to={ROUTES.PLAY}
+          disabled={isRoutePlay || !initialized}
+          outlined={!isRoutePlay}
+        >
+          PLAY
+        </Button>
+        <Button onClick={handleNewPuzzle} disabled={isRouteHome} outlined={!isRouteHome}>
+          NEW
+        </Button>
+        <Button onClick={handleCreate} disabled={isRouteCreate} outlined={!isRouteCreate}>
           CREATE
         </Button>
-        {puzzle && (
-          <Button to={ROUTES.PLAY} disabled={isRoutePlay} outlined={!isRoutePlay}>
-            PLAY
-          </Button>
-        )}
-        <Button onClick={() => setPuzzle(createPuzzle(size))} outlined>
-          NEW PUZZLE
+        <Button asIcon onClick={handleShare} disabled={!initialized}>
+          <ShareIcon color={COLORS.FIRST} />
         </Button>
-        <select onChange={(e) => setSize(parseInt(e.target.value))} value={size}>
-          <option value="5">5x5</option>
-          <option value="10">10x10</option>
-          <option value="15">15x15</option>
-          <option value="20">20x20</option>
-          <option value="25">25x25</option>
-        </select>
-        {!hidePuzzleButtons && (
-          <>
-            {!finished && (
-              <>
-                <Button onClick={resetState} outlined>
-                  RESET
-                </Button>
-                <Button onClick={setFinished} outlined>
-                  RESOLVE
-                </Button>
-              </>
-            )}
-            <CopyToClipboard text={shareUrl}>
-              <Button onClick={() => notice('Copied!')} outlined>
-                COPY LINK
-              </Button>
-            </CopyToClipboard>
-          </>
-        )}
       </nav>
     </header>
   )

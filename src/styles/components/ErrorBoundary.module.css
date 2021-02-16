@@ -1,0 +1,16 @@
+.error {
+  align-items: center;
+  background: var(--color-fifth);
+  bottom: 0;
+  color: var(--color-fourth);
+  display: flex;
+  font-size: 2rem;
+  font-weight: 600;
+  justify-content: center;
+  left: 0;
+  padding: 2rem;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: 0;
+}

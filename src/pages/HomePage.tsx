@@ -1,23 +1,27 @@
-import { FC, useEffect } from 'react'
+import { FC, lazy, useEffect } from 'react'
 import { useLocation } from 'wouter'
 
-import Loading from 'components/Loading'
-import Welcome from 'components/Welcome'
-import Wrapper from 'components/Wrapper'
+import LazyLoaded from 'components/LazyLoaded'
 import { ROUTE_PLAY } from 'constants/router.constants'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
 
+const Welcome = lazy(() => import('components/Welcome'))
+
 const HomePage: FC = () => {
-  const { code, puzzle, setPuzzle } = useContext(PuzzleContext)
+  const { initialized, solved, setPuzzle } = useContext(PuzzleContext)
 
   const [, navigate] = useLocation()
 
   useEffect(() => {
-    if (puzzle) navigate(ROUTE_PLAY)
-  }, [puzzle, navigate])
+    if (initialized && !solved) navigate(ROUTE_PLAY)
+  }, [initialized, solved, navigate])
 
-  return <Wrapper>{code ? <Loading /> : <Welcome setPuzzle={setPuzzle} />}</Wrapper>
+  return (
+    <LazyLoaded>
+      <Welcome setPuzzle={setPuzzle} />
+    </LazyLoaded>
+  )
 }
 
 export default HomePage
