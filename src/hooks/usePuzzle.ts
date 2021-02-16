@@ -36,7 +36,7 @@ export const usePuzzle = (): UsePuzzleType => {
 
   const size = board.length
   const initialized = size > 0
-  const empty = board.every((line) => line.every((cell) => cell !== CellState.Filled))
+  const empty = board.every((line) => line.every((cell) => cell === CellState.Empty))
   const colsSolved = columns.every((clues) => clues.every((clue) => clue.solved))
   const rowsSolved = rows.every((clues) => clues.every((clue) => clue.solved))
   const solved = initialized && colsSolved && rowsSolved
