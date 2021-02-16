@@ -1,12 +1,17 @@
 import { FC } from 'react'
+import { useLocation } from 'wouter'
 
 import Board from 'components/Board'
 import Button from 'components/Button'
 import { RefreshIcon, UndoIcon } from 'components/icons'
+import ShareButton from 'components/ShareButton'
 import { ModalContext } from 'contexts/ModalContext'
+import { ROUTE_HOME } from 'constants/router.constants'
 import { COLORS } from 'constants/colors.constants'
 import { useContextSecure as useContext } from 'utils/contextSecure'
 import { CellState, Puzzle } from 'models/Puzzle'
+
+import styles from 'styles/components/Play.module.css'
 
 type Props = {
   canUndo: boolean
@@ -33,11 +38,14 @@ const Play: FC<Props> = ({
 }) => {
   const { confirm } = useContext(ModalContext)
 
+  const [, navigate] = useLocation()
+
   const onReset = () =>
     confirm('This will discard current progress. Are you sure?', reset)
 
   const buttons = (
     <>
+      <ShareButton />
       <Button key="reset" asIcon secondary disabled={solved || empty} onClick={onReset}>
         <RefreshIcon color={COLORS.WHITE} />
       </Button>
@@ -47,7 +55,18 @@ const Play: FC<Props> = ({
     </>
   )
 
-  const footer = <h2>{solved ? 'Solved!' : "Let's solve this!"}</h2>
+  const handleClick = () => navigate(ROUTE_HOME)
+
+  const footer = solved ? (
+    <>
+      <h2 className={styles.footer}>Puzzle solved!</h2>
+      <Button primary onClick={handleClick}>
+        PLAY AGAIN
+      </Button>
+    </>
+  ) : (
+    <h2 className={styles.footer}>{"Let's solve this!"}</h2>
+  )
 
   return (
     <Board

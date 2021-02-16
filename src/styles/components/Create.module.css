@@ -14,4 +14,5 @@
 
 .footer {
   color: var(--color-sixth);
+  margin-bottom: 0.5rem;
 }
