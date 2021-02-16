@@ -3,7 +3,8 @@ import copy from 'copy-to-clipboard'
 
 import Button from 'components/Button'
 import { ShareIcon } from 'components/icons'
-import { ROUTES, ROUTE_LOAD } from 'constants/router.constants'
+import { COLORS } from 'constants/colors.constants'
+import { ROUTES } from 'constants/router.constants'
 import { ModalContext } from 'contexts/ModalContext'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
@@ -11,7 +12,6 @@ import { createUrl } from 'utils/createUrl'
 import { encodePuzzle } from 'utils/puzzleEncoder'
 
 import styles from 'styles/components/Header.module.css'
-import { COLORS } from 'constants/colors.constants'
 
 const Header = () => {
   const { confirm, notice } = useContext(ModalContext)
@@ -22,23 +22,26 @@ const Header = () => {
   const [isRouteHome] = useRoute(ROUTES.HOME)
   const [isRoutePlay] = useRoute(ROUTES.PLAY)
 
-  const handleShare = () => {
-    const code = encodePuzzle(puzzle)
-    const url = createUrl(ROUTE_LOAD, { code })
-    copy(url)
-    notice('Puzzle URL copied!')
-  }
-
-  const handleNewPuzzle = () => {
-    if (solved || !initialized) {
-      remove()
-      navigate(ROUTES.HOME)
-    } else {
-      confirm('This will discard current puzzle. Are you sure?', () => {
+  const handleNavigate = (route: string) => {
+    if (initialized && !solved) {
+      return confirm('This will discard current puzzle. Are you sure?', () => {
         remove()
-        navigate(ROUTES.HOME)
+        navigate(route)
       })
     }
+    remove()
+    navigate(route)
+  }
+
+  const handleNewPuzzle = () => handleNavigate(ROUTES.HOME)
+
+  const handleCreate = () => handleNavigate(ROUTES.CREATE)
+
+  const handleShare = () => {
+    const code = encodePuzzle(puzzle)
+    const url = createUrl(ROUTES.LOAD, { code })
+    copy(url)
+    notice('Puzzle URL copied!')
   }
 
   return (
@@ -57,7 +60,7 @@ const Header = () => {
         <Button onClick={handleNewPuzzle} disabled={isRouteHome} outlined={!isRouteHome}>
           NEW
         </Button>
-        <Button to={ROUTES.CREATE} disabled={isRouteCreate} outlined={!isRouteCreate}>
+        <Button onClick={handleCreate} disabled={isRouteCreate} outlined={!isRouteCreate}>
           CREATE
         </Button>
         <Button asIcon onClick={handleShare} disabled={!initialized}>
