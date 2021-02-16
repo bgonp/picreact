@@ -23,7 +23,7 @@ const Welcome: FC<Props> = ({ setPuzzle }) => {
 
   return (
     <div className={styles.welcome}>
-      <h2 className={styles.title}>CREATE NEW PUZZLE</h2>
+      <h1>Load a random puzzle or create your own</h1>
       <div className={styles.buttons}>
         <Button primary large onClick={setEasyPuzzle}>
           EASY
