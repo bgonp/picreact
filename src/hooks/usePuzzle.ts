@@ -69,10 +69,10 @@ export const usePuzzle = (): UsePuzzleType => {
     setHistory([])
     setBoard((board) => getEmptyBoard(board.length))
     setColumns((columns) =>
-      columns.map((column) => column.map(({ value }) => ({ value, solved: false })))
+      columns.map((column) => column.map(({ value }) => ({ value, solved: value === 0 })))
     )
     setRows((rows) =>
-      rows.map((row) => row.map(({ value }) => ({ value, solved: false })))
+      rows.map((row) => row.map(({ value }) => ({ value, solved: value === 0 })))
     )
   }, [setBoard, setColumns, setHistory, setRows])
 
