@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { useTimeout } from 'bgon-custom-hooks'
 
 import Button from 'components/Button'
-import { CrossIcon } from 'components/icons'
+import { CrossIcon, TickIcon } from 'components/icons'
 import { COLORS } from 'constants/colors.constants'
 import { TIMES } from 'constants/times.constants'
 import { ModalProps } from 'hooks/useModal'
@@ -52,11 +52,11 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
         <div className={styles.content}>
           {content}
           <div className={styles.buttons}>
-            <Button primary onClick={handleConfirm}>
-              CONFIRM
+            <Button asIcon primary onClick={handleConfirm}>
+              <TickIcon color={COLORS.WHITE} />
             </Button>
-            <Button secondary onClick={handleClose}>
-              CANCEL
+            <Button asIcon secondary onClick={handleClose}>
+              <CrossIcon color={COLORS.WHITE} />
             </Button>
           </div>
         </div>
