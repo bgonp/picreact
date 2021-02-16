@@ -1,20 +1,14 @@
 .welcome {
   padding: 1rem;
-}
-
-.title {
-  color: var(--color-first);
-  font-weight: 600;
+  max-width: 32rem;
   text-align: center;
-  margin: 0 0 2rem;
-  font-size: 2rem;
 }
 
 .buttons {
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
   gap: 1.2rem;
+  justify-content: space-between;
   margin: 0 auto;
   max-width: 16rem;
 }

@@ -1,5 +1,4 @@
 .dialog {
-  font-family: var(--font-family-main);
   background: var(--color-background);
   display: flex;
   align-items: center;

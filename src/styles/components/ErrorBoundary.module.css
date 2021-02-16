@@ -4,7 +4,6 @@
   bottom: 0;
   color: var(--color-fourth);
   display: flex;
-  font-family: var(--font-family-main);
   font-size: 2rem;
   font-weight: 600;
   justify-content: center;

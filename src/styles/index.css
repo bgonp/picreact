@@ -1,2 +1,27 @@
 @import 'fonts';
 @import 'normalize';
+
+body {
+  color: var(--color-first)
+}
+
+* {
+  font-family: var(--font-family-main);
+}
+
+h1, h2, h3 {
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.625rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}

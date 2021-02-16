@@ -24,14 +24,18 @@
   width: 100%;
 }
 
-.button.solved {
-  cursor: default;
-}
-
 .button:focus {
   outline: none;
 }
 
+.blocked {
+  cursor: default;
+}
+
 .filled {
-  background-color: var(--color-first);
+  background-color: var(--color-sixth);
+
+  &.crossable {
+    background-color: var(--color-first);
+  }
 }
