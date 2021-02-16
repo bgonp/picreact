@@ -5,14 +5,13 @@ import LazyLoaded from 'components/LazyLoaded'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { ROUTE_HOME } from 'constants/router.constants'
 import { useContextSecure as useContext } from 'utils/contextSecure'
-import { ModalContext } from 'contexts/ModalContext'
 
-const Board = lazy(() => import('components/Board'))
+const Play = lazy(() => import('components/Play'))
 
 const PlayPage: FC = () => {
-  const { confirm } = useContext(ModalContext)
   const {
     canUndo,
+    empty,
     initialized,
     size,
     solved,
@@ -25,22 +24,20 @@ const PlayPage: FC = () => {
 
   const [, navigate] = useLocation()
 
-  const handleReset = () =>
-    confirm('This will discard current progress. Are you sure?', reset)
-
   useEffect(() => {
     if (!initialized) navigate(ROUTE_HOME)
   }, [initialized, navigate])
 
   return (
     <LazyLoaded>
-      <Board
+      <Play
         canUndo={canUndo}
+        empty={empty}
         puzzle={puzzle}
         size={size}
         solved={solved}
         getCellState={getCellState}
-        reset={handleReset}
+        reset={reset}
         setCellState={setCellState}
         undo={undo}
       />

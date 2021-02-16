@@ -1,35 +1,30 @@
-import { FC, useCallback, useState } from 'react'
+import { FC, ReactElement, useCallback, useState } from 'react'
 import classNames from 'classnames'
 
-import Button from 'components/Button'
 import Cell from 'components/Cell'
-import { RefreshIcon, UndoIcon } from 'components/icons'
-import { COLORS } from 'constants/colors.constants'
 import { useClickControl } from 'hooks/useClickControl'
 import { CellState, Puzzle } from 'models/Puzzle'
 
 import styles from 'styles/components/Board.module.css'
 
 type Props = {
-  canUndo: boolean
+  blocked?: boolean
+  buttons: ReactElement[]
+  crossable?: boolean
   puzzle: Puzzle
   size: number
-  solved: boolean
   getCellState: (r: number, c: number) => CellState
-  reset: () => void
   setCellState: (r: number, c: number) => (s: CellState) => void
-  undo: () => void
 }
 
 export const Board: FC<Props> = ({
-  canUndo,
+  blocked = false,
+  buttons,
+  crossable = false,
   puzzle,
   size,
-  solved,
   getCellState,
-  reset,
   setCellState,
-  undo,
 }) => {
   const [currentCell, setCurrentCell] = useState<[number, number]>([-1, -1])
   const [clickedState, setClickedState] = useState<CellState>(CellState.Empty)
@@ -63,6 +58,7 @@ export const Board: FC<Props> = ({
   )
 
   const className = classNames(styles.board, {
+    [styles.crossable]: crossable,
     [styles.size5]: size === 5,
     [styles.size10]: size === 10,
     [styles.size15]: size === 15,
@@ -117,28 +113,22 @@ export const Board: FC<Props> = ({
             row.map((_, c) => (
               <Cell
                 key={`${r}-${c}`}
+                blocked={blocked}
                 className={getClassName(r, c)}
                 clickedState={clickedState}
+                crossable={crossable}
                 isLeftClicked={isLeftClicked}
                 isRightClicked={isRightClicked}
-                solved={solved}
-                state={getCellState(r, c)}
                 onHover={onCellHover(r, c)}
+                state={getCellState(r, c)}
                 setClickedState={setClickedState}
                 setState={setCellState(r, c)}
               />
             ))
           )}
         </div>
-      </div>
 
-      <div className={styles.buttons}>
-        <Button asIcon secondary disabled={solved} onClick={reset}>
-          <RefreshIcon color={COLORS.WHITE} />
-        </Button>
-        <Button asIcon primary disabled={!canUndo} onClick={undo}>
-          <UndoIcon color={COLORS.WHITE} />
-        </Button>
+        <div className={styles.buttons}>{buttons}</div>
       </div>
     </div>
   )

@@ -10,9 +10,10 @@ import styles from 'styles/components/Cell.module.css'
 type Props = {
   className?: string
   clickedState: CellState
+  crossable: boolean
   isLeftClicked: boolean
   isRightClicked: boolean
-  solved: boolean
+  blocked: boolean
   state: CellState
   onHover: () => void
   setClickedState: (state: CellState) => void
@@ -22,33 +23,32 @@ type Props = {
 export const Cell: FC<Props> = ({
   className = '',
   clickedState,
+  crossable,
   isLeftClicked,
   isRightClicked,
-  solved,
+  blocked,
   state,
   onHover,
   setClickedState,
   setState,
 }) => {
-  const handleContextMenu: (e: MouseEvent) => void = (e) => {
-    e.preventDefault()
-  }
+  const handleContextMenu: (e: MouseEvent) => void = (e) => e.preventDefault()
 
   const handleTouchEnd: (e: TouchEvent) => void = (e) => {
     e.preventDefault()
-    if (solved) return
+    if (blocked) return
     if (state === CellState.Empty) setState(CellState.Filled)
     else if (state === CellState.Filled) setState(CellState.Cross)
     else if (state === CellState.Cross) setState(CellState.Empty)
   }
 
   const handleMouseDown: (e: MouseEvent) => void = ({ button }) => {
-    if (solved) return
+    if (blocked) return
     let newState: CellState = CellState.Empty
     if (button === 0) {
       if (state === CellState.Cross) return
       if (state === CellState.Empty) newState = CellState.Filled
-    } else if (button === 2) {
+    } else if (crossable && button === 2) {
       if (state === CellState.Filled) return
       if (state === CellState.Empty) newState = CellState.Cross
     } else {
@@ -60,15 +60,16 @@ export const Cell: FC<Props> = ({
 
   const handleMouseEnter: () => void = () => {
     onHover()
-    if (solved) return
+    if (blocked) return
     if (state === clickedState) return
-    if (isRightClicked && state !== CellState.Filled) setState(clickedState)
+    if (crossable && isRightClicked && state !== CellState.Filled) setState(clickedState)
     else if (isLeftClicked && state !== CellState.Cross) setState(clickedState)
   }
 
   const buttonClassName = classNames(styles.button, {
+    [styles.blocked]: blocked,
+    [styles.crossable]: crossable,
     [styles.filled]: state === CellState.Filled,
-    [styles.solved]: solved,
   })
 
   return (
@@ -80,7 +81,7 @@ export const Cell: FC<Props> = ({
         onMouseDown={handleMouseDown}
         onMouseEnter={handleMouseEnter}
       >
-        {!solved && state === CellState.Cross && <CrossIcon color={COLORS.SECOND} />}
+        {!blocked && state === CellState.Cross && <CrossIcon color={COLORS.SECOND} />}
       </button>
     </div>
   )
