@@ -72,7 +72,6 @@
 }
 
 .large {
-  /* padding: 1.2rem 2.5rem; */
   padding: 1rem 2rem;
   font-size: 1rem;
   line-height: 1;
@@ -81,13 +80,13 @@
 }
 
 .asIcon {
-  padding: 0.4rem;
+  padding: 0.3rem;
   height: calc(2rem + 4px);
   width: calc(2rem + 4px);
 }
 
 .large.asIcon {
-  padding: 0.75rem;
+  padding: 0.6rem;
   height: calc(3rem + 4px);
   width: calc(3rem + 4px);
 }

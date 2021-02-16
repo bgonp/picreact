@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { useTimeout } from 'bgon-custom-hooks'
 
 import Button from 'components/Button'
-import { CrossIcon, TickIcon } from 'components/icons'
+import { CloseIcon, TickIcon } from 'components/icons'
 import { COLORS } from 'constants/colors.constants'
 import { TIMES } from 'constants/times.constants'
 import { ModalProps } from 'hooks/useModal'
@@ -56,7 +56,7 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
               <TickIcon color={COLORS.WHITE} />
             </Button>
             <Button asIcon secondary onClick={handleClose}>
-              <CrossIcon color={COLORS.WHITE} />
+              <CloseIcon color={COLORS.WHITE} />
             </Button>
           </div>
         </div>
@@ -77,7 +77,7 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
           secondary={type === 'error'}
           onClick={handleClose}
         >
-          <CrossIcon color={COLORS.WHITE} />
+          <CloseIcon color={COLORS.WHITE} />
         </Button>
       </div>
     </div>
