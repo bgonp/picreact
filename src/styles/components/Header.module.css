@@ -8,9 +8,10 @@
 
 .title {
   color: var(--color-white);
-  margin: 0 2rem 0 0;
   font-size: 28px;
   font-weight: 600;
+  line-height: 1;
+  margin: 0 2rem 0 0;
 
   & span {
     color: var(--color-third);

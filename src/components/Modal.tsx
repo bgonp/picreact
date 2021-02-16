@@ -49,8 +49,8 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
   if (type === 'confirm')
     return (
       <div className={className}>
-        <div className={styles.content}>
-          {content}
+        <div className={styles.container}>
+          <div className={styles.content}>{content}</div>
           <div className={styles.buttons}>
             <Button asIcon primary onClick={handleConfirm}>
               <TickIcon color={COLORS.WHITE} />
@@ -69,15 +69,17 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className={styles.content}>{content}</div>
-      <Button
-        asIcon
-        primary={type === 'notice'}
-        secondary={type === 'error'}
-        onClick={handleClose}
-      >
-        <CrossIcon color={COLORS.WHITE} />
-      </Button>
+      <div className={styles.container}>
+        <div className={styles.content}>{content}</div>
+        <Button
+          asIcon
+          primary={type === 'notice'}
+          secondary={type === 'error'}
+          onClick={handleClose}
+        >
+          <CrossIcon color={COLORS.WHITE} />
+        </Button>
+      </div>
     </div>
   )
 }

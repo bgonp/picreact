@@ -13,7 +13,7 @@ export const PuzzleContextProvider: FC = ({ children }) => {
   const { notice } = useContext(ModalContext)
 
   useEffect(() => {
-    if (puzzleContext.solved) notice('Puzzle solved!')
+    if (puzzleContext.solved) notice('Puzzle solved! Congratulations!')
   }, [puzzleContext.solved, notice])
 
   return <PuzzleContext.Provider value={puzzleContext}>{children}</PuzzleContext.Provider>
