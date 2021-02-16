@@ -1,21 +1,18 @@
+import { FC } from 'react'
 import { useLocation, useRoute } from 'wouter'
-import copy from 'copy-to-clipboard'
 
 import Button from 'components/Button'
-import { ShareIcon } from 'components/icons'
-import { COLORS } from 'constants/colors.constants'
+import ShareButton from 'components/ShareButton'
 import { ROUTES } from 'constants/router.constants'
 import { ModalContext } from 'contexts/ModalContext'
 import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
-import { createUrl } from 'utils/createUrl'
-import { encodePuzzle } from 'utils/puzzleEncoder'
 
 import styles from 'styles/components/Header.module.css'
 
-const Header = () => {
-  const { confirm, notice } = useContext(ModalContext)
-  const { initialized, solved, puzzle, remove } = useContext(PuzzleContext)
+const Header: FC = () => {
+  const { confirm } = useContext(ModalContext)
+  const { initialized, solved, remove } = useContext(PuzzleContext)
 
   const [, navigate] = useLocation()
   const [isRouteCreate] = useRoute(ROUTES.CREATE)
@@ -37,13 +34,6 @@ const Header = () => {
 
   const handleCreate = () => handleNavigate(ROUTES.CREATE)
 
-  const handleShare = () => {
-    const code = encodePuzzle(puzzle)
-    const url = createUrl(ROUTES.LOAD, { code })
-    copy(url)
-    notice('Puzzle URL copied!')
-  }
-
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>
@@ -63,9 +53,7 @@ const Header = () => {
         <Button onClick={handleCreate} disabled={isRouteCreate} outlined={!isRouteCreate}>
           CREATE
         </Button>
-        <Button asIcon onClick={handleShare} disabled={!initialized}>
-          <ShareIcon color={COLORS.FIRST} />
-        </Button>
+        <ShareButton disabled={!initialized} white />
       </nav>
     </header>
   )
