@@ -1,13 +1,10 @@
-.confirm, .notice, .error {
-  animation: fade-in 0.2s ease forwards;
-}
-
 .confirm.hidden {
   animation: fade-out var(--time-animation_duration) ease forwards;
 }
 
 .confirm .container {
   align-items: center;
+  animation: fade-in 0.2s ease forwards;
   backdrop-filter: blur(0.5rem);
   background: var(--color-background);
   bottom: 0;
@@ -40,6 +37,7 @@
 }
 
 .notice, .error {
+  animation: fade-in 0.2s ease forwards;
   display: flex;
   left: 0;
   position: fixed;
