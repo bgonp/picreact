@@ -1,10 +1,11 @@
 import { FC } from 'react'
-import { Redirect, Route, Switch } from 'wouter'
+import { Route, Switch } from 'wouter'
 
 import { ROUTES } from 'constants/router.constants'
 import CreatePage from 'pages/CreatePage'
 import HomePage from 'pages/HomePage'
 import LoadPage from 'pages/LoadPage'
+import NotFoundPage from 'pages/NotFoundPage'
 import PlayPage from 'pages/PlayPage'
 
 const Router: FC = () => (
@@ -19,7 +20,7 @@ const Router: FC = () => (
     <Route path={ROUTES.PLAY}>
       <PlayPage />
     </Route>
-    <Redirect to={ROUTES.HOME} />
+    <NotFoundPage />
   </Switch>
 )
 
