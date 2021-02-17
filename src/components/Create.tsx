@@ -70,7 +70,7 @@ const Create: FC<Props> = ({ onCreate }) => {
   }
 
   const handleSave = () => {
-    notice('Puzzle created, now you can share it using upper right button')
+    notice('Puzzle created, now you can copy a direct link using share button')
     onCreate(createPuzzleFromCells(board))
   }
 
