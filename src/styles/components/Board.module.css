@@ -1,10 +1,10 @@
 .board {
-  padding: 1rem;
-  width: fit-content;
-  user-select: none;
+  align-items: center;
   display: flex;
-  align-items: flex-end;
-  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+  user-select: none;
+  width: fit-content;
 
   &.crossable .cells {
     background: var(--color-second);
@@ -90,10 +90,9 @@
 }
 
 .footer {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  align-self: start;
+  display: grid;
+  justify-content: center;
   gap: 0.75rem;
   grid-column: 1 / 4;
   grid-row: 3;
