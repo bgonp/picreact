@@ -46,10 +46,17 @@ const Play: FC<Props> = ({
   const buttons = (
     <>
       <ShareButton />
-      <Button key="reset" asIcon secondary disabled={solved || empty} onClick={onReset}>
+      <Button
+        key="reset"
+        asIcon
+        secondary
+        disabled={solved || empty}
+        onClick={onReset}
+        title={'Reset'}
+      >
         <RefreshIcon color={COLORS.WHITE} />
       </Button>
-      <Button key="undo" asIcon primary disabled={!canUndo} onClick={undo}>
+      <Button key="undo" asIcon primary disabled={!canUndo} onClick={undo} title={'Undo'}>
         <UndoIcon color={COLORS.WHITE} />
       </Button>
     </>

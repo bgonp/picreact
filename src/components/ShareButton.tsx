@@ -28,7 +28,13 @@ const ShareButton: FC<Props> = ({ disabled = false, white = false }) => {
   }
 
   return (
-    <Button asIcon disabled={disabled} primary={!white} onClick={handleShare}>
+    <Button
+      asIcon
+      disabled={disabled}
+      primary={!white}
+      onClick={handleShare}
+      title="Share"
+    >
       <ShareIcon color={white ? COLORS.FIRST : COLORS.WHITE} />
     </Button>
   )

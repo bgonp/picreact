@@ -76,10 +76,24 @@ const Create: FC<Props> = ({ onCreate }) => {
 
   const buttons = (
     <>
-      <Button key="discard" asIcon secondary disabled={empty} onClick={handleDiscard}>
+      <Button
+        key="discard"
+        asIcon
+        secondary
+        disabled={empty}
+        onClick={handleDiscard}
+        title="Discard"
+      >
         <RefreshIcon color={COLORS.WHITE} />
       </Button>
-      <Button key="save" asIcon primary disabled={empty} onClick={handleSave}>
+      <Button
+        key="save"
+        asIcon
+        primary
+        disabled={empty}
+        onClick={handleSave}
+        title="Save"
+      >
         <TickIcon color={COLORS.WHITE} />
       </Button>
     </>
