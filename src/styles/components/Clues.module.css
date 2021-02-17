@@ -1,0 +1,66 @@
+.clues.columns {
+  box-sizing: border-box;
+  display: grid;
+  gap: 2px;
+  grid-column-start: 2;
+  width: 100%;
+  padding: 0 2px;
+  grid-template-columns: repeat(var(--puzzle-size), 1.3em);
+
+  & .line {
+    flex-direction: column;
+    padding: 0.6em 0;
+  }
+
+  & .hover {
+    background: linear-gradient(transparent, var(--color-fifth_transparent));
+  }
+}
+
+.columns.alt .hover {
+  background: linear-gradient(transparent, var(--color-third_transparent));
+}
+
+.clues.rows {
+  box-sizing: border-box;
+  display: grid;
+  gap: 2px;
+  height: 100%;
+  padding: 2px 0;
+  grid-template-rows: repeat(var(--puzzle-size), 1.3em);
+
+  & .line {
+    flex-direction: row;
+    padding: 0 0.8em;
+  }
+
+  & .hover {
+    background: linear-gradient(to right, transparent, var(--color-fifth_transparent));
+  }
+}
+
+.rows.alt .hover {
+  background: linear-gradient(to right, transparent, var(--color-third_transparent));
+}
+
+.line {
+  align-items: center;
+  color: var(--color-first);
+  display: flex;
+  font-size: 0.8em;
+  font-weight: 600;
+  gap: 0.6em 0.85em;
+  justify-content: flex-end;
+}
+
+.alt .line {
+  color: var(--color-fourth);
+}
+
+.ok {
+  color: var(--color-third);
+}
+
+.alt .ok {
+  color: var(--color-fifth);
+}

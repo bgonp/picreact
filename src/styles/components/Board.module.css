@@ -6,29 +6,11 @@
   align-items: flex-end;
   gap: 1rem;
 
-  &.crossable {
-    & .cluesLine {
-      color: var(--color-first);
-
-      &.hover {
-        background: linear-gradient(to right, transparent, var(--color-fifth_transparent));
-      }
-      
-      & .ok {
-        color: var(--color-third);
-      }
-    }
-
-    & .cells {
-      background: var(--color-second);
-    
-      & .cell.hover button {
-        box-shadow: inset 0 0 0 1em var(--color-fifth_transparent);
-      }
-    }
-
-    & .cluesColumns .hover {
-      background: linear-gradient(transparent, var(--color-fifth_transparent));
+  &.crossable .cells {
+    background: var(--color-second);
+  
+    & .cell.hover button {
+      box-shadow: inset 0 0 0 1em var(--color-fifth_transparent);
     }
   }
 
@@ -53,62 +35,14 @@
   }
 }
 
-.cells, .cluesColumns {
+.cells {
   grid-template-columns: repeat(var(--puzzle-size), 1.3em);
-}
-
-.cells, .cluesRows {
   grid-template-rows: repeat(var(--puzzle-size), 1.3em);
 }
 
 .content {
   display: grid;
   grid-template: 1fr auto 1fr / 1fr auto 1fr;
-}
-
-.cluesColumns {
-  box-sizing: border-box;
-  display: grid;
-  gap: 2px;
-  grid-column-start: 2;
-  width: 100%;
-  padding: 0 2px;
-
-  & .cluesLine {
-    flex-direction: column;
-    padding: 0.6em 0;
-
-    &.hover {
-      background: linear-gradient(transparent, var(--color-third_transparent));
-    }
-  }
-}
-
-.cluesRows {
-  box-sizing: border-box;
-  display: grid;
-  gap: 2px;
-  height: 100%;
-  padding: 2px 0;
-}
-
-.cluesLine {
-  align-items: center;
-  color: var(--color-fourth);
-  display: flex;
-  font-size: 0.8em;
-  font-weight: 600;
-  gap: 0.6em 0.85em;
-  justify-content: flex-end;
-  padding: 0 0.8em;
-
-  &.hover {
-    background: linear-gradient(to right, transparent, var(--color-third_transparent));
-  }
-
-  & .ok {
-    color: var(--color-fifth);
-  }
 }
 
 .cells {

@@ -6,6 +6,7 @@ import { useClickControl } from 'hooks/useClickControl'
 import { CellState, Puzzle } from 'models/Puzzle'
 
 import styles from 'styles/components/Board.module.css'
+import Clues from './Clues'
 
 type Props = {
   blocked?: boolean
@@ -20,15 +21,15 @@ type Props = {
 
 export const Board: FC<Props> = ({
   blocked = false,
-  buttons = [],
+  buttons = null,
   crossable = false,
-  footer = [],
+  footer = null,
   puzzle,
   size,
   getCellState,
   setCellState,
 }) => {
-  const [currentCell, setCurrentCell] = useState<[number, number]>([-1, -1])
+  const [hoveredCell, setHoveredCell] = useState<[number, number]>([-1, -1])
   const [clickedState, setClickedState] = useState<CellState>(CellState.Empty)
 
   const {
@@ -40,23 +41,23 @@ export const Board: FC<Props> = ({
   } = useClickControl()
 
   const onCellHover = useCallback<(row: number, column: number) => () => void>(
-    (row, column) => () => setCurrentCell([row, column]),
+    (row, column) => () => setHoveredCell([row, column]),
     []
   )
 
   const onMouseLeave = useCallback<() => void>(() => {
     handleMouseLeave()
-    setCurrentCell([-1, -1])
+    setHoveredCell([-1, -1])
   }, [handleMouseLeave])
 
-  const getClassName = useCallback<(row: number, column: number) => string>(
+  const getCellClassName = useCallback<(row: number, column: number) => string>(
     (row, column) =>
       classNames(styles.cell, {
         [styles.gapBottom]: row % 5 === 4,
         [styles.gapRight]: column % 5 === 4,
-        [styles.hover]: row === currentCell[0] || column === currentCell[1],
+        [styles.hover]: row === hoveredCell[0] || column === hoveredCell[1],
       }),
-    [currentCell]
+    [hoveredCell]
   )
 
   const className = classNames(styles.board, {
@@ -71,39 +72,8 @@ export const Board: FC<Props> = ({
   return (
     <div className={className}>
       <div className={styles.content}>
-        <div className={styles.cluesColumns}>
-          {puzzle.columns.map((column, i) => (
-            <div
-              key={`c-${i}`}
-              className={classNames(styles.cluesLine, {
-                [styles.hover]: i === currentCell[1],
-              })}
-            >
-              {column.map(({ value, solved }, j) => (
-                <span key={`c-${i}-${j}`} className={solved ? styles.ok : ''}>
-                  {value}
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-
-        <div className={styles.cluesRows}>
-          {puzzle.rows.map((row, i) => (
-            <div
-              key={`r-${i}`}
-              className={classNames(styles.cluesLine, {
-                [styles.hover]: i === currentCell[0],
-              })}
-            >
-              {row.map(({ value, solved }, j) => (
-                <span key={`r-${i}-${j}`} className={solved ? styles.ok : ''}>
-                  {value}
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
+        <Clues clues={puzzle.columns} columns hover={hoveredCell[1]} alt={!crossable} />
+        <Clues clues={puzzle.rows} rows hover={hoveredCell[0]} alt={!crossable} />
 
         <div
           className={styles.cells}
@@ -116,7 +86,7 @@ export const Board: FC<Props> = ({
               <Cell
                 key={`${r}-${c}`}
                 blocked={blocked}
-                className={getClassName(r, c)}
+                className={getCellClassName(r, c)}
                 clickedState={clickedState}
                 crossable={crossable}
                 isLeftClicked={isLeftClicked}
@@ -131,7 +101,6 @@ export const Board: FC<Props> = ({
         </div>
 
         {buttons && <div className={styles.buttons}>{buttons}</div>}
-
         {footer && <div className={styles.footer}>{footer}</div>}
       </div>
     </div>
