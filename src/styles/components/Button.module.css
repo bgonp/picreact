@@ -6,9 +6,10 @@
   box-shadow: 0 0 0 0 transparent;
   color: var(--color-first);
   cursor: pointer;
-  display: flex;
+  display: grid;
   font-size: 1rem;
   font-weight: 400;
+  grid-auto-flow: column;
   justify-content: center;
   line-height: 1;
   padding: 0.5rem 1.2rem;
@@ -80,6 +81,7 @@
 }
 
 .asIcon {
+  display: flex;
   padding: 0.3rem;
   height: calc(2rem + 4px);
   width: calc(2rem + 4px);
