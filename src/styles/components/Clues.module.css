@@ -8,8 +8,12 @@
   grid-template-columns: repeat(var(--puzzle-size), 1.3em);
 
   & .line {
+    align-self: end;
     flex-direction: column;
     padding: 0.6em 0;
+    grid-auto-flow: row;
+    height: fit-content;
+    width: auto;
   }
 
   & .hover {
@@ -31,7 +35,11 @@
 
   & .line {
     flex-direction: row;
-    padding: 0 0.8em;
+    justify-self: end;
+    padding: 0 0.7em;
+    grid-auto-flow: column;
+    height: auto;
+    width: fit-content;
   }
 
   & .hover {
@@ -46,11 +54,11 @@
 .line {
   align-items: center;
   color: var(--color-first);
-  display: flex;
+  display: grid;
   font-size: 0.8em;
   font-weight: 600;
-  gap: 0.6em 0.85em;
-  justify-content: flex-end;
+  gap: 0.5em 0.75em;
+  text-align: center;
 }
 
 .alt .line {
