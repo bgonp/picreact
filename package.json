@@ -1,6 +1,6 @@
 {
-  "name": "picreactss",
-  "version": "0.1.0",
+  "name": "picreact",
+  "version": "1.2.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "~6.0.0",
