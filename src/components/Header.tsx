@@ -37,18 +37,18 @@ const Header: FC = () => {
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>
-        PIC<span>REACT</span>SS
+        PIC<span>REACT</span>
       </h1>
       <nav className={styles.menu}>
+        <Button onClick={handleNewPuzzle} disabled={isRouteHome} outlined={!isRouteHome}>
+          NEW
+        </Button>
         <Button
           to={ROUTES.PLAY}
           disabled={isRoutePlay || !initialized}
           outlined={!isRoutePlay}
         >
           PLAY
-        </Button>
-        <Button onClick={handleNewPuzzle} disabled={isRouteHome} outlined={!isRouteHome}>
-          NEW
         </Button>
         <Button onClick={handleCreate} disabled={isRouteCreate} outlined={!isRouteCreate}>
           CREATE
