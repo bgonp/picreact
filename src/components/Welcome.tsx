@@ -38,7 +38,7 @@ const Welcome: FC<Props> = ({ setPuzzle }) => {
           EXPERT
         </Button>
         <Button primary large onClick={navigateToCreate} outlined>
-          CUSTOM
+          CREATE
         </Button>
       </div>
     </div>
