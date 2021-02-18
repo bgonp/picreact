@@ -114,7 +114,7 @@ Sección __CREATE__. Accede a esta sección desde la página principal o desde e
 
 ![Puzzle created](./screenshots/create_filled.jpg)
 
-Una vez termines tu diseño, guárdalo desde el botón lateral. Ahora puedes __resolver tu propio puzle o compartirlo__ a través de URL desde el botón __compartir__.
+Una vez termines tu diseño, guárdalo desde el botón lateral. Ahora puedes __resolver tu propio puzle o compartirlo__ a través de URL desde el botón __compartir__. Toma, [__un ejemplo__](https://picreact.vercel.app/load/waddaddaddaddaddadfdadhadfadfadladjdaddadffadhfadeefadeiadefdaddawbwaddaddaddaddaddaddaddaddaddaddadegdadehdadeedadegdadeegdadeeedadihdadggdaw) 😉
 
 ----
 
