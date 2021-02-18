@@ -3,7 +3,6 @@
 
 <p align="center">
   <a href="#descripción-general">Descripción</a> •
-  <a href="#prueba-picreact">Prueba Picreact</a> •
   <a href="#instalación">Instalación</a> •
   <a href="#estructura">Estructura</a> •
   <a href="#uso">Uso</a> •
@@ -23,7 +22,7 @@
 
 Un __nonograma__ es un juego de ingenio que se ha popularizado con los juegos __Picross__. Se basan en el estado de las celdas de una cuadrícula, que pueden estar vacías o rellenas. Para averiguar el estado de las celdas hay que servirse de las pistas, que línea a línea indican cuántas celdas estan rellenas y cómo se agrupan.
 
-Para más detalles sobre cómo jugar, revisa [__cómo jugar__](HOW_TO_PLAY.md).
+Para más detalles sobre cómo jugar, revisa 🚧[__cómo jugar__](HOW_TO_PLAY.md)🚧.
 
 __Picreact__ es una versión de este juego desarrollada en __React__ con __TypeScript__. En lugar de cargar puzles ya creados, Picreact te da la posibilidad de generar puzles __aleatorios__ o crear (y __compartir__) los tuyos propios. Además, el estado del puzle que estes resolviendo __queda almacenado en el navegador__ para no perder tu progreso al cerrar.
 
@@ -41,15 +40,28 @@ Para los iconos he generado componentes a partir de imágenes SVG y las fuentes 
 Utilizo un paquete propio ([__bgon-custom-hooks__](https://www.npmjs.com/package/bgon-custom-hooks), aún en desarrollo) para hooks recurrentes que uso en mis proyectos, en este caso `useLocalStorage` y `useTimeout`. En futuras versiones pretendo usar [__localForage__](https://localforage.github.io/localForage/) en lugar de localStorage.
 
 Para gestionar las rutas uso [__wouter__](https://github.com/molefrog/wouter#reader), ya que es muy ligero y más que suficiente para un proyecto como este.
- 
-## Prueba Picreact
-Puedes probar la versión más reciente desplegada en Vercel: [__PICREACT__](https://picreact.vercel.app/)
 
 ## Instalación
-Clonar proyecto `git clone git@github.com:bgonp/picreact.git && cd picreact`\
-Instalar dependencias `npm install`\
-Desplegar entorno de desarrollo `npm start`\
-Generar los estáticos (en /build): `npm run build`
+Instrucciones para instalar y/o probar el proyecto. Puedes instalarlo __localmente__, o como un contenedor __docker__, o probarlo directamente en la versión desplegada en __vercel__.
+
+### 🔗 Vercel
+La última versión de la aplicación se encuentra desplegada en [Vercel](https://vercel.com/) para que la tengas disponible en un solo click:
+
+[__PICREACT__](https://picreact.vercel.app/)
+
+### 💻 Local
+Necesitas `node` y `npm` para instalar este proyecto en local.
+- Clona el proyecto: `git clone git@github.com:bgonp/picreact.git && cd picreact`
+- Instala las dependencias: `npm install`
+- Con las dependencias instaladas, puedes optar por desplegarlo en entorno de desarrollo o crear la build y servirla por tí mismo:
+  - Desplegar entorno de desarrollo: `npm start`
+  - Generar los estáticos (en /build): `npm run build`
+
+### 🐳 Docker
+Si te es más cómodo, puedes levantar un contenedor con todo lo necesario. Necesitas `docker` y `docker-compose`.
+- Clona el proyecto: `git clone git@github.com:bgonp/picreact.git && cd picreact`
+- Levanta el contenedor: `docker-compose up -d`
+- Listo, la aplicación esta accesible en el puerto __8080__
 
 ## Estructura
 ```

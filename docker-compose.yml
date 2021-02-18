@@ -1,0 +1,7 @@
+version: "3.7"
+
+services:
+  picreact:
+    build: .
+    ports:
+      - 8080:5000
