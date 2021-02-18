@@ -1,7 +1,15 @@
 .footer {
   background: var(--color-second);
   color: var(--color-white);
-  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
+  padding: 1rem 2rem;
+}
+
+.license {
+  align-items: center;
+  color: var(--color-white);
+  display: flex;
+  padding: 0.5rem;
+  text-decoration: none;
 }

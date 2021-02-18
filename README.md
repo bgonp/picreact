@@ -93,7 +93,7 @@ También puedes acceder a estas secciones desde el menú del header.
 
 ![Started puzzle](./screenshots/play_started.jpg)
 
-Sección __PLAY__. Desde aquí se resuelve el puzle propuesto. __Botón izquierdo__ del ratón para marcar la casilla como rellena y __botón derecho__ para marcarla como vacía con una X. Botones laterales:
+Sección __PLAY__. Desde aquí se resuelve el puzle propuesto. __Botón izquierdo__ del ratón para marcar la casilla como rellena y __botón derecho__ para marcarla como vacía con una X. Pudes pulsar y arrastrar para marcar varias casillas seguidas. Botones laterales:
 - __Compartir__: Copia una URL que al compartirla carga el puzle actual.
 - __Restaurar__: Si te atascas puede ser mejor hacer borrón y cuenta nueva.
 - __Deshacer__: Deshaz tus últimos movimientos si te equivocas (límite fijado a 10).
