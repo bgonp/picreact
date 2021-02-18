@@ -2,12 +2,12 @@
 <h3 align="center">Picross en React!</h3>
 
 <p align="center">
-  <a href="#descripcion-general">Descripción</a> •
+  <a href="#descripción-general">Descripción</a> •
   <a href="#prueba-picreact">Prueba Picreact</a> •
-  <a href="#instalacion">Instalación</a> •
+  <a href="#instalación">Instalación</a> •
   <a href="#estructura">Estructura</a> •
   <a href="#uso">Uso</a> •
-  <a href="#proximos-pasos">Próximos pasos</a> •
+  <a href="#próximos-pasos">Próximos pasos</a> •
   <a href="#licencia">Licencia</a>
 </p>
 
