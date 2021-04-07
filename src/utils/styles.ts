@@ -2,7 +2,7 @@ import { HexColor } from 'models/HexColor'
 import { COLORS } from 'constants/colors.constants'
 import { TIMES } from 'constants/times.constants'
 
-export const setCssVariable = (name: string, value: string) =>
+const setCssVariable = (name: string, value: string) =>
   document.documentElement.style.setProperty(name, value)
 
 export const initCssVariables = () => {
