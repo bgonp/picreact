@@ -66,7 +66,6 @@ export const Board: FC<Props> = ({
     [styles.size10]: size === 10,
     [styles.size15]: size === 15,
     [styles.size20]: size === 20,
-    [styles.size25]: size === 25,
   })
 
   return (
