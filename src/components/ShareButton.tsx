@@ -1,4 +1,4 @@
-import copy from 'copy-to-clipboard'
+import { FC } from 'react'
 
 import Button from 'components/Button'
 import { ShareIcon } from 'components/icons'
@@ -9,7 +9,7 @@ import { PuzzleContext } from 'contexts/PuzzleContext'
 import { useContextSecure as useContext } from 'utils/contextSecure'
 import { createUrl } from 'utils/createUrl'
 import { encodePuzzle } from 'utils/puzzleEncoder'
-import { FC } from 'react'
+import { share } from 'utils/share'
 
 type Props = {
   disabled?: boolean
@@ -23,8 +23,7 @@ const ShareButton: FC<Props> = ({ disabled = false, white = false }) => {
   const handleShare = () => {
     const code = encodePuzzle(puzzle)
     const url = createUrl(ROUTES.LOAD, { code })
-    copy(url)
-    notice('Puzzle URL copied!')
+    share(url, notice)
   }
 
   return (
