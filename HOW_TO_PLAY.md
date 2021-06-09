@@ -1,7 +1,5 @@
 # How to play
 
-## (Under construction 😅)
-
 This is your first PICREACT puzzle. Here you can see a 5x5 grid with columns and rows numbers.
 
 ![Tutorial 1](./screenshots/tutorial/1.png)
