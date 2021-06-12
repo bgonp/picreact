@@ -1,17 +1,15 @@
-import { useCallback, useEffect } from 'react'
-import { useLocalStorage } from 'bgon-custom-hooks'
+import { useCallback, useEffect, useMemo } from 'react'
 
-import { ST_BOARD, ST_COLUMNS, ST_HISTORY, ST_ROWS } from 'constants/storage.constants'
-import { STEPS_LIMIT } from 'constants/puzzle.constants'
-import { CellState, Puzzle } from 'models/Puzzle'
+import { ST_BOARD, ST_COLUMNS, ST_ROWS } from 'constants/storage.constants'
+import { useHistory } from 'hooks/useHistory'
+import { useLocalStorage } from 'hooks/useLocalStorage'
+import { CellState, Clues, Puzzle } from 'models/Puzzle'
 import { getEmptyBoard } from 'utils/puzzleCreator'
 import { getUpdatedClues } from 'utils/getUpdatedClues'
 
 type Board = Puzzle['board']
 type Columns = Puzzle['columns']
 type Rows = Puzzle['rows']
-
-type Step = [number, number, CellState]
 
 export type UsePuzzleType = {
   canUndo: boolean
@@ -20,64 +18,73 @@ export type UsePuzzleType = {
   puzzle: Puzzle
   size: number
   solved: boolean
-  getCellState: (r: number, c: number) => CellState
+  getCellState: (row: number, col: number) => CellState
   remove: () => void
   reset: () => void
-  setCellState: (r: number, c: number) => (state: CellState) => void
+  setCellState: (row: number, col: number) => (state: CellState) => void
   setPuzzle: (puzzle: Puzzle) => void
   undo: () => void
 }
 
+const resetClues = (clues: Clues): Clues =>
+  clues.map((clue) => clue.map(({ value }) => ({ value, solved: value === 0 })))
+
 export const usePuzzle = (): UsePuzzleType => {
-  const [board, setBoard, cleanBoard] = useLocalStorage<Board>(ST_BOARD, [])
-  const [columns, setColumns, cleanColumns] = useLocalStorage<Columns>(ST_COLUMNS, [])
-  const [rows, setRows, cleanRows] = useLocalStorage<Rows>(ST_ROWS, [])
-  const [history, setHistory, cleanHistory] = useLocalStorage<Step[]>(ST_HISTORY, [])
+  const { hasHistory, addStep, getStep, cleanSteps } = useHistory()
+  const [board, setBoard, cleanBoard] = useLocalStorage(ST_BOARD, [] as Board)
+  const [columns, setColumns, cleanColumns] = useLocalStorage(ST_COLUMNS, [] as Columns)
+  const [rows, setRows, cleanRows] = useLocalStorage(ST_ROWS, [] as Rows)
 
   const size = board.length
-  const initialized = size > 0
-  const empty = board.every((line) => line.every((cell) => cell === CellState.Empty))
-  const colsSolved = columns.every((clues) => clues.every((clue) => clue.solved))
-  const rowsSolved = rows.every((clues) => clues.every((clue) => clue.solved))
-  const solved = initialized && colsSolved && rowsSolved
-  const canUndo = history.length > 0 && !solved
 
-  const checkIndexes = useCallback<(...indexes: number[]) => void>(
-    (...indexes) => {
-      if (indexes.some((index) => index < 0 && index >= board.length))
-        throw new Error('Cell index out of bounds')
-    },
+  const initialized = size > 0
+
+  const empty = useMemo(
+    () => board.every((line) => line.every((cell) => cell === CellState.Empty)),
     [board]
   )
 
-  const getCellState = useCallback<(r: number, c: number) => CellState>(
-    (r, c) => {
-      checkIndexes(r, c)
-      return board[r][c]
+  const solved = useMemo(() => {
+    if (!initialized) return false
+    const colsSolved = columns.every((clues) => clues.every((clue) => clue.solved))
+    const rowsSolved = rows.every((clues) => clues.every((clue) => clue.solved))
+    return colsSolved && rowsSolved
+  }, [columns, rows, initialized])
+
+  const canUndo = !solved && hasHistory
+
+  const checkIndexes = useCallback(
+    (...indexes: number[]) => {
+      if (indexes.some((index) => index < 0 && index >= size))
+        throw new Error('Cell index out of bounds')
+    },
+    [size]
+  )
+
+  const getCellState = useCallback(
+    (row: number, col: number) => {
+      checkIndexes(row, col)
+      return board[row][col]
     },
     [board, checkIndexes]
   )
 
   const remove = useCallback<() => void>(() => {
-    setHistory([])
+    cleanSteps()
     setBoard([])
     setColumns([])
     setRows([])
-  }, [setBoard, setColumns, setHistory, setRows])
+  }, [cleanSteps, setBoard, setColumns, setRows])
 
   const reset = useCallback<() => void>(() => {
-    setHistory([])
+    cleanSteps()
     setBoard((board) => getEmptyBoard(board.length))
-    setColumns((columns) =>
-      columns.map((column) => column.map(({ value }) => ({ value, solved: value === 0 })))
-    )
-    setRows((rows) =>
-      rows.map((row) => row.map(({ value }) => ({ value, solved: value === 0 })))
-    )
-  }, [setBoard, setColumns, setHistory, setRows])
+    setColumns(resetClues)
+    setRows(resetClues)
+  }, [cleanSteps, setBoard, setColumns, setRows])
 
-  const updateCell = useCallback<(r: number, c: number, state: CellState) => void>(
-    (r, c, state) => {
+  const updateCell = useCallback(
+    (r: number, c: number, state: CellState) => {
       checkIndexes(r, c)
 
       const nextBoard = board.map((column, i) =>
@@ -95,17 +102,16 @@ export const usePuzzle = (): UsePuzzleType => {
     [board, columns, rows, checkIndexes, setBoard, setColumns, setRows]
   )
 
-  const setCellState = useCallback<(r: number, c: number) => (state: CellState) => void>(
-    (r, c) => (state) => {
-      const prevState = getCellState(r, c)
-      setHistory((steps) => [[r, c, prevState], ...steps].slice(0, STEPS_LIMIT) as Step[])
-      updateCell(r, c, state)
+  const setCellState = useCallback(
+    (row, col) => (state: CellState) => {
+      addStep(row, col, getCellState(row, col))
+      updateCell(row, col, state)
     },
-    [getCellState, setHistory, updateCell]
+    [addStep, getCellState, updateCell]
   )
 
-  const setPuzzle = useCallback<(puzzle: Puzzle) => void>(
-    (puzzle) => {
+  const setPuzzle = useCallback(
+    (puzzle: Puzzle) => {
       setBoard(puzzle.board)
       setColumns(puzzle.columns)
       setRows(puzzle.rows)
@@ -113,20 +119,19 @@ export const usePuzzle = (): UsePuzzleType => {
     [setBoard, setColumns, setRows]
   )
 
-  const undo = useCallback<() => void>(() => {
-    if (!canUndo) return
-    const [[r, c, state], ...nextHistory] = history
-    updateCell(r, c, state)
-    setHistory(nextHistory)
-  }, [canUndo, history, setHistory, updateCell])
+  const undo = useCallback(() => {
+    if (solved) return
+    const lastStep = getStep()
+    if (lastStep) updateCell(...lastStep)
+  }, [solved, getStep, updateCell])
 
   useEffect(() => {
     if (!solved) return
     cleanBoard()
     cleanColumns()
-    cleanHistory()
+    cleanSteps()
     cleanRows()
-  }, [solved, cleanBoard, cleanColumns, cleanHistory, cleanRows])
+  }, [solved, cleanBoard, cleanColumns, cleanSteps, cleanRows])
 
   return {
     canUndo,
