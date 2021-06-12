@@ -7,7 +7,7 @@ export class HexColor {
     this._value = color
   }
 
-  toString() {
+  toString(): string {
     return this._value
   }
 }

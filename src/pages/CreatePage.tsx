@@ -3,13 +3,12 @@ import { useLocation } from 'wouter'
 
 import LazyLoaded from 'components/LazyLoaded'
 import { ROUTE_PLAY } from 'constants/router.constants'
-import { PuzzleContext } from 'contexts/PuzzleContext'
-import { useContextSecure as useContext } from 'utils/contextSecure'
+import { usePuzzleContext } from 'contexts/PuzzleContext'
 
 const Create = lazy(() => import('components/Create'))
 
 const CreatePage: FC = () => {
-  const { initialized, solved, setPuzzle } = useContext(PuzzleContext)
+  const { initialized, solved, setPuzzle } = usePuzzleContext()
 
   const [, navigate] = useLocation()
 

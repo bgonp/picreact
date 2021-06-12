@@ -4,12 +4,14 @@ import Button from 'components/Button'
 import Board from 'components/Board'
 import { RefreshIcon, TickIcon } from 'components/icons'
 import { COLORS } from 'constants/colors.constants'
-import { ModalContext } from 'contexts/ModalContext'
-import { useContextSecure as useContext } from 'utils/contextSecure'
+import { useModalContext } from 'contexts/ModalContext'
 import { CellState, Clue, Puzzle } from 'models/Puzzle'
 import { createPuzzleFromCells, getClues, getEmptyBoard } from 'utils/puzzleCreator'
 
 import styles from 'styles/components/Create.module.css'
+
+const DISCARD_MSG = 'This will discard current puzzle.'
+const SAVE_MSG = 'Puzzle created, now you can copy a direct link using share button'
 
 type Props = {
   onCreate: (puzzle: Puzzle) => void
@@ -20,7 +22,7 @@ const Create: FC<Props> = ({ onCreate }) => {
   const [columns, setColumns] = useState<Clue[][]>([])
   const [rows, setRows] = useState<Clue[][]>([])
 
-  const { confirm, notice } = useContext(ModalContext)
+  const { showConfirm, showNotice } = useModalContext()
 
   const size = board.length
   const empty = board.every((line) => line.every((cell) => cell !== CellState.Filled))
@@ -66,11 +68,11 @@ const Create: FC<Props> = ({ onCreate }) => {
   }
 
   const handleDiscard = () => {
-    confirm('This will discard current puzzle.', setSize(0))
+    showConfirm({ content: DISCARD_MSG, onConfirm: setSize(0) })
   }
 
   const handleSave = () => {
-    notice('Puzzle created, now you can copy a direct link using share button')
+    showNotice({ content: SAVE_MSG })
     onCreate(createPuzzleFromCells(board))
   }
 

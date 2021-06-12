@@ -1,25 +1,31 @@
-import { FC } from 'react'
+import { createContext, FC, useContext } from 'react'
 
 import Modal from 'components/Modal'
 import { useModal } from 'hooks/useModal'
-import type { ConfirmType, ErrorType, NoticeType } from 'hooks/useModal'
-import { createContextSecure as createContext } from 'utils/contextSecure'
 
-export type ModalContextType = {
-  confirm: ConfirmType
-  error: ErrorType
-  notice: NoticeType
+type ModalContextType = Pick<
+  ReturnType<typeof useModal>,
+  'showConfirm' | 'showError' | 'showNotice'
+>
+
+const ModalContext = createContext<ModalContextType | null>(null)
+
+export const useModalContext = (): ModalContextType => {
+  const modalContext = useContext(ModalContext)
+  if (modalContext === null) throw Error('Unable to use modal outside context')
+
+  return modalContext
 }
 
-export const ModalContext = createContext<ModalContextType>()
-
-export const ModalContextProvider: FC = ({ children }) => {
-  const { confirm, error, notice, modal } = useModal(Modal)
+export const ModalProvider: FC = ({ children }) => {
+  const { isHidden, content, type, onClose, onConfirm, ...modalActions } = useModal()
 
   return (
-    <ModalContext.Provider value={{ confirm, error, notice }}>
+    <ModalContext.Provider value={modalActions}>
       {children}
-      {modal}
+      {!isHidden && (
+        <Modal content={content} type={type} onConfirm={onConfirm} onClose={onClose} />
+      )}
     </ModalContext.Provider>
   )
 }

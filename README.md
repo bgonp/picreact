@@ -37,8 +37,6 @@ Para los estilos he usado [__PostCSS__](https://postcss.org/). Al necesitar conf
 
 Para los iconos he generado componentes a partir de imágenes SVG y las fuentes de texto usadas son del sistema, de esta forma no he necesitado __ningún asset__ para el proyecto.
 
-Utilizo un paquete propio ([__bgon-custom-hooks__](https://www.npmjs.com/package/bgon-custom-hooks), aún en desarrollo) para hooks recurrentes que uso en mis proyectos, en este caso `useLocalStorage` y `useTimeout`. En futuras versiones pretendo usar [__localForage__](https://localforage.github.io/localForage/) en lugar de localStorage.
-
 Para gestionar las rutas uso [__wouter__](https://github.com/molefrog/wouter#reader), ya que es muy ligero y más que suficiente para un proyecto como este.
 
 ## Instalación

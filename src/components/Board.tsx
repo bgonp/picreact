@@ -10,9 +10,9 @@ import Clues from './Clues'
 
 type Props = {
   blocked?: boolean
-  buttons?: ReactElement | null
+  buttons?: ReactElement
   crossable?: boolean
-  footer?: ReactElement | null
+  footer?: ReactElement
   puzzle: Puzzle
   size: number
   getCellState: (r: number, c: number) => CellState
