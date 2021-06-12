@@ -5,7 +5,7 @@ import { TIMES } from 'constants/times.constants'
 const setCssVariable = (name: string, value: string) =>
   document.documentElement.style.setProperty(name, value)
 
-export const initCssVariables = () => {
+export const initCssVariables = (): void => {
   Object.entries(COLORS).forEach(([name, color]: [string, HexColor]) =>
     setCssVariable(`--color-${name.toLowerCase()}`, `${color}`)
   )
