@@ -1,12 +1,12 @@
 import { FC, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
-import { useTimeout } from 'bgon-custom-hooks'
 
 import Button from 'components/Button'
 import { CloseIcon, TickIcon } from 'components/icons'
 import { COLORS } from 'constants/colors.constants'
 import { TIMES } from 'constants/times.constants'
 import { ModalProps } from 'hooks/useModal'
+import { useTimeout } from 'hooks/useTimeout'
 
 import styles from 'styles/components/Modal.module.css'
 
@@ -22,29 +22,33 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
     [styles.hidden]: hidden,
   })
 
-  const handleConfirm: () => void = () => {
+  const confirm: () => void = () => {
     setHidden(true)
-    onConfirm()
+    onConfirm?.()
   }
 
-  const handleClose = useCallback<() => void>(() => {
+  const close = useCallback(() => {
     setHidden(true)
+    if (!onClose) return
     setTimeout(onClose, TIMES.ANIMATION_DURATION)
   }, [onClose, setTimeout])
 
-  const handleMouseEnter = clearTimeout
+  const handleMouseEnter = () => {
+    if (hidden) return
+    clearTimeout()
+  }
 
   const handleMouseLeave = () => {
-    if (!TIMES.ALERT_TIMEOUT || type === 'confirm') return
-    setTimeout(handleClose, TIMES.ALERT_TIMEOUT)
+    if (hidden || !TIMES.ALERT_TIMEOUT || type === 'confirm') return
+    setTimeout(close, TIMES.ALERT_TIMEOUT)
   }
 
   useEffect(() => {
     clearTimeout()
     setHidden(false)
     if (!TIMES.ALERT_TIMEOUT || type === 'confirm') return
-    setTimeout(handleClose, TIMES.ALERT_TIMEOUT)
-  }, [content, type, handleClose, setTimeout, clearTimeout])
+    setTimeout(close, TIMES.ALERT_TIMEOUT)
+  }, [content, type, close, setTimeout, clearTimeout])
 
   if (type === 'confirm')
     return (
@@ -52,10 +56,10 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
         <div className={styles.container}>
           <div className={styles.content}>{content}</div>
           <div className={styles.buttons}>
-            <Button asIcon primary onClick={handleConfirm}>
+            <Button asIcon primary onClick={confirm}>
               <TickIcon color={COLORS.WHITE} />
             </Button>
-            <Button asIcon secondary onClick={handleClose}>
+            <Button asIcon secondary onClick={close}>
               <CloseIcon color={COLORS.WHITE} />
             </Button>
           </div>
@@ -75,7 +79,7 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
           asIcon
           primary={type === 'notice'}
           secondary={type === 'error'}
-          onClick={handleClose}
+          onClick={close}
         >
           <CloseIcon color={COLORS.WHITE} />
         </Button>

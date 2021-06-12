@@ -2,7 +2,7 @@ import { FC } from 'react'
 
 import ErrorBoundary from 'components/ErrorBoundary'
 import Main from 'components/Main'
-import { ModalContextProvider } from 'contexts/ModalContext'
+import { ModalProvider } from 'contexts/ModalContext'
 import { PuzzleContextProvider } from 'contexts/PuzzleContext'
 import { initCssVariables } from 'utils/styles'
 
@@ -12,11 +12,11 @@ initCssVariables()
 
 const App: FC = () => (
   <ErrorBoundary>
-    <ModalContextProvider>
+    <ModalProvider>
       <PuzzleContextProvider>
         <Main />
       </PuzzleContextProvider>
-    </ModalContextProvider>
+    </ModalProvider>
   </ErrorBoundary>
 )
 

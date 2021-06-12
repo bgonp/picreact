@@ -1,14 +1,13 @@
-import { FC } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 import { useLocation } from 'wouter'
 
 import Board from 'components/Board'
 import Button from 'components/Button'
 import { RefreshIcon, UndoIcon } from 'components/icons'
 import ShareButton from 'components/ShareButton'
-import { ModalContext } from 'contexts/ModalContext'
+import { useModalContext } from 'contexts/ModalContext'
 import { ROUTE_HOME } from 'constants/router.constants'
 import { COLORS } from 'constants/colors.constants'
-import { useContextSecure as useContext } from 'utils/contextSecure'
 import { CellState, Puzzle } from 'models/Puzzle'
 
 import styles from 'styles/components/Play.module.css'
@@ -19,9 +18,9 @@ type Props = {
   puzzle: Puzzle
   size: number
   solved: boolean
-  getCellState: (r: number, c: number) => CellState
+  getCellState: (row: number, col: number) => CellState
   reset: () => void
-  setCellState: (r: number, c: number) => (value: CellState) => void
+  setCellState: (row: number, col: number) => (value: CellState) => void
   undo: () => void
 }
 
@@ -36,43 +35,63 @@ const Play: FC<Props> = ({
   setCellState,
   undo,
 }) => {
-  const { confirm } = useContext(ModalContext)
+  const { showConfirm } = useModalContext()
 
   const [, navigate] = useLocation()
 
-  const onReset = () =>
-    confirm('This will discard current progress. Are you sure?', reset)
-
-  const buttons = (
-    <>
-      <ShareButton />
-      <Button
-        key="reset"
-        asIcon
-        secondary
-        disabled={solved || empty}
-        onClick={onReset}
-        title={'Reset'}
-      >
-        <RefreshIcon color={COLORS.WHITE} />
-      </Button>
-      <Button key="undo" asIcon primary disabled={!canUndo} onClick={undo} title={'Undo'}>
-        <UndoIcon color={COLORS.WHITE} />
-      </Button>
-    </>
+  const onReset = useCallback(
+    () =>
+      showConfirm({
+        content: 'This will discard current progress. Are you sure?',
+        onConfirm: reset,
+      }),
+    [reset, showConfirm]
   )
 
-  const handleClick = () => navigate(ROUTE_HOME)
+  const handleClick = useCallback(() => navigate(ROUTE_HOME), [navigate])
 
-  const footer = solved ? (
-    <>
-      <h2 className={styles.footer}>Puzzle solved!</h2>
-      <Button primary onClick={handleClick}>
-        PLAY AGAIN
-      </Button>
-    </>
-  ) : (
-    <h2 className={styles.footer}>{"Let's solve this!"}</h2>
+  const buttons = useMemo(
+    () => (
+      <>
+        <ShareButton />
+        <Button
+          key="reset"
+          asIcon
+          secondary
+          disabled={solved || empty}
+          onClick={onReset}
+          title={'Reset'}
+        >
+          <RefreshIcon color={COLORS.WHITE} />
+        </Button>
+        <Button
+          key="undo"
+          asIcon
+          primary
+          disabled={!canUndo}
+          onClick={undo}
+          title={'Undo'}
+        >
+          <UndoIcon color={COLORS.WHITE} />
+        </Button>
+      </>
+    ),
+    [canUndo, empty, solved, onReset, undo]
+  )
+
+  const footer = useMemo(
+    () =>
+      solved ? (
+        <>
+          <h2 className={styles.footer}>Puzzle solved!</h2>
+          <Button primary onClick={handleClick}>
+            PLAY AGAIN
+          </Button>
+        </>
+      ) : (
+        <h2 className={styles.footer}>{"Let's solve this!"}</h2>
+      ),
+    [solved, handleClick]
   )
 
   return (

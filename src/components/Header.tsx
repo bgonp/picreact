@@ -4,15 +4,14 @@ import { useLocation, useRoute } from 'wouter'
 import Button from 'components/Button'
 import ShareButton from 'components/ShareButton'
 import { ROUTES } from 'constants/router.constants'
-import { ModalContext } from 'contexts/ModalContext'
-import { PuzzleContext } from 'contexts/PuzzleContext'
-import { useContextSecure as useContext } from 'utils/contextSecure'
+import { useModalContext } from 'contexts/ModalContext'
 
 import styles from 'styles/components/Header.module.css'
+import { usePuzzleContext } from 'contexts/PuzzleContext'
 
 const Header: FC = () => {
-  const { confirm } = useContext(ModalContext)
-  const { initialized, solved, remove } = useContext(PuzzleContext)
+  const { showConfirm } = useModalContext()
+  const { initialized, solved, remove } = usePuzzleContext()
 
   const [, navigate] = useLocation()
   const [isRouteCreate] = useRoute(ROUTES.CREATE)
@@ -21,9 +20,12 @@ const Header: FC = () => {
 
   const handleNavigate = (route: string) => {
     if (initialized && !solved) {
-      return confirm('This will discard current puzzle. Are you sure?', () => {
-        remove()
-        navigate(route)
+      return showConfirm({
+        content: 'This will discard current puzzle. Are you sure?',
+        onConfirm: () => {
+          remove()
+          navigate(route)
+        },
       })
     }
     remove()
