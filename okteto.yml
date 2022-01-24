@@ -1,0 +1,8 @@
+name: picreact
+command: sh
+sync:
+- .:/picreact
+forward:
+- 9229:9229
+- 5000:5000
+- 5001:5000
