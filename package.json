@@ -2,6 +2,10 @@
   "name": "picreact",
   "version": "1.4.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "build": "GENERATE_SOURCEMAP=false craco build",
     "lint": "eslint '**/*.{ts,tsx}' --quiet --fix",
