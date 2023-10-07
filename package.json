@@ -7,17 +7,18 @@
     "npm": ">=10.0.0"
   },
   "scripts": {
-    "build": "GENERATE_SOURCEMAP=false craco build",
+    "build": "tsc && vite build",
     "lint": "eslint '**/*.{ts,tsx}' --quiet --fix",
     "prepare": "husky install",
-    "start": "craco start",
-    "test": "craco test"
+    "dev": "vite"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "4.1.0",
     "classnames": "2.2.6",
     "copy-to-clipboard": "3.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "vite": "4.4.11",
     "wouter": "2.12.0"
   },
   "devDependencies": {
