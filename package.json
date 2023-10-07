@@ -39,8 +39,6 @@
     "eslint-plugin-react": "7.22.0",
     "eslint-plugin-react-hooks": "4.2.0",
     "husky": "6.0.0",
-    "postcss": "8.4.31",
-    "postcss-loader": "7.3.3",
     "postcss-preset-env": "9.1.4",
     "prettier": "2.2.1",
     "typescript": "5.2.2"
