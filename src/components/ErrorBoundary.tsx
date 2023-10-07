@@ -6,7 +6,7 @@ type State = {
   error: Error | null
 }
 
-export default class ErrorBoundary extends Component<Record<string, unknown>, State> {
+export default class ErrorBoundary extends Component<{ children: ReactNode }, State> {
   state = { error: null }
 
   static getDerivedStateFromError(error: Error): State {

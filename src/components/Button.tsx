@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import classNames from 'classnames'
 import { Link } from 'wouter'
 
@@ -6,6 +6,7 @@ import styles from 'styles/components/Button.module.css'
 
 type Props = {
   asIcon?: boolean
+  children: ReactNode
   disabled?: boolean
   href?: string | null
   large?: boolean

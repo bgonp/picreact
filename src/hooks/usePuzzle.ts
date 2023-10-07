@@ -103,7 +103,7 @@ export const usePuzzle = (): UsePuzzleType => {
   )
 
   const setCellState = useCallback(
-    (row, col) => (state: CellState) => {
+    (row: number, col: number) => (state: CellState) => {
       addStep(row, col, getCellState(row, col))
       updateCell(row, col, state)
     },

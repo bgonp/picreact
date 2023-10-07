@@ -7,7 +7,7 @@ import { usePuzzleContext } from 'contexts/PuzzleContext'
 import { createPuzzleFromCode } from 'utils/puzzleCreator'
 
 type Props = {
-  code: string
+  code: string | undefined
 }
 
 const LoadPage: FC<Props> = ({ code }) => {
@@ -18,7 +18,7 @@ const LoadPage: FC<Props> = ({ code }) => {
 
   const loadPuzzle = useCallback(() => {
     try {
-      const puzzle = createPuzzleFromCode(code)
+      const puzzle = createPuzzleFromCode(code ?? '')
       setPuzzle(puzzle)
       navigate(ROUTES.PLAY)
       showNotice({ content: 'Puzzle loaded successfully' })
