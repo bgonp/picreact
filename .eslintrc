@@ -29,5 +29,6 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "ignorePatterns": ["node_modules", "build", "*.js"]
 }
