@@ -30,5 +30,5 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": ["node_modules", "build", "*.js"]
+  "ignorePatterns": ["node_modules", "build", "*.js", "*.d.ts"]
 }

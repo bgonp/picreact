@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "tsc && vite build",
-    "lint": "tsc && eslint '**/*.{ts,tsx}' --quiet --fix",
+    "css-types": "tcm src/styles/components -w",
+    "lint": "tcm src/styles/components && tsc && eslint '**/*.{ts,tsx}' --quiet --fix",
     "prepare": "husky install",
     "dev": "vite"
   },
@@ -41,6 +42,7 @@
     "husky": "6.0.0",
     "postcss-preset-env": "9.1.4",
     "prettier": "2.2.1",
+    "typed-css-modules": "0.7.2",
     "typescript": "5.2.2"
   },
   "browserslist": {
