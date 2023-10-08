@@ -11,7 +11,9 @@
     "css-types": "tcm src/styles/components -w",
     "lint": "tcm src/styles/components -s && tsc && prettier -w --log-level=silent src && eslint '**/*.{ts,tsx}' --quiet --fix",
     "prepare": "husky install",
-    "dev": "vite"
+    "dev": "vite",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
   },
   "dependencies": {
     "classnames": "2.2.6",
@@ -37,12 +39,14 @@
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "happy-dom": "12.9.0",
     "husky": "6.0.0",
     "postcss-preset-env": "9.1.4",
     "prettier": "3.0.3",
     "typed-css-modules": "0.7.2",
     "typescript": "5.2.2",
-    "vite": "4.4.11"
+    "vite": "4.4.11",
+    "vitest": "0.34.6"
   },
   "browserslist": {
     "production": [
