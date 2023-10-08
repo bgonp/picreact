@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc && vite build",
     "css-types": "tcm src/styles/components -w",
-    "lint": "tcm src/styles/components && tsc && eslint '**/*.{ts,tsx}' --quiet --fix",
+    "lint": "tcm src/styles/components -s && tsc && prettier -w --log-level=silent src && eslint '**/*.{ts,tsx}' --quiet --fix",
     "prepare": "husky install",
     "dev": "vite"
   },
@@ -36,7 +36,6 @@
     "@typescript-eslint/parser": "6.7.4",
     "eslint": "8.51.0",
     "eslint-config-prettier": "9.0.0",
-    "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
     "husky": "6.0.0",

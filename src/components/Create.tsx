@@ -61,15 +61,17 @@ const Create: FC<Props> = ({ onCreate }) => {
     return state
   }
 
-  const setCellState = (r: number, c: number) => (state: CellState): void => {
-    const nextBoard = board.map((column, i) =>
-      column.map((cell, j) => (i === r && j === c ? state : cell))
-    )
-    const { columns: nextColumns, rows: nextRows } = getClues(nextBoard)
-    setBoard(nextBoard)
-    setColumns(nextColumns)
-    setRows(nextRows)
-  }
+  const setCellState =
+    (r: number, c: number) =>
+    (state: CellState): void => {
+      const nextBoard = board.map((column, i) =>
+        column.map((cell, j) => (i === r && j === c ? state : cell))
+      )
+      const { columns: nextColumns, rows: nextRows } = getClues(nextBoard)
+      setBoard(nextBoard)
+      setColumns(nextColumns)
+      setRows(nextRows)
+    }
 
   const handleDiscard = () => {
     showConfirm({ content: DISCARD_MSG, onConfirm: setSize(0) })
