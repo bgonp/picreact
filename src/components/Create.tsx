@@ -55,17 +55,23 @@ const Create: FC<Props> = ({ onCreate }) => {
     )
   }
 
-  const getCellState = (r: number, c: number): CellState => board[r][c]
-
-  const setCellState = (r: number, c: number) => (state: CellState): void => {
-    const nextBoard = board.map((column, i) =>
-      column.map((cell, j) => (i === r && j === c ? state : cell))
-    )
-    const { columns: nextColumns, rows: nextRows } = getClues(nextBoard)
-    setBoard(nextBoard)
-    setColumns(nextColumns)
-    setRows(nextRows)
+  const getCellState = (r: number, c: number): CellState => {
+    const state = board[r]?.[c]
+    if (state === undefined) throw new Error('Cell does not exist')
+    return state
   }
+
+  const setCellState =
+    (r: number, c: number) =>
+    (state: CellState): void => {
+      const nextBoard = board.map((column, i) =>
+        column.map((cell, j) => (i === r && j === c ? state : cell))
+      )
+      const { columns: nextColumns, rows: nextRows } = getClues(nextBoard)
+      setBoard(nextBoard)
+      setColumns(nextColumns)
+      setRows(nextRows)
+    }
 
   const handleDiscard = () => {
     showConfirm({ content: DISCARD_MSG, onConfirm: setSize(0) })

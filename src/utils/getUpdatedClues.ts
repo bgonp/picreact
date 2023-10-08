@@ -59,12 +59,18 @@ export const getUpdatedClues = (clues: Clue[], line: CellState[]): Clue[] => {
 
   const { left, right } = getLineBounds(line)
   for (const i of left.keys()) {
-    if (left[i] !== clues[i].value) break
-    allFalse[i].solved = true
+    const clue = clues[i]?.value
+    const respectiveFalse = allFalse[i]
+    if (!clue || !respectiveFalse) throw new Error('Wrong puzzle size')
+    if (left[i] !== clue) break
+    respectiveFalse.solved = true
   }
   for (const i of right.keys()) {
-    if (right[i] !== clues[clues.length - i - 1].value) break
-    allFalse[clues.length - i - 1].solved = true
+    const clue = clues[clues.length - i - 1]?.value
+    const respectiveFalse = allFalse[clues.length - i - 1]
+    if (!clue || !respectiveFalse) throw new Error('Wrong puzzle size')
+    if (right[i] !== clue) break
+    respectiveFalse.solved = true
   }
 
   return allFalse

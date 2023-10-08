@@ -1,4 +1,8 @@
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import App from 'components/App'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+const root = document.getElementById('root')
+
+if (!root) throw new Error('Root element not found')
+
+ReactDOM.createRoot(root).render(<App />)

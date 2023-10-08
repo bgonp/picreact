@@ -1,4 +1,4 @@
-import { createContext, FC, useContext } from 'react'
+import { createContext, FC, ReactNode, useContext } from 'react'
 
 import Modal from 'components/Modal'
 import { useModal } from 'hooks/useModal'
@@ -17,7 +17,7 @@ export const useModalContext = (): ModalContextType => {
   return modalContext
 }
 
-export const ModalProvider: FC = ({ children }) => {
+export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { isHidden, content, type, onClose, onConfirm, ...modalActions } = useModal()
 
   return (

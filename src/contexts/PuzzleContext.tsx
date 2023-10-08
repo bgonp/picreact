@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect } from 'react'
+import { createContext, FC, ReactNode, useContext, useEffect } from 'react'
 
 import { useModalContext } from 'contexts/ModalContext'
 import { usePuzzle, UsePuzzleType } from 'hooks/usePuzzle'
@@ -12,7 +12,7 @@ export const usePuzzleContext = (): UsePuzzleType => {
   return puzzleContext
 }
 
-export const PuzzleContextProvider: FC = ({ children }) => {
+export const PuzzleContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const puzzleContext = usePuzzle()
   const { showNotice } = useModalContext()
 

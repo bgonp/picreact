@@ -15,7 +15,7 @@ const Modal: FC<ModalProps> = ({ content, type, onConfirm, onClose }) => {
 
   const { setTimeout, clearTimeout } = useTimeout()
 
-  const className = classNames(styles.dialog, {
+  const className = classNames({
     [styles.confirm]: type === 'confirm',
     [styles.error]: type === 'error',
     [styles.notice]: type === 'notice',

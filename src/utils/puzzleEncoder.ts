@@ -10,8 +10,8 @@ const isValidCode = (code: string): boolean => {
   if (sides.length !== 2) return false
 
   const regex = new RegExp(`${lineSeparator}`, 'g')
-  const size = (sides[0].match(regex)?.length || 0) + 1
-  if (size - 1 !== sides[1].match(regex)?.length) return false
+  const size = (sides[0]?.match(regex)?.length || 0) + 1
+  if (size - 1 !== sides[1]?.match(regex)?.length) return false
 
   return code.split('').every((letter) => {
     const value = letter.charCodeAt(0) - CODE_FIRST_CHAR
@@ -37,7 +37,7 @@ const decodeSide = (code: string): Clue[][] =>
 export const encodePuzzle = ({ columns, rows }: Puzzle): string =>
   `${encodeSide(columns)}${sideSeparator}${encodeSide(rows)}`
 
-export const decodePuzzle = (code: string): Clue[][][] => {
+export const decodePuzzle = (code: string): [Clue[][], Clue[][]] => {
   if (!isValidCode(code)) throw new Error('Wrong puzzle code')
-  return code.split(sideSeparator).map((side) => decodeSide(side))
+  return code.split(sideSeparator).map((side) => decodeSide(side)) as [Clue[][], Clue[][]]
 }

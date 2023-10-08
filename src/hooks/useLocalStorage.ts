@@ -6,17 +6,15 @@ export const useLocalStorage = <T>(
   key: string,
   initialValue: T
 ): UseLocalStorageType<T> => {
-  const [value, setValue] = useState<T>(
-    (): T => {
-      try {
-        const value = window.localStorage.getItem(key)
-        return value ? JSON.parse(value) : initialValue
-      } catch (error) {
-        console.error(error)
-        return initialValue
-      }
+  const [value, setValue] = useState<T>((): T => {
+    try {
+      const value = window.localStorage.getItem(key)
+      return value ? JSON.parse(value) : initialValue
+    } catch (error) {
+      console.error(error)
+      return initialValue
     }
-  )
+  })
 
   const cleanStorage = useCallback(() => {
     try {

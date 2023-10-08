@@ -7,8 +7,7 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -29,5 +28,6 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "ignorePatterns": ["node_modules", "build", "*.js", "*.d.ts"]
 }
