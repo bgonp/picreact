@@ -16,6 +16,9 @@ const FOLDERS = [
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    outDir: 'build',
+  },
   plugins: [react()],
   resolve: {
     alias: Object.fromEntries(FOLDERS.map((folder) => [folder, `/src/${folder}`])),
