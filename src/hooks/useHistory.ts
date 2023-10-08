@@ -31,7 +31,7 @@ export const useHistory = (): UseHistoryType => {
     if (!hasHistory) return null
     const [step, ...nextHistory] = history
     setHistory(nextHistory)
-    return step
+    return step as Step
   }, [hasHistory, history, setHistory])
 
   const cleanSteps = useCallback(() => {

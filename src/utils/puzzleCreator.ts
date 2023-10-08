@@ -9,7 +9,7 @@ const getLineClues = (type: 'col' | 'row', cells: CellState[][], i: number): Clu
   let counter = 0
 
   const clues = [...Array(cells.length + 1)].reduce((acc, _, j) => {
-    if (j < cells.length && (type === 'col' ? cells[j][i] : cells[i][j])) {
+    if (j < cells.length && (type === 'col' ? cells[j]?.[i] : cells[i]?.[j])) {
       counter++
     } else if (counter > 0) {
       acc.push({ value: counter, solved: false })
@@ -57,10 +57,10 @@ export const createPuzzleFromSize = (size: number): Puzzle => {
 
 export const createPuzzleFromCode = (code: string): Puzzle => {
   const [columns, rows] = decodePuzzle(code)
-  const size = columns.length
+  const size = columns?.length ?? 0
   if (!isValidSize(size)) throw new Error('Wrong puzzle size')
 
-  const board = getEmptyBoard(columns.length)
+  const board = getEmptyBoard(columns.length ?? 0)
 
   return { board, columns, rows }
 }

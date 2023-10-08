@@ -64,7 +64,9 @@ export const usePuzzle = (): UsePuzzleType => {
   const getCellState = useCallback(
     (row: number, col: number) => {
       checkIndexes(row, col)
-      return board[row][col]
+      const cell = board[row]?.[col]
+      if (cell === undefined) throw new Error('Cell not found')
+      return cell
     },
     [board, checkIndexes]
   )
@@ -90,9 +92,9 @@ export const usePuzzle = (): UsePuzzleType => {
       const nextBoard = board.map((column, i) =>
         column.map((cell, j) => (i === r && j === c ? state : cell))
       )
-      const col = nextBoard.map((row) => row[c])
+      const col = nextBoard.map((row) => row[c] as CellState)
+      const row = nextBoard[r] as CellState[]
       const nextCols = columns.map((l, i) => (i !== c ? l : getUpdatedClues(l, col)))
-      const row = nextBoard[r]
       const nextRows = rows.map((l, i) => (i !== r ? l : getUpdatedClues(l, row)))
 
       setBoard(nextBoard)

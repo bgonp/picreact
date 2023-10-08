@@ -55,7 +55,11 @@ const Create: FC<Props> = ({ onCreate }) => {
     )
   }
 
-  const getCellState = (r: number, c: number): CellState => board[r][c]
+  const getCellState = (r: number, c: number): CellState => {
+    const state = board[r]?.[c]
+    if (state === undefined) throw new Error('Cell does not exist')
+    return state
+  }
 
   const setCellState = (r: number, c: number) => (state: CellState): void => {
     const nextBoard = board.map((column, i) =>
