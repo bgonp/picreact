@@ -1,7 +1,7 @@
 export enum CellState {
-  Empty,
-  Cross,
-  Filled,
+  Empty = 0,
+  Cross = 1,
+  Filled = 2,
 }
 
 export type Clue = {
