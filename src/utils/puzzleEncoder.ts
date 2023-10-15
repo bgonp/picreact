@@ -34,10 +34,16 @@ const decodeLine = (code: string): Clue[] =>
 const decodeSide = (code: string): Clue[][] =>
   code.split(lineSeparator).map((lineCode) => decodeLine(lineCode))
 
-export const encodePuzzle = ({ columns, rows }: Puzzle): string =>
+type Clues = { columns: Puzzle['columns']; rows: Puzzle['rows'] }
+
+export const encodePuzzle = ({ columns, rows }: Clues): string =>
   `${encodeSide(columns)}${sideSeparator}${encodeSide(rows)}`
 
-export const decodePuzzle = (code: string): [Clue[][], Clue[][]] => {
+export const decodePuzzle = (code: string): Clues => {
   if (!isValidCode(code)) throw new Error('Wrong puzzle code')
-  return code.split(sideSeparator).map((side) => decodeSide(side)) as [Clue[][], Clue[][]]
+  const sides = code.split(sideSeparator)
+  if (!sides[0] || !sides[1]) throw new Error('Wrong puzzle code')
+  const columns = decodeSide(sides[0])
+  const rows = decodeSide(sides[1])
+  return { columns, rows }
 }

@@ -56,7 +56,7 @@ export const createPuzzleFromSize = (size: number): Puzzle => {
 }
 
 export const createPuzzleFromCode = (code: string): Puzzle => {
-  const [columns, rows] = decodePuzzle(code)
+  const { columns, rows } = decodePuzzle(code)
   const size = columns?.length ?? 0
   if (!isValidSize(size)) throw new Error('Wrong puzzle size')
 
