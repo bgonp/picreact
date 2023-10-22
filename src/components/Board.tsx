@@ -19,7 +19,7 @@ type Props = {
   setCellState: (r: number, c: number) => (s: CellState) => void
 }
 
-export const Board: FC<Props> = ({
+const Board: FC<Props> = ({
   blocked = false,
   buttons = null,
   crossable = false,

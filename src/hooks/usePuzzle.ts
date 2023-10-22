@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
 
 import { ST_BOARD, ST_COLUMNS, ST_HISTORY, ST_ROWS } from 'constants/storage.constants'
-import { STEPS_LIMIT } from 'constants/puzzle.constants'
+import { HISTORY_LIMIT } from 'constants/puzzle.constants'
 import { useHistory } from 'hooks/useHistory'
 import { useLocalStorage } from 'hooks/useLocalStorage'
 import { CellState, Clues, Puzzle } from 'models/Puzzle'
@@ -33,7 +33,7 @@ const resetClues = (clues: Clues): Clues =>
   clues.map((clue) => clue.map(({ value }) => ({ value, solved: value === 0 })))
 
 export const usePuzzle = (): UsePuzzleType => {
-  const history = useHistory<Step>(ST_HISTORY, STEPS_LIMIT)
+  const history = useHistory<Step>(ST_HISTORY, HISTORY_LIMIT)
   const { hasHistory, addEntry, getEntry, cleanHistory } = history
   const [board, setBoard, cleanBoard] = useLocalStorage(ST_BOARD, [] as Board)
   const [columns, setColumns, cleanColumns] = useLocalStorage(ST_COLUMNS, [] as Columns)

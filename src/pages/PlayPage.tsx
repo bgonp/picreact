@@ -3,7 +3,7 @@ import { useLocation } from 'wouter'
 
 import LazyLoaded from 'components/LazyLoaded'
 import { usePuzzleContext } from 'contexts/PuzzleContext'
-import { ROUTE_HOME } from 'constants/router.constants'
+import { ROUTES } from 'constants/router.constants'
 
 const Play = lazy(() => import('components/Play'))
 
@@ -13,7 +13,7 @@ const PlayPage: FC = () => {
   const [, navigate] = useLocation()
 
   useEffect(() => {
-    if (!initialized) navigate(ROUTE_HOME)
+    if (!initialized) navigate(ROUTES.HOME)
   }, [initialized, navigate])
 
   return (

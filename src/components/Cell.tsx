@@ -20,7 +20,7 @@ type Props = {
   setState: (s: CellState) => void
 }
 
-export const Cell: FC<Props> = ({
+const Cell: FC<Props> = ({
   className = '',
   clickedState,
   crossable,

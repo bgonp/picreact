@@ -9,7 +9,7 @@ export type Clue = {
   value: number
 }
 
-export type Board = CellState[][]
+type Board = CellState[][]
 
 export type Clues = Clue[][]
 
