@@ -1,43 +1,40 @@
 import { useCallback } from 'react'
 
-import { STEPS_LIMIT } from 'constants/puzzle.constants'
-import { ST_HISTORY } from 'constants/storage.constants'
 import { useLocalStorage } from 'hooks/useLocalStorage'
-import { CellState } from 'models/Puzzle'
 
-type Step = [number, number, CellState]
-
-type UseHistoryType = {
+type UseHistoryType<T> = {
   hasHistory: boolean
-  addStep: (row: number, col: number, state: CellState) => void
-  getStep: () => Step | null
-  cleanSteps: () => void
+  addEntry: (entry: T) => void
+  getEntry: () => T | null
+  cleanHistory: () => void
 }
 
-export const useHistory = (): UseHistoryType => {
-  const [history, setHistory, cleanHistory] = useLocalStorage(ST_HISTORY, [] as Step[])
+export const useHistory = <T>(
+  storageId: string,
+  entriesLimit: number
+): UseHistoryType<T> => {
+  const [history, setHistory, clearHistory] = useLocalStorage(storageId, [] as T[])
 
   const hasHistory = history.length > 0
 
-  const addStep = useCallback(
-    (row: number, col: number, state: CellState) => {
-      const newStep = [row, col, state] as Step
-      setHistory((steps) => [newStep, ...steps].slice(0, STEPS_LIMIT))
+  const addEntry = useCallback(
+    (newEntry: T) => {
+      setHistory((entries) => [newEntry, ...entries].slice(0, entriesLimit))
     },
-    [setHistory]
+    [entriesLimit, setHistory]
   )
 
-  const getStep = useCallback(() => {
+  const getEntry = useCallback(() => {
     if (!hasHistory) return null
-    const [step, ...nextHistory] = history
+    const [entry, ...nextHistory] = history
     setHistory(nextHistory)
-    return step as Step
+    return entry as T
   }, [hasHistory, history, setHistory])
 
-  const cleanSteps = useCallback(() => {
-    cleanHistory()
+  const cleanHistory = useCallback(() => {
+    clearHistory()
     setHistory([])
-  }, [cleanHistory, setHistory])
+  }, [clearHistory, setHistory])
 
-  return { hasHistory, addStep, getStep, cleanSteps }
+  return { hasHistory, addEntry, getEntry, cleanHistory }
 }

@@ -2,7 +2,7 @@ import { FC, lazy, useEffect } from 'react'
 import { useLocation } from 'wouter'
 
 import LazyLoaded from 'components/LazyLoaded'
-import { ROUTE_PLAY } from 'constants/router.constants'
+import { ROUTES } from 'constants/router.constants'
 import { usePuzzleContext } from 'contexts/PuzzleContext'
 
 const Create = lazy(() => import('components/Create'))
@@ -13,7 +13,7 @@ const CreatePage: FC = () => {
   const [, navigate] = useLocation()
 
   useEffect(() => {
-    if (initialized && !solved) navigate(ROUTE_PLAY)
+    if (initialized && !solved) navigate(ROUTES.PLAY)
   }, [initialized, solved, navigate])
 
   return (

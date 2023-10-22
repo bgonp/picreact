@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 type UseTimeoutType = {
   setTimeout: (callback: () => void, milliseconds: number) => void
@@ -6,28 +6,32 @@ type UseTimeoutType = {
 }
 
 export const useTimeout = (): UseTimeoutType => {
-  const [timeout, setTimeoutValue] = useState<number | null>(null)
+  const timeoutRef = useRef<number | null>(null)
 
-  const setTimeout = useCallback<UseTimeoutType['setTimeout']>(
-    (callback, milliseconds) => {
-      setTimeoutValue((prevTimeout) => {
-        if (prevTimeout) window.clearTimeout(prevTimeout)
-        return window.setInterval(callback, milliseconds)
-      })
-    },
+  const { setTimeout, clearTimeout } = useMemo(
+    () => ({
+      setTimeout: (callback: () => void, milliseconds: number) => {
+        if (timeoutRef.current) window.clearTimeout(timeoutRef.current)
+        timeoutRef.current = window.setTimeout(() => {
+          timeoutRef.current = null
+          callback()
+        }, milliseconds)
+      },
+
+      clearTimeout: () => {
+        if (timeoutRef.current) window.clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      },
+    }),
     []
   )
 
-  const clearTimeout = useCallback<UseTimeoutType['clearTimeout']>(() => {
-    setTimeoutValue(null)
-  }, [])
-
-  useEffect(() => {
-    const prevTimeout = timeout
-    return () => {
-      if (prevTimeout) window.clearTimeout(prevTimeout)
-    }
-  }, [timeout])
+  useEffect(
+    () => () => {
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current)
+    },
+    []
+  )
 
   return {
     setTimeout,

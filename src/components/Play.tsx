@@ -6,7 +6,7 @@ import Button from 'components/Button'
 import { RefreshIcon, UndoIcon } from 'components/icons'
 import ShareButton from 'components/ShareButton'
 import { useModalContext } from 'contexts/ModalContext'
-import { ROUTE_HOME } from 'constants/router.constants'
+import { ROUTES } from 'constants/router.constants'
 import { COLORS } from 'constants/colors.constants'
 import { CellState, Puzzle } from 'models/Puzzle'
 
@@ -48,7 +48,7 @@ const Play: FC<Props> = ({
     [reset, showConfirm]
   )
 
-  const handleClick = useCallback(() => navigate(ROUTE_HOME), [navigate])
+  const handleClick = useCallback(() => navigate(ROUTES.HOME), [navigate])
 
   const buttons = useMemo(
     () => (

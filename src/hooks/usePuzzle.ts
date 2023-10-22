@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
 
-import { ST_BOARD, ST_COLUMNS, ST_ROWS } from 'constants/storage.constants'
+import { ST_BOARD, ST_COLUMNS, ST_HISTORY, ST_ROWS } from 'constants/storage.constants'
+import { HISTORY_LIMIT } from 'constants/puzzle.constants'
 import { useHistory } from 'hooks/useHistory'
 import { useLocalStorage } from 'hooks/useLocalStorage'
 import { CellState, Clues, Puzzle } from 'models/Puzzle'
@@ -10,6 +11,8 @@ import { getUpdatedClues } from 'utils/getUpdatedClues'
 type Board = Puzzle['board']
 type Columns = Puzzle['columns']
 type Rows = Puzzle['rows']
+
+type Step = [number, number, CellState]
 
 export type UsePuzzleType = {
   canUndo: boolean
@@ -30,7 +33,8 @@ const resetClues = (clues: Clues): Clues =>
   clues.map((clue) => clue.map(({ value }) => ({ value, solved: value === 0 })))
 
 export const usePuzzle = (): UsePuzzleType => {
-  const { hasHistory, addStep, getStep, cleanSteps } = useHistory()
+  const history = useHistory<Step>(ST_HISTORY, HISTORY_LIMIT)
+  const { hasHistory, addEntry, getEntry, cleanHistory } = history
   const [board, setBoard, cleanBoard] = useLocalStorage(ST_BOARD, [] as Board)
   const [columns, setColumns, cleanColumns] = useLocalStorage(ST_COLUMNS, [] as Columns)
   const [rows, setRows, cleanRows] = useLocalStorage(ST_ROWS, [] as Rows)
@@ -72,18 +76,18 @@ export const usePuzzle = (): UsePuzzleType => {
   )
 
   const remove = useCallback<() => void>(() => {
-    cleanSteps()
+    cleanHistory()
     setBoard([])
     setColumns([])
     setRows([])
-  }, [cleanSteps, setBoard, setColumns, setRows])
+  }, [cleanHistory, setBoard, setColumns, setRows])
 
   const reset = useCallback<() => void>(() => {
-    cleanSteps()
+    cleanHistory()
     setBoard((board) => getEmptyBoard(board.length))
     setColumns(resetClues)
     setRows(resetClues)
-  }, [cleanSteps, setBoard, setColumns, setRows])
+  }, [cleanHistory, setBoard, setColumns, setRows])
 
   const updateCell = useCallback(
     (r: number, c: number, state: CellState) => {
@@ -106,10 +110,10 @@ export const usePuzzle = (): UsePuzzleType => {
 
   const setCellState = useCallback(
     (row: number, col: number) => (state: CellState) => {
-      addStep(row, col, getCellState(row, col))
+      addEntry([row, col, getCellState(row, col)])
       updateCell(row, col, state)
     },
-    [addStep, getCellState, updateCell]
+    [addEntry, getCellState, updateCell]
   )
 
   const setPuzzle = useCallback(
@@ -123,17 +127,17 @@ export const usePuzzle = (): UsePuzzleType => {
 
   const undo = useCallback(() => {
     if (solved) return
-    const lastStep = getStep()
+    const lastStep = getEntry()
     if (lastStep) updateCell(...lastStep)
-  }, [solved, getStep, updateCell])
+  }, [solved, getEntry, updateCell])
 
   useEffect(() => {
     if (!solved) return
     cleanBoard()
     cleanColumns()
-    cleanSteps()
+    cleanHistory()
     cleanRows()
-  }, [solved, cleanBoard, cleanColumns, cleanSteps, cleanRows])
+  }, [solved, cleanBoard, cleanColumns, cleanHistory, cleanRows])
 
   return {
     canUndo,

@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useLocation } from 'wouter'
 
 import Button from 'components/Button'
-import { ROUTE_CREATE } from 'constants/router.constants'
+import { ROUTES } from 'constants/router.constants'
 import { Puzzle } from 'models/Puzzle'
 import { createPuzzleFromSize } from 'utils/puzzleCreator'
 
@@ -19,7 +19,7 @@ const Welcome: FC<Props> = ({ setPuzzle }) => {
   const setMediumPuzzle = () => setPuzzle(createPuzzleFromSize(10))
   const setHardPuzzle = () => setPuzzle(createPuzzleFromSize(15))
   const setExpertPuzzle = () => setPuzzle(createPuzzleFromSize(20))
-  const navigateToCreate = () => navigate(ROUTE_CREATE)
+  const navigateToCreate = () => navigate(ROUTES.CREATE)
 
   return (
     <div className={styles.welcome}>
