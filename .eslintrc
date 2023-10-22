@@ -29,5 +29,11 @@
       "version": "detect"
     }
   },
+  "overrides": [
+    {
+      "files": ["*.stories.tsx"],
+      "extends": ["plugin:storybook/recommended"]
+    }
+  ],
   "ignorePatterns": ["node_modules", "build", "*.js", "*.d.ts"]
 }

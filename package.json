@@ -13,7 +13,9 @@
     "prepare": "husky install",
     "dev": "vite",
     "test": "vitest run",
-    "test:watch": "vitest watch"
+    "test:watch": "vitest watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "classnames": "2.2.6",
@@ -23,6 +25,14 @@
     "wouter": "2.12.0"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^7.5.1",
+    "@storybook/addon-interactions": "^7.5.1",
+    "@storybook/addon-links": "^7.5.1",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/blocks": "^7.5.1",
+    "@storybook/react": "^7.5.1",
+    "@storybook/react-vite": "^7.5.1",
+    "@storybook/testing-library": "^0.2.2",
     "@testing-library/react": "14.0.0",
     "@types/classnames": "2.2.11",
     "@types/node": "18.18.4",
@@ -35,10 +45,12 @@
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "eslint-plugin-storybook": "^0.6.15",
     "happy-dom": "12.9.0",
     "husky": "6.0.0",
     "postcss-preset-env": "9.1.4",
     "prettier": "3.0.3",
+    "storybook": "^7.5.1",
     "typed-css-modules": "0.7.2",
     "typescript": "5.2.2",
     "vite": "4.4.11",
