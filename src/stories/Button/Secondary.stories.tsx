@@ -17,6 +17,16 @@ const meta = {
   tags: ['autodocs'],
   args: {
     children: 'Button',
+    title: 'Button',
+    secondary: true,
+  },
+  argTypes: {
+    asIcon: { control: false },
+    primary: { control: false },
+    secondary: { control: false },
+    href: { control: false },
+    to: { control: false },
+    onClick: { control: false },
   },
 } satisfies Meta<typeof Button>
 
@@ -33,7 +43,6 @@ const createStory = (
   } = {}
 ): Story => ({
   args: {
-    secondary: true,
     ...(args.asIcon
       ? { children: <CloseIcon color={args.outlined ? COLORS.FOURTH : COLORS.WHITE} /> }
       : null),

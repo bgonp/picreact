@@ -13,10 +13,22 @@ const meta = {
   component: Button,
   parameters: {
     layout: 'centered',
+    backgrounds: {
+      default: 'first',
+    },
   },
   tags: ['autodocs'],
   args: {
     children: 'Button',
+    title: 'Button',
+  },
+  argTypes: {
+    asIcon: { control: false },
+    primary: { control: false },
+    secondary: { control: false },
+    href: { control: false },
+    to: { control: false },
+    onClick: { control: false },
   },
 } satisfies Meta<typeof Button>
 
@@ -39,11 +51,6 @@ const createStory = (
     ...args,
   },
   ...(args.asIcon ? { argTypes: { children: { control: false } } } : null),
-  parameters: {
-    backgrounds: {
-      default: 'first',
-    },
-  },
 })
 
 export const Default = createStory({})
