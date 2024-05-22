@@ -1,0 +1,39 @@
+name: "Look for broken links to documentation"
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+#   schedule:
+#     # Every day at 00:00 UTC
+#     - cron: '0 0 * * *'
+
+jobs:
+  run-docs-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run the docs test
+        run: false
+
+      - name: Create PR if test failed
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          export PR_TITLE="Fixing broken documentation links"
+          export RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          export PR_BODY="Some links to the documentation are broken.\nSee: $RUN_URL"
+          export PR_BRANCH=fix-broken-docs-links-${{ github.run_id }}
+
+          git switch -c $PR_BRANCH
+          git push -u origin $PR_BRANCH
+          gh pr create \
+            --draft \
+            --title "$PR_TITLE" \
+            --body "$PR_BODY" \
+            --base master \
+            --head $PR_BRANCH \
+            --label "bug"
