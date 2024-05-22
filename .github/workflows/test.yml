@@ -23,9 +23,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          export PR_TITLE="Fixing broken documentation links"
+          export PR_TITLE="Fix broken documentation links"
           export RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          export PR_BODY="Some links to the documentation are broken.\nSee: $RUN_URL"
+          export PR_BODY="Some links to the documentation are broken. See: $RUN_URL"
           export PR_BRANCH=fix-broken-docs-links-${{ github.run_id }}
 
           git switch -c $PR_BRANCH
