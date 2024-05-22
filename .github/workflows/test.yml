@@ -20,6 +20,8 @@ jobs:
 
       - name: Create PR if test failed
         if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           export PR_TITLE="Fixing broken documentation links"
           export RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
