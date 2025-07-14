@@ -1,9 +1,9 @@
 declare const styles: {
-  readonly "cell": string;
-  readonly "button": string;
   readonly "blocked": string;
-  readonly "filled": string;
+  readonly "button": string;
+  readonly "cell": string;
   readonly "crossable": string;
+  readonly "filled": string;
 };
 export = styles;
 

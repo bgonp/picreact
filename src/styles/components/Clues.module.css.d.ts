@@ -1,11 +1,11 @@
 declare const styles: {
+  readonly "alt": string;
   readonly "clues": string;
   readonly "columns": string;
-  readonly "line": string;
   readonly "hover": string;
-  readonly "alt": string;
-  readonly "rows": string;
+  readonly "line": string;
   readonly "ok": string;
+  readonly "rows": string;
 };
 export = styles;
 

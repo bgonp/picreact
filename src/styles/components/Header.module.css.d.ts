@@ -1,7 +1,7 @@
 declare const styles: {
   readonly "header": string;
-  readonly "title": string;
   readonly "menu": string;
+  readonly "title": string;
 };
 export = styles;
 

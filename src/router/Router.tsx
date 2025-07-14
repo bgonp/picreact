@@ -16,7 +16,9 @@ const Router: FC = () => (
     <Route path={ROUTES.HOME}>
       <HomePage />
     </Route>
-    <Route path={ROUTES.LOAD}>{({ code }) => <LoadPage code={code} />}</Route>
+    <Route path={ROUTES.LOAD}>
+      <LoadPage />
+    </Route>
     <Route path={ROUTES.PLAY}>
       <PlayPage />
     </Route>

@@ -1,16 +1,13 @@
 import { FC, useCallback, useEffect } from 'react'
-import { useLocation } from 'wouter'
+import { useLocation, useParams } from 'wouter'
 
 import { ROUTES } from 'constants/router.constants'
 import { useModalContext } from 'contexts/ModalContext'
 import { usePuzzleContext } from 'contexts/PuzzleContext'
 import { createPuzzleFromCode } from 'utils/puzzleCreator'
 
-type Props = {
-  code: string | undefined
-}
-
-const LoadPage: FC<Props> = ({ code }) => {
+const LoadPage: FC = () => {
+  const { code } = useParams<{ code: string }>()
   const { initialized, solved, setPuzzle } = usePuzzleContext()
   const { showConfirm, showError, showNotice } = useModalContext()
 
@@ -22,7 +19,7 @@ const LoadPage: FC<Props> = ({ code }) => {
       setPuzzle(puzzle)
       navigate(ROUTES.PLAY)
       showNotice({ content: 'Puzzle loaded successfully' })
-    } catch (e) {
+    } catch {
       navigate(ROUTES.HOME)
       showError({ content: 'Error while trying to load puzzle' })
     }
